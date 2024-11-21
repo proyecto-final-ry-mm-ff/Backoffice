@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { loginApi, RegistroApi, fetchDepartamentos, fetchCiudades, fetchCategorias, fetchEventos, addEventoApi } from '../../Services/services';
-import { act } from 'react';
+import { loginApi } from '../../Services/services';
 
 
 //Crear una acción asíncrona para el login

@@ -1,12 +1,11 @@
 
-//Store: Es el "almacén" central donde se guarda el estado global de la aplicación.
-
 import { configureStore } from '@reduxjs/toolkit';
 import { userReducer } from './features/slice';
+import chatReducer from './features/chatSlice';
 
 export const store = configureStore({
     reducer: {
         user: userReducer,
-
+        chats: chatReducer
     }
 });

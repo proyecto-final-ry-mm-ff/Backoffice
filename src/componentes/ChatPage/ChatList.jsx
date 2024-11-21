@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Box, Card, CardContent, Typography, Grid, Button } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 
@@ -8,13 +9,13 @@ const chatListStyles = {
     overflowY: 'auto', // Habilita el scrollbar vertical
 };
 
-export default function ChatList({ onChatSelect }) { // Recibe la función como prop
-    // Simulamos una lista de chats vacía
-    const chatPreviews = Array.from({ length: 20 }); // Genera un array con 20 elementos vacíos
+export default function ChatList({ onChatSelect }) {
 
-    const handleChatClick = (index) => {
-        // Crear un objeto de chat para pasar al seleccionar
-        onChatSelect({ id: index + 1 });
+    const chats = useSelector((state) => state.chats); // Obtiene la lista de chats desde Redux
+
+
+    const handleChatClick = (chat) => {
+        onChatSelect(chat); // Llama a la función con el chat seleccionado
     };
 
     return (
@@ -28,18 +29,25 @@ export default function ChatList({ onChatSelect }) { // Recibe la función como 
 
             <Box sx={chatListStyles}>
                 <Grid container spacing={2}>
-                    {chatPreviews.map((_, index) => (
-                        <Grid item xs={12} key={index}>
-                            <Card variant="outlined" onClick={() => handleChatClick(index)} style={{ cursor: 'pointer' }}>
-                                <CardContent>
-                                    <Typography variant="body2">
-                                        Chat {index + 1} - Vista previa
-                                    </Typography>
-                                    {/* Este será el espacio donde irán más detalles de cada chat */}
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
+                    {chats.length > 0 ? (
+                        chats.map((chat) => (
+                            <Grid item xs={12} key={chat.id}>
+                                <Card
+                                    variant="outlined"
+                                    onClick={() => handleChatClick(chat)}
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    <CardContent>
+                                        <Typography variant="body2">
+                                            Chat {chat.id} - {chat.name || 'Sin nombre'}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))
+                    ) : (
+                        <Typography>No hay chats disponibles</Typography>
+                    )}
                 </Grid>
             </Box>
         </Box>

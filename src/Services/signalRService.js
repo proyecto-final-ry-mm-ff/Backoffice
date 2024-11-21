@@ -1,3 +1,6 @@
+import { store } from '../redux/store'
+import { addChat, setChats } from '../redux/features/chatSlice';
+
 import * as signalR from '@microsoft/signalr'
 
 const wssUrl = "http://localhost:5056/chat-hub";
@@ -19,34 +22,24 @@ connection.start().then(() => {
         .catch(err => console.error("Error al conectar al operador:", err));
 }).catch(err => console.error("Error de conexión:", err));
 
-/*
+
 // Recibe la lista de chats pendientes
 connection.on("PendingChats", (chats) => {
-    console.log("Chats pendientes:", chats);
-    if (chats.length > 0) {
-        const chatList = chats.map((chat, x) => {
-            return `<div class="chat" id="${chat.id}">
-                  <span>Chat ${chat.id}</span>
-               </div>`;
-        });
 
-        document.querySelector(".chatList").innerHTML = chatList;
-    }
+    console.log("Chats pendientes:", chats);
+
+    store.dispatch(setChats(chats));
     // Mostrar la lista de chats pendientes en la interfaz
 });
 
 // Recibe notificación de un nuevo chat
 connection.on("NewChatRequest", (chat) => {
-    console.log({ chat });
-    console.log(`Nuevo chat disponible: ${chat.id}`);
-    const newChat = `<div class="chat newChat" id="${chat.id}">
-                  <span>Chat ${chat.id}</span>
-               </div>`;
-
-    document.querySelector(".chatList").insertAdjacentHTML('beforeend', newChat);
-    // Actualizar la interfaz para mostrar el nuevo chat
+    console.log("Nuevo chat recibido -> ID: " + chat.id);
+    // Agrega el nuevo chat al estado
+    store.dispatch(addChat(chat));
 });
 
+/*
 //Me asigno un chat
 document.querySelector('.content').addEventListener("click", async function (event) {
     if (event.target && event.target.classList.contains('chat')) {
@@ -82,6 +75,7 @@ export const ReceiveMessage = async (messageDto) => {
 
 }
 
+
 connection.on("ReceiveMessage", (messageDto) => {
     const messageElement = document.createElement("div");
     console.log({ messageDto });
@@ -91,8 +85,8 @@ connection.on("ReceiveMessage", (messageDto) => {
     messageElement.classList.add("msg", senderIsClient ? "clientMsg" : "opMsg");
     messageElement.textContent = `${niceTimeStamp} - ${senderIsClient ? 'User' : 'OPE'} says:  ${messageDto.content}`;
     document.getElementById("messages").appendChild(messageElement);
-});*/
-
+});
+*/
 // Método para enviar un mensaje al hub
 export const sendMessageToChat = async (chatId, userId, message) => {
     try {
