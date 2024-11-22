@@ -1,10 +1,9 @@
 import { store } from '../redux/store'
-import { addChat, setChats } from '../redux/features/chatSlice';
+import { addChat, addMessageToChat, setChats } from '../redux/features/chatSlice';
 
 import * as signalR from '@microsoft/signalr'
 
 const wssUrl = "http://localhost:5056/chat-hub";
-const OperatorContext = {};
 
 
 // Conexión al hub de SignalR
@@ -23,21 +22,79 @@ connection.start().then(() => {
 }).catch(err => console.error("Error de conexión:", err));
 
 
-// Recibe la lista de chats pendientes
+
 connection.on("PendingChats", (chats) => {
 
     console.log("Chats pendientes:", chats);
 
     store.dispatch(setChats(chats));
-    // Mostrar la lista de chats pendientes en la interfaz
 });
 
-// Recibe notificación de un nuevo chat
 connection.on("NewChatRequest", (chat) => {
     console.log("Nuevo chat recibido -> ID: " + chat.id);
     // Agrega el nuevo chat al estado
     store.dispatch(addChat(chat));
 });
+
+
+connection.on("ReceiveMessage", (messageDto) => {
+    //TODO: implementar
+    console.log({ messageDto });
+    store.dispatch(addMessageToChat(messageDto.chatId, messageDto));
+});
+
+
+export const connectToHub = async () => {
+    try {
+        await connection.start();
+        console.log("1 - Conectado como operador al Hub de SignalR");
+        await connection.invoke("OperatorConnect");
+    } catch (err) {
+        console.error("Error al conectar con el Hub de SignalR", err);
+        //  setTimeout(startConnection, 5000); // Reintento en caso de fallo
+    }
+}
+
+export const assignOperatorToChat = async (selectedChatId) => {
+    try {
+        await connection.invoke("AssignOperatorToChat", selectedChatId);
+        // OperatorContext.selectedChatId = selectedChatId;
+    } catch (err) {
+        console.error("Error asignar operador:", err);
+    }
+}
+
+// Método para enviar un mensaje al hub
+export const sendMessageToChat = async (chatId, senderTypeId, message) => {
+    try {
+        await connection.invoke("SendMessageToChat", chatId, senderTypeId, message);
+        console.log(`Mensaje enviado existosamente // Chat: ${chatId}, Tipo:${senderTypeId}, Mensaje:${message}`);
+    } catch (err) {
+        console.error("Error al enviar mensaje:", err);
+    }
+};
+
+
+
+
+
+
+
+// Recibe la lista de chats pendientes
+// connection.on("PendingChats", (chats) => {
+
+//     console.log("Chats pendientes:", chats);
+
+//     store.dispatch(setChats(chats));
+//     // Mostrar la lista de chats pendientes en la interfaz
+// });
+
+// Recibe notificación de un nuevo chat
+// connection.on("NewChatRequest", (chat) => {
+//     console.log("Nuevo chat recibido -> ID: " + chat.id);
+//     // Agrega el nuevo chat al estado
+//     store.dispatch(addChat(chat));
+// });
 
 /*
 //Me asigno un chat
@@ -87,12 +144,3 @@ connection.on("ReceiveMessage", (messageDto) => {
     document.getElementById("messages").appendChild(messageElement);
 });
 */
-// Método para enviar un mensaje al hub
-export const sendMessageToChat = async (chatId, userId, message) => {
-    try {
-        await connection.invoke("SendMessageToChat", chatId, userId, message);
-        console.log(`Mensaje enviado existosamente // Chat: ${chatId}, Usuario:${userId}, Mensaje:${message}`);
-    } catch (err) {
-        console.error("Error al enviar mensaje:", err);
-    }
-};

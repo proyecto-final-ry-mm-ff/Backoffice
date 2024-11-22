@@ -3,10 +3,15 @@ import { Box, Card, CardContent, TextField, Button, useTheme } from '@mui/materi
 import { ColorModeContext, codigos } from "../../theme";
 import '../../estilos/chat.css';
 import { sendMessageToChat } from '../../Services/signalRService.js';
+import { useSelector } from 'react-redux';
 
 const Chat = ({ chatId }) => {
     const theme = useTheme();
     const colors = codigos(theme.palette.mode);
+
+    const losChats = useSelector((state) => state.chats);
+    const elChatto = losChats?.find(c => c.id === chatId) || null;
+
 
     const [messages, setMessages] = useState([]); // Estado para los mensajes
     const [newMessage, setNewMessage] = useState(''); // Estado para el nuevo mensaje
@@ -37,10 +42,10 @@ const Chat = ({ chatId }) => {
 
             // Enviar el mensaje a SignalR
 
-            const userId = 2;
+            const senderTypeId = 2; //2 siempre es usuario operador
             try {
                 // Llamar a sendMessageToChat desde SignalRService
-                await sendMessageToChat(chatId, userId, newMessage);
+                await sendMessageToChat(chatId, senderTypeId, newMessage);
             } catch (err) {
                 console.error("Error al enviar mensaje:", err);
             }
@@ -55,14 +60,14 @@ const Chat = ({ chatId }) => {
                 {/*Seccion para ver los mensajes*/}
 
                 <Box className="chat-box">
-                    {messages.map((msg, index) => (
+                    {elChatto?.messages.map((msg, index) => (
                         <div
                             key={index}
-                            className={msg.isSentByMe ? "message-sent" : "message-received"}
+                            className={msg.senderType === '2' ? "message-sent" : "message-received"}
                         >
-                            <p className="message">{msg.text}</p>
+                            <p className="message">{msg.content}</p>
                             <span className="time">
-                                {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                {new Date(msg.timeStamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
                         </div>
                     ))}

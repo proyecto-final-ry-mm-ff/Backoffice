@@ -1,4 +1,23 @@
+import { connectToHub } from './signalRService';
+
 const urlApi = "http://localhost:5015/api/chat";
+
+
+export const login = async () => {
+    console.log("Paso 1 - Me identifico como Operador");
+    const response = await fetch(`${urlApi}/login`, {
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        body: JSON.stringify({ email: "felipe@test.com", password: "Password1!" }),
+    });
+
+    const authorize = await response.json();
+    console.log({ authorize });
+    if (response.ok) {
+        connectToHub();
+    }
+}
+
 
 
 // Servicio para enviar un mensaje
