@@ -14,8 +14,6 @@ export default function ChatList({ onChatSelect }) {
     const chatStore = useSelector((state) => state.chatStore); 
     const chats = chatStore.chatList;
     // Obtiene la lista de chats desde Redux
-    console.log('neustros chats',chats.chatList);
-    
 
     const handleChatClick = (chatId) => {
         onChatSelect(chatId); // Llama a la función con el chat seleccionado

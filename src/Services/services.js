@@ -1,9 +1,9 @@
 import { connectToHub } from './signalRService';
 
-const urlApi = "http://localhost:5015/api/chat";
+const urlApi = "http://localhost:5015";
 
 
-export const login = async () => {
+export const loginApi = async () => {
     console.log("Paso 1 - Me identifico como Operador");
     const response = await fetch(`${urlApi}/login`, {
         headers: { "Content-Type": "application/json" },
@@ -15,76 +15,54 @@ export const login = async () => {
     console.log({ authorize });
     if (response.ok) {
         connectToHub();
+        return authorize;
     }
+
+    return false;
 }
 
 
 
-// Servicio para enviar un mensaje
-/*export const sendMessageToChat = async (message) => {
-    try {
-        console.log(JSON.stringify({ name: message }))
-        const response = await fetch(`${urlApi}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name: message }) // Enviar el mensaje como un objeto con la propiedad "name"
-        });
-
-        // Verifica el texto completo de la respuesta para debug
-        const responseText = await response.text();
-        if (!response.ok) {
-            throw new Error("Error en la respuesta del servidor");
-        }
-
-        const data = JSON.parse(responseText); // Analiza el JSON si la respuesta es correcta
-        return data;
-    } catch (error) {
-        console.error("Error al enviar mensaje:", error);
-    }
-};*/
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const urlApiObligatorio = "https://babytracker.develotion.com";
+//const urlApiObligatorio = "https://babytracker.develotion.com";
 
 //llega el objeto con usuario y contraseña
 
 
-export const loginApi = async (objetoLogin) => {
-    console.log('Objeto Login ->', objetoLogin);
+// export const loginApi = async (objetoLogin) => {
+//     console.log('Objeto Login ->', objetoLogin);
 
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+//     var myHeaders = new Headers();
+//     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify(objetoLogin);
+//     var raw = JSON.stringify(objetoLogin);
 
-    var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw
-    };
-    console.log('api requestOptions', requestOptions);
+//     var requestOptions = {
+//         method: 'POST',
+//         headers: myHeaders,
+//         body: raw
+//     };
+//     console.log('api requestOptions', requestOptions);
 
-    try {
-        const response = await fetch(`${urlApiObligatorio}/login.php`, requestOptions);
-        console.log('response de la lllamada a api de login', response)
-        //si no da ok el login
-        if (!response.ok) {
-            //guardamos en errorData un json de response para capturar el (errorData.mensaje) y dar el error
-            const errorData = await response.json();
-            console.log('errorData', errorData)
-            throw new Error(errorData.mensaje || 'Error desconocido');
-        }
-        // si el response.ok == true entonces retorna el result del login como json
-        const result = await response.json();
-        return result;
-    } catch (error) {
-        return { error: error.message };
-    }
-};
+//     try {
+//         const response = await fetch(`${urlApiObligatorio}/login.php`, requestOptions);
+//         console.log('response de la lllamada a api de login', response)
+//         //si no da ok el login
+//         if (!response.ok) {
+//             //guardamos en errorData un json de response para capturar el (errorData.mensaje) y dar el error
+//             const errorData = await response.json();
+//             console.log('errorData', errorData)
+//             throw new Error(errorData.mensaje || 'Error desconocido');
+//         }
+//         // si el response.ok == true entonces retorna el result del login como json
+//         const result = await response.json();
+//         return result;
+//     } catch (error) {
+//         return { error: error.message };
+//     }
+// };
 
 
 /*
