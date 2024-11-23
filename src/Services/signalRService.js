@@ -14,9 +14,7 @@ const connection = new signalR.HubConnectionBuilder()
 
 //Cuando conecto deberia mandar id de operador y JWT 
 connection.start().then(() => {
-
     console.log('SignalR: ' + connection.state);
-
     connection.invoke("OperatorConnect")
         .catch(err => console.error("Error al conectar al operador:", err));
 }).catch(err => console.error("Error de conexión:", err));
@@ -24,23 +22,27 @@ connection.start().then(() => {
 
 
 connection.on("PendingChats", (chats) => {
-
     console.log("Chats pendientes:", chats);
+    const chatObjs = chats.map(c => {
+        const miNuevoChat = { id: c };
+        return miNuevoChat
+    });
 
-    store.dispatch(setChats(chats));
+    store.dispatch(setChats(chatObjs));
 });
 
-connection.on("NewChatRequest", (chat) => {
-    console.log("Nuevo chat recibido -> ID: " + chat.id);
+connection.on("NewChatRequest", (chatId) => {
+    console.log("Nuevo chat recibido -> ID: " + chatId);
     // Agrega el nuevo chat al estado
+    const chat = { id: chatId }
     store.dispatch(addChat(chat));
 });
 
 
 connection.on("ReceiveMessage", (messageDto) => {
-    //TODO: implementar
+    console.log('DESDE RECEIVEMESSAGE');
     console.log({ messageDto });
-    store.dispatch(addMessageToChat(messageDto.chatId, messageDto));
+    store.dispatch(addMessageToChat(messageDto));
 });
 
 
@@ -57,6 +59,7 @@ export const connectToHub = async () => {
 
 export const assignOperatorToChat = async (selectedChatId) => {
     try {
+        console.log('OP asignado');
         await connection.invoke("AssignOperatorToChat", selectedChatId);
         // OperatorContext.selectedChatId = selectedChatId;
     } catch (err) {

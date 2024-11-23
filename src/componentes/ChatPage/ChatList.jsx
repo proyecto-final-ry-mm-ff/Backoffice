@@ -11,11 +11,14 @@ const chatListStyles = {
 
 export default function ChatList({ onChatSelect }) {
 
-    const chats = useSelector((state) => state.chats); // Obtiene la lista de chats desde Redux
+    const chatStore = useSelector((state) => state.chatStore); 
+    const chats = chatStore.chatList;
+    // Obtiene la lista de chats desde Redux
+    console.log('neustros chats',chats.chatList);
+    
 
-
-    const handleChatClick = (chat) => {
-        onChatSelect(chat); // Llama a la función con el chat seleccionado
+    const handleChatClick = (chatId) => {
+        onChatSelect(chatId); // Llama a la función con el chat seleccionado
     };
 
     return (
@@ -29,18 +32,18 @@ export default function ChatList({ onChatSelect }) {
 
             <Box sx={chatListStyles}>
                 <Grid container spacing={2}>
-                    {chats.length > 0 ? (
-                        chats.map((chat) => (
+                    {chats?.length > 0 ? (
+                        chats?.map((chat) => (
                             <Grid item xs={12} key={chat.id}>
                                 <Card
                                     variant="outlined"
-                                    onClick={() => handleChatClick(chat)}
+                                    onClick={() => handleChatClick(chat.id)}
                                     style={{ cursor: 'pointer' }}
                                 >
                                     <CardContent>
-                                        <Typography variant="body2">
-                                            Chat {chat.id} - {chat.name || 'Sin nombre'}
-                                        </Typography>
+                                      
+                                            Chat {chat.id}
+                            
                                     </CardContent>
                                 </Card>
                             </Grid>

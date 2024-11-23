@@ -8,6 +8,7 @@ import Topbar from '../Global/Topbar';
 import Sidebar from '../Global/Sidebar';
 
 
+
 export default function ChatPage() {
 
     const [theme, colorMode] = useMode();
@@ -30,9 +31,12 @@ export default function ChatPage() {
                                     </Box>
                                 </Grid>
                                 <Grid item xs={6} md={7}>
-                                    <Box>
-                                        <Chat chatId={selectedChat?.id} />
-                                    </Box>
+                                    {selectedChat &&
+                                        <Box>
+                                            <Chat chatId={selectedChat} />
+                                        </Box>
+                                    }
+
                                 </Grid>
                                 <Grid item xs={3} md={2.5}>
                                     <Box>

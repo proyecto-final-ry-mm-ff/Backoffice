@@ -6,6 +6,6 @@ import chatReducer from './features/chatSlice';
 export const store = configureStore({
     reducer: {
         user: userReducer,
-        chats: chatReducer
+        chatStore: chatReducer
     }
 });

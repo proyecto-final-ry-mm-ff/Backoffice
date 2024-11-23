@@ -2,15 +2,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Box, Card, CardContent, TextField, Button, useTheme } from '@mui/material';
 import { ColorModeContext, codigos } from "../../theme";
 import '../../estilos/chat.css';
-import { sendMessageToChat } from '../../Services/signalRService.js';
+import { sendMessageToChat, assignOperatorToChat } from '../../Services/signalRService.js';
 import { useSelector } from 'react-redux';
 
 const Chat = ({ chatId }) => {
     const theme = useTheme();
     const colors = codigos(theme.palette.mode);
 
-    const losChats = useSelector((state) => state.chats);
-    const elChatto = losChats?.find(c => c.id === chatId) || null;
+    const chatStore = useSelector((state) => state.chatStore); 
+    const chats = chatStore.chatList;
+    const elChatto = chats?.find(c => c.id === chatId) || null;
+
+ 
 
 
     const [messages, setMessages] = useState([]); // Estado para los mensajes
@@ -24,21 +27,31 @@ const Chat = ({ chatId }) => {
         }
     }, [messages]);
 
-    // Cargar los mensajes 
-    useEffect(() => {
-        if (chatId) {
-            //TODO / Cargar mensajes         
-            setMessages([
-                { id: 1, text: "¡Hola! ¿Cómo estás?", isSentByMe: false },
-                { id: 2, text: "¡Bien, gracias! ¿Y tú?", isSentByMe: true },
-            ]);
-        }
-    }, [chatId]); // Atento a cada vez que el chatId cambie
 
+
+    // // Cargar los mensajes
+    // useEffect(() => {
+    //     if (chatId) {
+    //         //TODO / Cargar mensajes
+    //         setMessages([
+    //             { id: 1, text: "¡Hola! ¿Cómo estás?", isSentByMe: false },
+    //             { id: 2, text: "¡Bien, gracias! ¿Y tú?", isSentByMe: true },
+    //         ]);
+    //     }
+    // }, [chatId]); // Atento a cada vez que el chatId cambie
+
+ 
+    const doSomething = async (chatId) => {
+        await assignOperatorToChat(chatId);
+    }
+
+    useEffect(() => {
+        doSomething(chatId);
+    }, [chatId])
 
     const handleSendMessage = async () => {
         if (newMessage.trim()) {
-            setMessages((prevMessages) => [...prevMessages, { text: newMessage, isSentByMe: true }]);
+            //  setMessages((prevMessages) => [...prevMessages, { text: newMessage, isSentByMe: true }]);
 
             // Enviar el mensaje a SignalR
 
@@ -60,7 +73,7 @@ const Chat = ({ chatId }) => {
                 {/*Seccion para ver los mensajes*/}
 
                 <Box className="chat-box">
-                    {elChatto?.messages.map((msg, index) => (
+                    {elChatto?.messages?.map((msg, index) => (
                         <div
                             key={index}
                             className={msg.senderType === '2' ? "message-sent" : "message-received"}
