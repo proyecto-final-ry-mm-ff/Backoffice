@@ -12,14 +12,14 @@ export const loginApi = async () => {
         body: JSON.stringify({ email: "felipe@test.com", password: "Password1!" }),
     });
 
-    const authorize = await response.json();
-    console.log({ authorize });
+    const parsedResponse = await response.json();
+    console.log({ parsedResponse });
     if (response.ok) {
-        localStorage.setItem('token', response.accessToken);
-        localStorage.setItem('refreshToken', response.refreshToken);
+        localStorage.setItem('token', parsedResponse.accessToken);
+        localStorage.setItem('refreshToken', parsedResponse.refreshToken);
         localStorage.setItem('logueado', true); // Guardar el estado de logueado.
         connectToHub();
-        return authorize;
+        return parsedResponse;
     }
 
     return false;
@@ -38,7 +38,7 @@ export const saveChat = async (chat) => {
 
     const parsedResponse = await response.json();
     console.log({ parsedResponse });
-    if (parsedResponse.ok) {
+    if (response.ok) {
         return true;
     }
 

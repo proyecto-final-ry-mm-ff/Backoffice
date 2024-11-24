@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Box, Card, CardContent, TextField, Button, useTheme } from '@mui/material';
 import { ColorModeContext, codigos } from "../../theme";
 import '../../estilos/chat.css';
-import { sendMessageToChat, assignOperatorToChat, endChat } from '../../Services/signalRService.js';
+import { saveChat } from '../../Services/services';
+import { sendMessageToChat, assignOperatorToChat } from '../../Services/signalRService.js';
 import { useSelector } from 'react-redux';
 
 const Chat = ({ chatId }) => {
@@ -67,7 +68,7 @@ const Chat = ({ chatId }) => {
     const handleEndChat = async () => {
         try {
             // Pegarle al endChat de signalRF
-            await endChat(thisChat);
+            await saveChat(thisChat);
         } catch (err) {
             console.error("Error al enviar mensaje:", err);
         }

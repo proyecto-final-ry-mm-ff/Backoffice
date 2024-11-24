@@ -1,5 +1,5 @@
 
 
 export const getBearerToken = () => {
-    return localStorage.get("token") || null;
+    return localStorage.getItem("token") || null;
 }
