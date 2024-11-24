@@ -9,11 +9,11 @@ const Chat = ({ chatId }) => {
     const theme = useTheme();
     const colors = codigos(theme.palette.mode);
 
-    const chatStore = useSelector((state) => state.chatStore); 
+    const chatStore = useSelector((state) => state.chatStore);
     const chats = chatStore.chatList;
-    const elChatto = chats?.find(c => c.id === chatId) || null;
+    const thisChat = chats?.find(c => c.id === chatId) || null;
 
- 
+
 
 
     const [messages, setMessages] = useState([]); // Estado para los mensajes
@@ -27,7 +27,10 @@ const Chat = ({ chatId }) => {
         }
     }, [messages]);
 
-
+    //Para asignar operador al chat
+    useEffect(() => {
+        handleAssignOperatorToChat(chatId);
+    }, [chatId])
 
     // // Cargar los mensajes
     // useEffect(() => {
@@ -40,14 +43,10 @@ const Chat = ({ chatId }) => {
     //     }
     // }, [chatId]); // Atento a cada vez que el chatId cambie
 
- 
-    const doSomething = async (chatId) => {
+
+    const handleAssignOperatorToChat = async (chatId) => {
         await assignOperatorToChat(chatId);
     }
-
-    useEffect(() => {
-        doSomething(chatId);
-    }, [chatId])
 
     const handleSendMessage = async () => {
         if (newMessage.trim()) {
@@ -65,10 +64,10 @@ const Chat = ({ chatId }) => {
         }
     };
 
-    const handleEndChat = async ()=>{
+    const handleEndChat = async () => {
         try {
             // Pegarle al endChat de signalRF
-            await endChat(chatId);
+            await endChat(thisChat);
         } catch (err) {
             console.error("Error al enviar mensaje:", err);
         }
@@ -82,7 +81,7 @@ const Chat = ({ chatId }) => {
                 {/*Seccion para ver los mensajes*/}
 
                 <Box className="chat-box">
-                    {elChatto?.messages?.map((msg, index) => (
+                    {thisChat?.messages?.map((msg, index) => (
                         <div
                             key={index}
                             className={msg.senderType === '2' ? "message-sent" : "message-received"}

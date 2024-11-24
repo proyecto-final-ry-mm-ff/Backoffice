@@ -1,3 +1,4 @@
+import { getBearerToken } from './helperService';
 import { connectToHub } from './signalRService';
 
 const urlApi = "http://localhost:5015";
@@ -14,6 +15,9 @@ export const loginApi = async () => {
     const authorize = await response.json();
     console.log({ authorize });
     if (response.ok) {
+        localStorage.setItem('token', response.accessToken);
+        localStorage.setItem('refreshToken', response.refreshToken);
+        localStorage.setItem('logueado', true); // Guardar el estado de logueado.
         connectToHub();
         return authorize;
     }
@@ -21,6 +25,26 @@ export const loginApi = async () => {
     return false;
 }
 
+
+export const saveChat = async (chat) => {
+    const token = getBearerToken(); //TODO:  Hay que manejar una lógica de pedir refresh token si este expiró
+    console.log("Voy a guardar la instancia de chat...");
+    console.log({ chat });
+    const response = await fetch(`${urlApi}/chat`, {
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        method: "POST",
+        body: JSON.stringify(chat),
+    });
+
+    const parsedResponse = await response.json();
+    console.log({ parsedResponse });
+    if (parsedResponse.ok) {
+        return true;
+    }
+
+    return false;
+
+}
 
 
 

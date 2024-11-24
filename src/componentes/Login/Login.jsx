@@ -52,18 +52,11 @@ export default function Login() {
 
     // reseteo el mensaje de error en cada llamada
     setErrorLogin('');
-
-    let resultado = await loginApi(); //Realiza la llamada a la API de loginApi y espera al return
-    console.log('Resultado ->', resultado);
-
+    
+    const resultado = await loginApi(); //Realiza la llamada a la API de loginApi y espera al return
     if (!resultado) {
       setErrorLogin('TODO CAMBIAR');
     } else {
-      localStorage.setItem('token', resultado.accessToken);
-      localStorage.setItem('refreshToken', resultado.refreshToken);
-      localStorage.setItem('idUsuario', resultado.id); // Guardar el id del usuario en localStorage.
-      localStorage.setItem('logueado', true); // Guardar el estado de logueado.
-
       setLogueado(true);
       navigate('/dashboard'); // Navegar al dashboard después del login.
     }
