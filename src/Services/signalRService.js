@@ -15,16 +15,16 @@ const connection = new signalR.HubConnectionBuilder()
 // Método para conectar al operador y recibir los chats pendientes
 connection.on("PendingChats", (chats) => {
     console.log("Chats pendientes:", chats);
-    const chatObjs = chats.map(c => {
-        const miNuevoChat = { id: c };
-        return miNuevoChat
-    });
+    // const chatObjs = chats.map(c => {
+    //     const miNuevoChat = { id: c };
+    //     return miNuevoChat
+    // });
 
-    store.dispatch(setChats(chatObjs));
+    // store.dispatch(setChats(chatObjs));
+    store.dispatch(setChats(chats));
 });
 
-connection.on("NewChatRequest", (chatId) => {
-    const chat = { id: chatId }
+connection.on("NewChatRequest", (chat) => {
     store.dispatch(addChat(chat));
 });
 
