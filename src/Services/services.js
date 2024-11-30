@@ -4,12 +4,12 @@ import { connectToHub } from './signalRService';
 const urlApi = "http://localhost:5015";
 
 
-export const loginApi = async () => {
+export const loginApi = async (userData) => {
     console.log("Paso 1 - Me identifico como Operador");
     const response = await fetch(`${urlApi}/login`, {
         headers: { "Content-Type": "application/json" },
         method: "POST",
-        body: JSON.stringify({ email: "felipe@test.com", password: "Password1!" }),
+        body: JSON.stringify({ email: userData.email, password: userData.password }), //Password1!
     });
 
     const parsedResponse = await response.json();

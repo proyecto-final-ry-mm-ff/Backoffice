@@ -17,10 +17,10 @@ export default function Login() {
   //HOCKS useSate (maneja los estados)
 
   // useSate devuelve un array con dos elementos:
-  // 1) valoresActuales = El valor actual del estado.
-  // 2) setValoresActuales = Una función que te permite actualizar ese valor.
+  // 1) userData = El valor actual del estado.
+  // 2) setUserData = Una función que te permite actualizar ese valor.
   // 3) useState es el valor inicial del estado
-  const [valoresActuales, setValoresActuales] = useState({ usuario: 'machin', password: 'machin' });
+  const [userData, setUserData] = useState({});
   const [logueado, setLogueado] = useState(false);
   const [error, setErrorLogin] = useState('');
   const navigate = useNavigate();
@@ -38,10 +38,10 @@ export default function Login() {
 
 
   // Cada vez que el usuario cambia los valores en los campos del formulario, se llama a handleChangeMultiple
-  // y dentro se llama a setValoresActuales(HOCK) para actualizar el estado.
+  // y dentro se llama a setUserData(HOCK) para actualizar el estado.
   const handleChangeMultiple = (e) => {
-    setValoresActuales((valoresActuales) => ({
-      ...valoresActuales,
+    setUserData((userData) => ({
+      ...userData,
       [e.target.name]: e.target.value,
     }));
   };
@@ -52,8 +52,8 @@ export default function Login() {
 
     // reseteo el mensaje de error en cada llamada
     setErrorLogin('');
-    
-    const resultado = await loginApi(); //Realiza la llamada a la API de loginApi y espera al return
+
+    const resultado = await loginApi(userData); //Realiza la llamada a la API de loginApi y espera al return
     if (!resultado) {
       setErrorLogin('TODO CAMBIAR');
     } else {
@@ -70,10 +70,10 @@ export default function Login() {
           <Form.Group className="input-box" >
             <input
               type="text"
-              placeholder="Ingrese usuario"
+              placeholder="Ingrese email"
               name="usuario"
               onChange={handleChangeMultiple}
-              value={valoresActuales.usuario}
+              value={userData.email}
             /><FaUser className='icon' />
           </Form.Group>
 
@@ -83,13 +83,13 @@ export default function Login() {
               placeholder="Password"
               name="password"
               onChange={handleChangeMultiple}
-              value={valoresActuales.password}
+              value={userData.password}
             /><FaLock className='icon' />
           </Form.Group>
 
 
           <Button variant="primary" type="submit" className='loginBtn'
-            disabled={valoresActuales.password == "" || valoresActuales.usuario == ""}>
+            disabled={userData.password === "" || userData.email === ""}>
             Iniciar Sesión
           </Button>
 

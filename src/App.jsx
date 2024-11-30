@@ -16,13 +16,13 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/chatPage" element={<ChatPage />} />
-          <Route path="/flowDesigner" element={<FlowDesigner />} />
-          <Route path="/configuracion" element={<Configuracion />} />
+          <Route path="/chat-page" element={<ChatPage />} />
+          <Route path="/flow-designer" element={<FlowDesigner />} />
+          <Route path="/config" element={<Configuracion />} />
 
           {/* Redirección al iniciar la app */}
-          <Route path="/" element={<Navigate to="/chatPage" />} />
-          <Route path="/dashboard" element={<Navigate to="/chatPage" />} />
+          <Route path="/" element={<Navigate to="/chat-page" />} />
+          <Route path="/dashboard" element={<Navigate to="/chat-page" />} />
 
           <Route path="*" element={<p>No se encontró la ruta!</p>} />
         </Routes>
