@@ -88,21 +88,21 @@ const Sidebar = () => {
                     <Box>
                         <Item
                             title="Chats"
-                            to="/chatPage"
+                            to="/chat-page"
                             icon={<ChatIcon />}
                             selected={selected}
                             setSelected={setSelected}
                         />
                         <Item
                             title="Diseñador de flujos"
-                            to="/flowDesigner"
+                            to="/flow-designer"
                             icon={<AccountTreeIcon />}
                             selected={selected}
                             setSelected={setSelected}
                         />
                         <Item
                             title="Configuración"
-                            to="/configuracion"
+                            to="/config"
                             icon={<SettingsIcon />}
                             selected={selected}
                             setSelected={setSelected}
