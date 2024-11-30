@@ -71,7 +71,7 @@ export default function Login() {
             <input
               type="text"
               placeholder="Ingrese email"
-              name="usuario"
+              name="email"
               onChange={handleChangeMultiple}
               value={userData.email}
             /><FaUser className='icon' />

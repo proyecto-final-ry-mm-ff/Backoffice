@@ -21,7 +21,7 @@ const App = () => {
           <Route path="/config" element={<Configuracion />} />
 
           {/* Redirección al iniciar la app */}
-          <Route path="/" element={<Navigate to="/chat-page" />} />
+          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/dashboard" element={<Navigate to="/chat-page" />} />
 
           <Route path="*" element={<p>No se encontró la ruta!</p>} />

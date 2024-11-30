@@ -59,6 +59,7 @@ const Chat = ({ chatId }) => {
             try {
                 // Llamar a sendMessageToChat desde SignalRService
                 await sendMessageToChat(chatId, senderTypeId, newMessage);
+                setNewMessage('');
             } catch (err) {
                 console.error("Error al enviar mensaje:", err);
             }
