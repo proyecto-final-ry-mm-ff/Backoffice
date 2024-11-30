@@ -13,8 +13,10 @@ const chatSlice = createSlice({
             state.chatList = action.payload; // Reemplaza la lista de chats
         },
         addMessageToChat: (state, action) => {
-            const { connectionId } = action.payload; // Desestructura el ID del chat y el mensaje
-            const chat = state.chatList.find((c) => c.id === connectionId); // Busca el chat por ID
+            // const { connectionId } = action.payload; // Desestructura el ID del chat y el mensaje
+            // const chat = state.chatList.find((c) => c.id === connectionId); // Busca el chat por ID
+            const { chatId } = action.payload; // Desestructura el ID del chat y el mensaje
+            const chat = state.chatList.find((c) => c.id === chatId); // Busca el chat por ID
             if (chat) {
                 chat.messages = chat.messages || []; // Asegúrate de que tenga un array de mensajes
                 chat.messages.push(action.payload); // Agrega el mensaje al chat correspondiente

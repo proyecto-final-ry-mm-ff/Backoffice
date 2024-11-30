@@ -25,11 +25,12 @@ connection.on("PendingChats", (chats) => {
 });
 
 connection.on("NewChatRequest", (chat) => {
+    console.log("NewChatRequest", { chat });
     store.dispatch(addChat(chat));
 });
 
 connection.on("ReceiveMessage", (messageDto) => {
-    console.log({ messageDto });
+    console.log("ReceiveMessage", { messageDto });
     store.dispatch(addMessageToChat(messageDto));
 });
 
