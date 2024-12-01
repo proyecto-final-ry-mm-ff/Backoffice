@@ -30,10 +30,10 @@ export const saveChat = async (chat) => {
     const token = getBearerToken(); //TODO:  Hay que manejar una lógica de pedir refresh token si este expiró
     console.log("Voy a guardar la instancia de chat...");
     console.log({ chat });
-    const response = await fetch(`${urlApi}/chat`, {
+    const response = await fetch(`${urlApi}/chat/${chat.id}`, {
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        method: "POST",
-        body: JSON.stringify({...chat}),
+        method: "PUT",
+        body: JSON.stringify({ ...chat }),
     });
 
     const parsedResponse = await response.json();
