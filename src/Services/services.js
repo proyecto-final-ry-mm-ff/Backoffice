@@ -33,7 +33,7 @@ export const saveChat = async (chat) => {
     const chatUpdateDto = {
         chatId: chat.id,
         customerId: chat.customer.id,
-        status: 3,
+        status: 4,
         messages: chat.messages
     };
     const response = await fetch(`${urlApi}/chat/${chat.id}`, {
