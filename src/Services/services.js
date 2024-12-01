@@ -33,7 +33,7 @@ export const saveChat = async (chat) => {
     const response = await fetch(`${urlApi}/chat`, {
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         method: "POST",
-        body: JSON.stringify(chat),
+        body: JSON.stringify({...chat}),
     });
 
     const parsedResponse = await response.json();
