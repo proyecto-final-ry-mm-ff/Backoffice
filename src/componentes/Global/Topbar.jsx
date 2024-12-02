@@ -8,6 +8,9 @@ import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import { useContext } from "react";
 
+import { store } from '../redux/store'
+import { logout } from '../redux/features/userSlice'
+
 const Topbar = () => {
 
     const theme = useTheme(); //Da accseso al theme utlizado
@@ -17,7 +20,7 @@ const Topbar = () => {
     const navigate = useNavigate();
 
     const logOut = () => {
-        localStorage.clear();
+        store.dispatch(logout());
         navigate('/login'); // Navegar a /login
     };
 

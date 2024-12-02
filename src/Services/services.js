@@ -1,3 +1,5 @@
+import { store } from '../redux/store'
+import { login } from '../redux/features/userSlice'
 import { getBearerToken } from './helperService';
 import { connectToHub } from './signalRService';
 
@@ -15,9 +17,10 @@ export const loginApi = async (userData) => {
     const parsedResponse = await response.json();
     console.log({ parsedResponse });
     if (response.ok) {
-        localStorage.setItem('token', parsedResponse.accessToken);
-        localStorage.setItem('refreshToken', parsedResponse.refreshToken);
-        localStorage.setItem('logueado', true); // Guardar el estado de logueado.
+        store.dispatch(login(parsedResponse));
+        // localStorage.setItem('token', parsedResponse.accessToken);
+        // localStorage.setItem('refreshToken', parsedResponse.refreshToken);
+        // localStorage.setItem('logueado', true); // Guardar el estado de logueado.
         connectToHub();
         return parsedResponse;
     }

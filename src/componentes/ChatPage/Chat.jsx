@@ -5,6 +5,8 @@ import '../../estilos/chat.css';
 import { saveChat } from '../../Services/services';
 import { sendMessageToChat, assignOperatorToChat } from '../../Services/signalRService.js';
 import { useSelector } from 'react-redux';
+import { store } from '../../redux/store';
+import { assignChat } from '../../redux/features/userSlice';
 
 const Chat = ({ chatId }) => {
     const theme = useTheme();
@@ -75,6 +77,10 @@ const Chat = ({ chatId }) => {
         }
     }
 
+    const handleAssignChat = () => {
+        store.dispatch(assignChat(thisChat));
+    }
+
     return (
         <Card variant="outlined">
             <CardContent>
@@ -107,6 +113,9 @@ const Chat = ({ chatId }) => {
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Escribe un mensaje..."
                     />
+                    <Button variant="contained" onClick={handleAssignChat} sx={{ marginLeft: 1 }}>
+                        Asigar chat
+                    </Button>
                     <Button variant="contained" onClick={handleEndChat} sx={{ marginLeft: 1 }}>
                         Finalizar chat
                     </Button>
