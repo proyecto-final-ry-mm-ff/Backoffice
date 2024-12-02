@@ -7,6 +7,8 @@ export default function ChatList({ onChatSelect }) {
     const chatStore = useSelector((state) => state.chatStore); 
     const chats = chatStore.chatList;
 
+    console.log('TU LISTADO DE CHATS: ',chats);
+
     const handleChatClick = (chatId) => {
         onChatSelect(chatId); // Llama a la función con el chat seleccionado
     };
@@ -28,7 +30,7 @@ export default function ChatList({ onChatSelect }) {
                                 className="chat-avatar"
                             />
                             <div className="chat-info">
-                                <p className="chat-name">{chat.name || `Chat ${chat.id}`}</p>
+                                <p className="chat-name">{`${chat?.customer?.name} - ${chat?.customer?.phone}`}</p>
                                 <p className="chat-preview">{chat.preview || "Mensaje previo..."}</p>
                             </div>
                             {chat.unreadCount > 0 && (
