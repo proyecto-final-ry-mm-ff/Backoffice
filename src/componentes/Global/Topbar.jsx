@@ -8,8 +8,9 @@ import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import { useContext } from "react";
 
-import { store } from '../redux/store'
-import { logout } from '../redux/features/userSlice'
+
+import { logout } from '../../redux/features/userSlice'
+import { store } from "../../redux/store";
 
 const Topbar = () => {
 

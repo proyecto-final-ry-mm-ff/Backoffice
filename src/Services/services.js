@@ -1,6 +1,6 @@
 import { store } from '../redux/store'
 import { login } from '../redux/features/userSlice'
-import { getBearerToken } from './helperService';
+import { GetBearerToken } from './helperService';
 import { connectToHub } from './signalRService';
 
 const urlApi = "http://localhost:5015";
@@ -30,7 +30,7 @@ export const loginApi = async (userData) => {
 
 
 export const saveChat = async (chat) => {
-    const token = getBearerToken(); //TODO:  Hay que manejar una lógica de pedir refresh token si este expiró
+    const token = GetBearerToken(); //TODO:  Hay que manejar una lógica de pedir refresh token si este expiró
     console.log("Voy a guardar la instancia de chat...");
     console.log({ chat });
     const chatUpdateDto = {
