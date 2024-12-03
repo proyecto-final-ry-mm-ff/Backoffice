@@ -7,6 +7,7 @@ const chatSlice = createSlice({
     },
     reducers: {
         addChat: (state, action) => {
+            console.log('ACA TU PAYLOAD',action.payload)
             state.chatList.push(action.payload); // Agrega un nuevo chat
         },
         setChats: (state, action) => {

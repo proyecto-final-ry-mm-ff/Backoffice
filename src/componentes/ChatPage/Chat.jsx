@@ -7,6 +7,7 @@ import { sendMessageToChat, assignOperatorToChat } from '../../Services/signalRS
 import { useSelector } from 'react-redux';
 import { store } from '../../redux/store';
 import { assignChat } from '../../redux/features/userSlice';
+import { setChats } from '../../redux/features/chatSlice.js';
 
 const Chat = ({ chatId }) => {
     const theme = useTheme();
@@ -31,9 +32,9 @@ const Chat = ({ chatId }) => {
     }, [messages]);
 
     //Para asignar operador al chat
-    useEffect(() => {
-        handleAssignOperatorToChat(chatId);
-    }, [chatId])
+    // useEffect(() => {
+    //     handleAssignOperatorToChat(chatId);
+    // }, [chatId])
 
     // // Cargar los mensajes
     // useEffect(() => {
@@ -47,9 +48,13 @@ const Chat = ({ chatId }) => {
     // }, [chatId]); // Atento a cada vez que el chatId cambie
 
 
-    const handleAssignOperatorToChat = async (chatId) => {
-        await assignOperatorToChat(chatId);
-    }
+    // const handleAssignOperatorToChat = async (chatId) => {
+    //     await assignOperatorToChat(chatId);
+    //     store.dispatch(assignChat(thisChat));
+    //     const remainingChats = chats.filter(chat=>chat.id != thisChat.id);
+    //     console.log('RemainignCHats', remainingChats);
+    //     store.dispatch(setChats(remainingChats))
+    // }
 
     const handleSendMessage = async () => {
         if (newMessage.trim()) {
@@ -77,8 +82,12 @@ const Chat = ({ chatId }) => {
         }
     }
 
-    const handleAssignChat = () => {
+    const handleAssignChat = async () => {
+        await assignOperatorToChat(thisChat.id);
         store.dispatch(assignChat(thisChat));
+        const remainingChats = chats.filter(chat=>chat.id != thisChat.id);
+        console.log('RemainignCHats', remainingChats);
+        store.dispatch(setChats(remainingChats))
     }
 
     return (
@@ -114,7 +123,7 @@ const Chat = ({ chatId }) => {
                         placeholder="Escribe un mensaje..."
                     />
                     <Button variant="contained" onClick={handleAssignChat} sx={{ marginLeft: 1 }}>
-                        Asigar chat
+                        Asignar chat
                     </Button>
                     <Button variant="contained" onClick={handleEndChat} sx={{ marginLeft: 1 }}>
                         Finalizar chat

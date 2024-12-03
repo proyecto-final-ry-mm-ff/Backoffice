@@ -27,7 +27,7 @@ const userSlice = createSlice({
             // state.id = null;
         },
         assignChat: (state, action) => {
-            state.assignedChats.push(action.chat); // Agrega un nuevo chat
+            state.assignedChats.push(action.payload); // Agrega un nuevo chat
         },
         // setChats: (state, action) => {
         //     state.chatList = action.payload; // Reemplaza la lista de chats

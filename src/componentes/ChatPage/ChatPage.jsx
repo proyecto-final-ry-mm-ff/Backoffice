@@ -27,20 +27,20 @@ export default function ChatPage() {
                             <Grid container spacing={2}>
                                 <Grid item xs={3} md={2.5}>
                                     <Box>
-                                        <ChatList onChatSelect={setSelectedChat} />
+                                        <ChatList onChatSelect={setSelectedChat}/>
                                     </Box>
                                 </Grid>
                                 <Grid item xs={6} md={7}>
                                     {selectedChat &&
                                         <Box>
-                                            <Chat chatId={selectedChat} />
+                                            <Chat chatId={selectedChat.id} />
                                         </Box>
                                     }
 
                                 </Grid>
                                 <Grid item xs={3} md={2.5}>
                                     <Box>
-                                        <ChatList onChatSelect={setSelectedChat} />
+                                        <ChatList onChatSelect={setSelectedChat} isAssignedChatsList="true" />
                                     </Box>
                                 </Grid>
                             </Grid>
