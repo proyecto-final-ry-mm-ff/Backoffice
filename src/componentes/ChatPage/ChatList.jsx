@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Card, CardContent, Typography, Grid, Button } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
-
+import { useSelector } from 'react-redux';
 // Estilo CSS para el contenedor de chats
 const chatListStyles = {
     maxHeight: '85vh', // Ajusta la altura máxima según tu diseño
@@ -12,18 +12,13 @@ export default function ChatList({ onChatSelect }) { // Recibe la función como 
     // Simulamos una lista de chats vacía
     const chatPreviews = Array.from({ length: 20 }); // Genera un array con 20 elementos vacíos
 
-<<<<<<< Updated upstream
-    const handleChatClick = (index) => {
-        // Crear un objeto de chat para pasar al seleccionar
-        onChatSelect({ id: index + 1 });
-=======
+
     const chatStore = useSelector((state) => state.chatStore);
     const chats = chatStore.chatList;
     // Obtiene la lista de chats desde Redux
 
     const handleChatClick = (chatId) => {
         onChatSelect(chatId); // Llama a la función con el chat seleccionado
->>>>>>> Stashed changes
     };
 
     return (
@@ -36,22 +31,6 @@ export default function ChatList({ onChatSelect }) { // Recibe la función como 
             </Box>
 
             <Box sx={chatListStyles}>
-<<<<<<< Updated upstream
-                <Grid container spacing={2}>
-                    {chatPreviews.map((_, index) => (
-                        <Grid item xs={12} key={index}>
-                            <Card variant="outlined" onClick={() => handleChatClick(index)} style={{ cursor: 'pointer' }}>
-                                <CardContent>
-                                    <Typography variant="body2">
-                                        Chat {index + 1} - Vista previa
-                                    </Typography>
-                                    {/* Este será el espacio donde irán más detalles de cada chat */}
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
-=======
                 {chats?.length > 0 ? (
                     chats?.map((chat) => (
                         <Card
@@ -69,7 +48,6 @@ export default function ChatList({ onChatSelect }) { // Recibe la función como 
                 ) : (
                     <Typography>No hay chats disponibles</Typography>
                 )}
->>>>>>> Stashed changes
             </Box>
         </Box>
     );
