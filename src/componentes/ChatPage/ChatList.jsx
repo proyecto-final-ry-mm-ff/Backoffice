@@ -12,9 +12,18 @@ export default function ChatList({ onChatSelect }) { // Recibe la función como 
     // Simulamos una lista de chats vacía
     const chatPreviews = Array.from({ length: 20 }); // Genera un array con 20 elementos vacíos
 
+<<<<<<< Updated upstream
     const handleChatClick = (index) => {
         // Crear un objeto de chat para pasar al seleccionar
         onChatSelect({ id: index + 1 });
+=======
+    const chatStore = useSelector((state) => state.chatStore);
+    const chats = chatStore.chatList;
+    // Obtiene la lista de chats desde Redux
+
+    const handleChatClick = (chatId) => {
+        onChatSelect(chatId); // Llama a la función con el chat seleccionado
+>>>>>>> Stashed changes
     };
 
     return (
@@ -27,6 +36,7 @@ export default function ChatList({ onChatSelect }) { // Recibe la función como 
             </Box>
 
             <Box sx={chatListStyles}>
+<<<<<<< Updated upstream
                 <Grid container spacing={2}>
                     {chatPreviews.map((_, index) => (
                         <Grid item xs={12} key={index}>
@@ -41,6 +51,25 @@ export default function ChatList({ onChatSelect }) { // Recibe la función como 
                         </Grid>
                     ))}
                 </Grid>
+=======
+                {chats?.length > 0 ? (
+                    chats?.map((chat) => (
+                        <Card
+                            variant="outlined"
+                            onClick={() => handleChatClick(chat.id)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <CardContent>
+
+                                Chat {chat.id}
+
+                            </CardContent>
+                        </Card>
+                    ))
+                ) : (
+                    <Typography>No hay chats disponibles</Typography>
+                )}
+>>>>>>> Stashed changes
             </Box>
         </Box>
     );
