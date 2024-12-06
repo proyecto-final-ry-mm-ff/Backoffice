@@ -1,7 +1,5 @@
 import React from 'react';
 import { useDnD } from './DnDContext';
-import { NodeTypes } from './Nodes/NodeTypes';
-import { ReactFlowProvider } from '@xyflow/react';
 
 const FlowSideBar = () => {
     const [_, setType] = useDnD();
@@ -12,17 +10,49 @@ const FlowSideBar = () => {
     };
 
     return (
-        <aside>
-            <div className="description">NODOS</div>
-            {/* "Texto" node */}
-            <div
-                className="dndnode input"
-                onDragStart={(event) => onDragStart(event, 'textNode')}
-                draggable
-            >
-                Texto
+        <aside style={{ margin: '10px', border: 'solid 1px #555555', borderRadius: '5px', paddingTop: '10px', textAlign: 'center', width: '13vh', }}>
+            <div >
+                <div> <h3>Nodos</h3>  </div>
+                {/* "Start" node */}
+                <div
+                    style={{ padding: '10px' }}
+                    className="dndnode input"
+                    onDragStart={(event) => onDragStart(event, 'startNode')}
+                    draggable
+                >
+                    Inicio
+                </div>
+                {/* "Text" node */}
+                <div
+                    style={{ padding: '10px' }}
+                    className="dndnode input"
+                    onDragStart={(event) => onDragStart(event, 'textNode')}
+                    draggable
+                >
+                    Texto
+                </div>
+                {/* "Button" node */}
+                <div
+                    style={{ padding: '10px' }}
+                    className="dndnode input"
+                    onDragStart={(event) => onDragStart(event, 'buttonNode')}
+                    draggable
+                >
+                    Botón
+                </div>
+                {/* "Action" node */}
+                <div
+                    style={{ padding: '10px' }}
+                    className="dndnode input"
+                    onDragStart={(event) => onDragStart(event, 'actionNode')}
+                    draggable
+                >
+                    Acción
+                </div>
+
+
             </div>
-        </aside>
+        </aside >
     );
 };
 

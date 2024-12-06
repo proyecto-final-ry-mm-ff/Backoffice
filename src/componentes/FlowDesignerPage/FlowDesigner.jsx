@@ -19,9 +19,11 @@ import '@xyflow/react/dist/style.css';
 
 import TextNode from './Nodes/TextNode';
 import ButtonNode from './Nodes/ButtonNode';
+import StartNode from './Nodes/StartNode';
+import ActionNode from './Nodes/ActionNode';
 
 const initialNodes = [
-    { id: '1', type: 'textNode', position: { x: 450, y: 300 }, data: { label: '1' } },
+    { id: '1', type: 'startNode', position: { x: 150, y: 150 }, data: { label: '1' } },
     //{ id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
 ];
 const initialEdges = [
@@ -41,9 +43,16 @@ const FlowDesigner = ({ onBackToList }) => {
 
     const onConnect = useCallback(
         (params) => setEdges((eds) => addEdge(params, eds)),
-        [setEdges],
+        [],
     );
 
+    // Mapeo de nodos
+    const nodeTypes = {
+        textNode: TextNode,
+        buttonNode: ButtonNode,
+        startNode: StartNode,
+        actionNode: ActionNode
+    };
     // Arrastrar elementos al canvas
     const onDragOver = useCallback((event) => {
         event.preventDefault();
@@ -73,11 +82,6 @@ const FlowDesigner = ({ onBackToList }) => {
         },
         [screenToFlowPosition, type],
     );
-
-
-    const nodeTypes = {
-        textNode: TextNode,
-    };
 
     const handleSaveFlow = (flowData) => {
         console.log('Flow guardado:', flowData);
