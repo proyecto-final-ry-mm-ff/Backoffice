@@ -15,7 +15,6 @@ export const getFlows = createAsyncThunk(
             }
 
             const data = await response.json();
-            console.log(`Flows en el service -> ${data.length}`)
             return data; // Esto será action.payload en el fulfilled
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
