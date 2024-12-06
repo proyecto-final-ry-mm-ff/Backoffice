@@ -1,5 +1,5 @@
 import React from 'react';
-import { Handle, Position } from 'react-flow-renderer';
+import { Handle, Position } from '@xyflow/react';
 
 const ButtonNode = ({ data }) => {
     return (

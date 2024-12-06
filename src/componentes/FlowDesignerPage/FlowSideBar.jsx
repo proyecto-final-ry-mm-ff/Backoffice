@@ -50,6 +50,15 @@ const FlowSideBar = () => {
                     Acción
                 </div>
 
+                <div
+                    style={{ padding: '10px' }}
+                    className="dndnode input"
+                    onDragStart={(event) => onDragStart(event, 'generic')}
+                    draggable
+                >
+                    Genérico
+                </div>
+
 
             </div>
         </aside >

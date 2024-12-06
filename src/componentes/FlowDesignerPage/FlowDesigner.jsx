@@ -43,7 +43,7 @@ const FlowDesigner = ({ onBackToList }) => {
 
     const onConnect = useCallback(
         (params) => setEdges((eds) => addEdge(params, eds)),
-        [],
+        [setEdges],
     );
 
     // Mapeo de nodos
