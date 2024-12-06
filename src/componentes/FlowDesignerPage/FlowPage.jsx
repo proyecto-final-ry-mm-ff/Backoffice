@@ -4,6 +4,8 @@ import { ColorModeContext, useMode, codigos } from '../../theme';
 import FlowsList from './FlowsList'; // Importa la lista de canales
 import Topbar from '../Global/Topbar';
 import Sidebar from '../Global/Sidebar';
+import { ReactFlowProvider } from '@xyflow/react';
+import { DnDProvider } from './DnDContext';
 const FlowPage = () => {
     const [theme, colorMode] = useMode();
     const colors = codigos(theme.palette.mode);
@@ -16,9 +18,13 @@ const FlowPage = () => {
                     <Sidebar />
                     <main className='content'>
                         <Topbar />
-                        <div className='dashboard-content'>
-                            <FlowsList />
-                        </div>
+                        <ReactFlowProvider> {/*importnate*/}
+                            <div className='dashboard-content'>
+                                <DnDProvider>
+                                    <FlowsList />
+                                </DnDProvider>
+                            </div>
+                        </ReactFlowProvider>
                     </main>
                 </div>
             </ThemeProvider>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createFlow, deleteFlow, getFlows } from '../../Services/flowService';
 import FlowDesigner from './FlowDesigner';
-
+import { ReactFlowProvider } from '@xyflow/react';
 import {
     Table,
     TableBody,
@@ -61,6 +61,7 @@ const FlowList = () => {
         <div>
             {isDesigning ? (
                 <FlowDesigner flowId={selectedFlowId} onBackToList={handleBackToList} />
+
             ) : (
                 // Mostrar la lista de flujos
                 <>

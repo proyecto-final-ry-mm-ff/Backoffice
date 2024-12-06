@@ -5,13 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ReactFlowProvider } from 'react-flow-renderer';
-
+import { DnDProvider } from './componentes/FlowDesignerPage/DnDContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-
-    <ReactFlowProvider>
-      <App />
+    <ReactFlowProvider> {/*importante */}
+      <DnDProvider>
+        <App />
+      </DnDProvider>
     </ReactFlowProvider>
   </React.StrictMode>
 );

@@ -142,6 +142,7 @@ const FlowDesigner = ({ onBackToList }) => {
                         <MiniMap />
                         <Background variant="dots" gap={12} size={1} />
                     </ReactFlow>
+
                 </div>
             </Box>
         </Box>
@@ -149,11 +150,5 @@ const FlowDesigner = ({ onBackToList }) => {
     );
 }
 
-export default () => (
-    <ReactFlowProvider>
-        <DnDProvider>
-            <FlowDesigner />
-        </DnDProvider>
-    </ReactFlowProvider>
-);
+export default FlowDesigner;
 
