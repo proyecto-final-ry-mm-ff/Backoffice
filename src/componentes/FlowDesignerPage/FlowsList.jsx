@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createFlow, deleteFlow, getFlows } from '../../Services/flowService';
 import FlowDesigner from './FlowDesigner';
-import { ReactFlowProvider } from '@xyflow/react';
 
 import {
     Table,
@@ -59,74 +58,72 @@ const FlowList = () => {
     if (status === 'failed') return <p>Error: {error}</p>;
 
     return (
-        <ReactFlowProvider>
-            <div>
-                {isDesigning ? (
-                    <FlowDesigner flowId={selectedFlowId} onBackToList={handleBackToList} />
-                ) : (
-                    // Mostrar la lista de flujos
-                    <>
-                        <h3>Lista de Flows</h3>
-                        <Button
-                            variant="outlined"
-                            color="secondary"
-                            onClick={() => dispatch(getFlows())}
-                            style={{ marginRight: '10px' }}
-                        >
-                            Actualizar Tabla
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            color="secondary"
-                            onClick={handleCreateFlow}
-                            style={{ marginRight: '10px' }}
-                        >
-                            Nuevo Diagrama
-                        </Button>
+        <div>
+            {isDesigning ? (
+                <FlowDesigner flowId={selectedFlowId} onBackToList={handleBackToList} />
+            ) : (
+                // Mostrar la lista de flujos
+                <>
+                    <h3>Lista de Flows</h3>
+                    <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => dispatch(getFlows())}
+                        style={{ marginRight: '10px' }}
+                    >
+                        Actualizar Tabla
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={handleCreateFlow}
+                        style={{ marginRight: '10px' }}
+                    >
+                        Nuevo Diagrama
+                    </Button>
 
-                        {flowsList.length > 0 ? (
-                            <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>Id</TableCell>
-                                            <TableCell>Nombre</TableCell>
-                                            <TableCell>Canal</TableCell>
-                                            <TableCell>Autor</TableCell>
-                                            <TableCell>Activo</TableCell>
-                                            <TableCell>Acciones</TableCell>
+                    {flowsList.length > 0 ? (
+                        <TableContainer component={Paper}>
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Id</TableCell>
+                                        <TableCell>Nombre</TableCell>
+                                        <TableCell>Canal</TableCell>
+                                        <TableCell>Autor</TableCell>
+                                        <TableCell>Activo</TableCell>
+                                        <TableCell>Acciones</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {flowsList.map((flow) => (
+                                        <TableRow key={flow.id}>
+                                            <TableCell>{flow.id}</TableCell>
+                                            <TableCell>{flow.nombre}</TableCell>
+                                            <TableCell>{flow.canal}</TableCell>
+                                            <TableCell>{flow.autor}</TableCell>
+                                            <TableCell>{flow.activo ? 'Sí' : 'No'}</TableCell>
+                                            <TableCell>
+                                                <Button
+                                                    variant="outlined"
+                                                    color="secondary"
+                                                    onClick={() => handleDelete(flow.id)}
+                                                    style={{ marginRight: '10px' }}
+                                                >
+                                                    Eliminar
+                                                </Button>
+                                            </TableCell>
                                         </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {flowsList.map((flow) => (
-                                            <TableRow key={flow.id}>
-                                                <TableCell>{flow.id}</TableCell>
-                                                <TableCell>{flow.nombre}</TableCell>
-                                                <TableCell>{flow.canal}</TableCell>
-                                                <TableCell>{flow.autor}</TableCell>
-                                                <TableCell>{flow.activo ? 'Sí' : 'No'}</TableCell>
-                                                <TableCell>
-                                                    <Button
-                                                        variant="outlined"
-                                                        color="secondary"
-                                                        onClick={() => handleDelete(flow.id)}
-                                                        style={{ marginRight: '10px' }}
-                                                    >
-                                                        Eliminar
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        ) : (
-                            <p>No hay Flows disponibles</p>
-                        )}
-                    </>
-                )}
-            </div>
-        </ReactFlowProvider>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    ) : (
+                        <p>No hay Flows disponibles</p>
+                    )}
+                </>
+            )}
+        </div>
     );
 };
 

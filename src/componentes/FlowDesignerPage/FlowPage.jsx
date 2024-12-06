@@ -7,7 +7,6 @@ import Sidebar from '../Global/Sidebar';
 const FlowPage = () => {
     const [theme, colorMode] = useMode();
     const colors = codigos(theme.palette.mode);
-    const [selectedFlowId, setSelectedFlowId] = useState(); // Estado para el flujo seleccionado
 
     return (
         <ColorModeContext.Provider value={colorMode}>

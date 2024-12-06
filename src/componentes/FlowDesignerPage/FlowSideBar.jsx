@@ -1,7 +1,9 @@
 import React from 'react';
 import { useDnD } from './DnDContext';
+import { NodeTypes } from './Nodes/NodeTypes';
+import { ReactFlowProvider } from '@xyflow/react';
 
-export default () => {
+const FlowSideBar = () => {
     const [_, setType] = useDnD();
 
     const onDragStart = (event, nodeType) => {
@@ -12,19 +14,16 @@ export default () => {
     return (
         <aside>
             <div className="description">NODOS</div>
-            <div className="dndnode input"
-                onDragStart={(event) => onDragStart(event, 'input')}
-                draggable>
-                Input Node
-            </div>
-            <div className="dndnode"
-                onDragStart={(event) => onDragStart(event, 'default')}
-                draggable>
-                Default Node
-            </div>
-            <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'output')} draggable>
-                Output Node
+            {/* "Texto" node */}
+            <div
+                className="dndnode input"
+                onDragStart={(event) => onDragStart(event, 'textNode')}
+                draggable
+            >
+                Texto
             </div>
         </aside>
     );
 };
+
+export default FlowSideBar;

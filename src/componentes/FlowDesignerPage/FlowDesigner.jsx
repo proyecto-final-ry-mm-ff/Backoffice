@@ -21,7 +21,7 @@ import TextNode from './Nodes/TextNode';
 import ButtonNode from './Nodes/ButtonNode';
 
 const initialNodes = [
-    { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
+    { id: '1', type: 'textNode', position: { x: 450, y: 300 }, data: { label: '1' } },
     //{ id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
 ];
 const initialEdges = [
@@ -41,7 +41,7 @@ const FlowDesigner = ({ onBackToList }) => {
 
     const onConnect = useCallback(
         (params) => setEdges((eds) => addEdge(params, eds)),
-        [],
+        [setEdges],
     );
 
     // Arrastrar elementos al canvas
@@ -54,24 +54,21 @@ const FlowDesigner = ({ onBackToList }) => {
         (event) => {
             event.preventDefault();
 
-            // check if the dropped element is valid
             if (!type) {
                 return;
             }
 
-            // project was renamed to screenToFlowPosition
-            // and you don't need to subtract the reactFlowBounds.left/top anymore
-            // details: https://reactflow.dev/whats-new/2023-11-10
             const position = screenToFlowPosition({
                 x: event.clientX,
                 y: event.clientY,
             });
+
             const newNode = {
                 id: getId(),
                 type,
                 position,
-                data: { label: `${type} node` },
             };
+            console.log(newNode);
             setNodes((nds) => nds.concat(newNode));
         },
         [screenToFlowPosition, type],
@@ -80,7 +77,6 @@ const FlowDesigner = ({ onBackToList }) => {
 
     const nodeTypes = {
         textNode: TextNode,
-        buttonNode: ButtonNode,
     };
 
     const handleSaveFlow = (flowData) => {
@@ -132,10 +128,11 @@ const FlowDesigner = ({ onBackToList }) => {
                         edges={edges}
                         onNodesChange={onNodesChange}
                         onEdgesChange={onEdgesChange}
+
                         onConnect={onConnect}
                         onDragOver={onDragOver}
-                        nodeTypes={nodeTypes}
                         onDrop={onDrop}
+                        nodeTypes={nodeTypes}
                     >
                         <Controls />
                         <MiniMap />
