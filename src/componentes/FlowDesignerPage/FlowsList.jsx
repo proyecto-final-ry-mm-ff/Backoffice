@@ -45,7 +45,6 @@ const FlowList = () => {
         } catch (error) {
             console.log('Error al crear el Flow:', error);
         }
-
     };
 
     const handleBackToList = () => {

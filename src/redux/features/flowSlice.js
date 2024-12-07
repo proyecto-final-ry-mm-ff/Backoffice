@@ -30,7 +30,6 @@ const flowSlice = createSlice({
             })
             .addCase(createFlow.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                console.log(action.payload);
                 state.flowsList.push(action.payload);
             })
             .addCase(createFlow.rejected, (state, action) => {

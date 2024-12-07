@@ -21,6 +21,7 @@ import TextNode from './Nodes/TextNode';
 import ButtonNode from './Nodes/ButtonNode';
 import StartNode from './Nodes/StartNode';
 import ActionNode from './Nodes/ActionNode';
+import AwaitNode from './Nodes/AwaitNode';
 
 const initialNodes = [
     { id: '1', type: 'startNode', position: { x: 150, y: 150 }, data: { label: '1' } },
@@ -51,7 +52,8 @@ const FlowDesigner = ({ onBackToList }) => {
         textNode: TextNode,
         buttonNode: ButtonNode,
         startNode: StartNode,
-        actionNode: ActionNode
+        actionNode: ActionNode,
+        awaitNode: AwaitNode
     };
     // Arrastrar elementos al canvas
     const onDragOver = useCallback((event) => {
@@ -77,7 +79,6 @@ const FlowDesigner = ({ onBackToList }) => {
                 type,
                 position,
             };
-            console.log(newNode);
             setNodes((nds) => nds.concat(newNode));
         },
         [screenToFlowPosition, type],
