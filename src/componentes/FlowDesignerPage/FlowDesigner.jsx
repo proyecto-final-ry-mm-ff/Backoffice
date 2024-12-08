@@ -1,9 +1,11 @@
 import React, { useRef, useCallback } from 'react';
-import { Button, TextField, Box } from '@mui/material';
+import { Button, TextField, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { ReactFlowProvider } from '@xyflow/react';
 import { DnDProvider, useDnD } from './DnDContext';
 import FlowSideBar from './FlowSideBar';
-import { useEffect } from 'react';
+import { useState } from 'react';
+import { createFlow } from '../../Services/flowService';
+import { Dispatch } from '@reduxjs/toolkit';
 import {
     ReactFlow,
     MiniMap,
@@ -22,25 +24,33 @@ import ButtonNode from './Nodes/ButtonNode';
 import StartNode from './Nodes/StartNode';
 import ActionNode from './Nodes/ActionNode';
 import AwaitNode from './Nodes/AwaitNode';
+import { useDispatch } from 'react-redux';
 
-const initialNodes = [
-    { id: '1', type: 'startNode', position: { x: 150, y: 150 }, data: { label: '1' } },
-    //{ id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-];
+const initialNodes = [{
+    id: '0',
+    type: 'startNode',
+    position: { x: 150, y: 150 },
+    //data: { label: '1' }
+},];
 const initialEdges = [
     //{ id: 'e1-2', source: '1', target: '2' }
 ];
 
-let id = 0;
-const getId = () => `dndnode_${id++}`;
+let id = 1;
+const getId = () => `${id++}`;
 
 const FlowDesigner = ({ onBackToList }) => {
     const reactFlowWrapper = useRef(null);
+    const dispatch = useDispatch();
 
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes); //Creamos y actualizamos lista de nodos
+    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges); //Creamos y actualizamos lista de conexiones
+
     const { screenToFlowPosition } = useReactFlow();
-    const [type] = useDnD();
+    const [type] = useDnD(); //Trae el tipo del nodo almacenado en Drag n' Drop Context
+
+    const [channel, setChannel] = useState(''); // Estado para el select
+    const [diagramName, setDiagramName] = useState(''); // Estado para el nombre del diagrama
 
     const onConnect = useCallback(
         (params) => setEdges((eds) => addEdge(params, eds)),
@@ -80,36 +90,73 @@ const FlowDesigner = ({ onBackToList }) => {
                 position,
             };
             setNodes((nds) => nds.concat(newNode));
+
         },
         [screenToFlowPosition, type],
     );
 
-    const handleSaveFlow = (flowData) => {
-        console.log('Flow guardado:', flowData);
-        // TODO implementar guardado de flow
+    const handleSaveFlow = async () => {
+        const formattedNodes = nodes.map((node) => ({
+            id: node.id,
+            type: node.type,
+            position: node.position,
+            data: { text: node.data?.label || '' },
+        }));
+
+        const formattedEdges = edges.map((edge) => ({
+            source: edge.source,
+            target: edge.target,
+        }));
+
+        const flowData = {
+            nodes: formattedNodes,
+            edges: formattedEdges,
+        };
+
+        const newFlow = {
+            Nombre: diagramName,
+            Canal: channel,
+            Autor: '',
+            Activo: false,
+            Data: JSON.stringify(flowData, null, 2),
+        };
+
+        console.log(newFlow)
+        try {
+            dispatch(createFlow(newFlow));
+            onBackToList();
+        } catch (error) {
+            console.log('Error al crear el Flow:', error);
+        }
     };
 
     return (<>
         <Box sx={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
-            {/* Sidebar */}
+
             <FlowSideBar />
-            {/* Flow Designer */}
             <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                 {/* TopBar */}
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '10px',
-                    }}
-                >
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', }}>
                     <TextField
                         label="Nombre del Diagrama"
                         variant="outlined"
                         size="small"
+                        value={diagramName}
+                        onChange={(e) => setDiagramName(e.target.value)}
                         sx={{ flex: 1, marginRight: '10px' }}
                     />
+
+                    <FormControl size="small" sx={{ marginRight: '10px' }}>
+                        <InputLabel>Seleccione el canal</InputLabel>
+                        <Select
+                            value={channel}
+                            onChange={(e) => setChannel(e.target.value)}
+                        >
+                            <MenuItem value="Embebido">Embebido</MenuItem>
+                            <MenuItem value="Instagram">Instagram</MenuItem>
+                            <MenuItem value="Facebook">Facebook</MenuItem>
+                        </Select>
+                    </FormControl>
                     <Button
                         variant="contained"
                         color="primary"

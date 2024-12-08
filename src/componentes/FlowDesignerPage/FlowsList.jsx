@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createFlow, deleteFlow, getFlows } from '../../Services/flowService';
 import FlowDesigner from './FlowDesigner';
-import { ReactFlowProvider } from '@xyflow/react';
+
 import {
     Table,
     TableBody,
@@ -32,19 +32,8 @@ const FlowList = () => {
     };
 
     const handleCreateFlow = () => {
-        const newFlow = {
-            nombre: '',
-            canal: '',
-            autor: '',
-            activo: false,
-        };
-        try {
-            const createdFlow = dispatch(createFlow(newFlow));
-            setSelectedFlowId(createdFlow.id);
-            setIsDesigning(true); // Cambia a la vista al diseñador
-        } catch (error) {
-            console.log('Error al crear el Flow:', error);
-        }
+
+        setIsDesigning(true); // Cambia a la vista al diseñador
     };
 
     const handleBackToList = () => {
