@@ -6,14 +6,16 @@ import '../../estilos/chat.css';
 export default function ChatList({ onChatSelect, isAssignedChatsList=false }) {
     const chatStore = useSelector((state) => state.chatStore);
     const chats = chatStore.chatList;
+    const assignedChats = chatStore.assignedChats;
 
-    const userStore = useSelector((state) => state.userStore);
-    const assignedChats = userStore.assignedChats;
+    const chatsToRender = isAssignedChatsList ? assignedChats : chats.filter(c=>c.assigned === false);
 
-    const chatsToRender = isAssignedChatsList ? assignedChats : chats;
+//    if(isAssignedChatsList){
+//         console.log('CHattis',{assignedChats})
+//     }
 
     const handleChatClick = (chat) => {
-        onChatSelect(chat.id); // Llama a la función con el chat seleccionado
+        onChatSelect(chat); // Llama a la función con el chat seleccionado
     };
 
     return (

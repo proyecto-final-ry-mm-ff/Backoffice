@@ -11,6 +11,7 @@ import { useContext } from "react";
 
 import { logout } from '../../redux/features/userSlice'
 import { store } from "../../redux/store";
+import { disconnectFromHub } from "../../Services/signalRService";
 
 const Topbar = () => {
 
@@ -20,7 +21,8 @@ const Topbar = () => {
 
     const navigate = useNavigate();
 
-    const logOut = () => {
+    const logOut = async  () => {
+        await disconnectFromHub();
         store.dispatch(logout());
         navigate('/login'); // Navegar a /login
     };

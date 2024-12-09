@@ -6,8 +6,7 @@ import { saveChat } from '../../Services/services';
 import { sendMessageToChat, assignOperatorToChat } from '../../Services/signalRService.js';
 import { useSelector } from 'react-redux';
 import { store } from '../../redux/store';
-import { assignChat } from '../../redux/features/userSlice';
-import { setChats } from '../../redux/features/chatSlice.js';
+import { assignChat } from '../../redux/features/chatSlice.js';
 
 const Chat = ({ chatId }) => {
     const theme = useTheme();
@@ -15,9 +14,15 @@ const Chat = ({ chatId }) => {
 
     const chatStore = useSelector((state) => state.chatStore);
     const chats = chatStore.chatList;
-    const thisChat = chats?.find(c => c.id === chatId) || null;
+    let thisChat = chats?.find(c => c.id === chatId) || null;
+    let chatIsAssigned = false;
+    
+    if(!thisChat){
+        thisChat = chatStore.assignedChats?.find(c => c.id === chatId) || null;
+        chatIsAssigned = true;
+    }
 
-
+    const userStore = useSelector((state) => state.userStore);
 
 
     const [messages, setMessages] = useState([]); // Estado para los mensajes
@@ -76,24 +81,22 @@ const Chat = ({ chatId }) => {
     const handleEndChat = async () => {
         try {
             // Pegarle al endChat de signalRF
-            await saveChat(thisChat);
+            const token = userStore.token;
+            await saveChat(token, thisChat);
         } catch (err) {
             console.error("Error al enviar mensaje:", err);
         }
     }
 
     const handleAssignChat = async () => {
+        store.dispatch(assignChat({userId: userStore.id, chat: thisChat}));
         await assignOperatorToChat(thisChat.id);
-        store.dispatch(assignChat(thisChat));
-        const remainingChats = chats.filter(chat=>chat.id != thisChat.id);
-        console.log('RemainignCHats', remainingChats);
-        store.dispatch(setChats(remainingChats))
     }
 
     return (
         <Card variant="outlined">
             <CardContent>
-                <h2>Chat {chatId}</h2>
+                <h2>Chat  con {thisChat?.customer?.name} #ChatID: {chatId}</h2>
 
                 {/*Seccion para ver los mensajes*/}
 
@@ -122,9 +125,9 @@ const Chat = ({ chatId }) => {
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Escribe un mensaje..."
                     />
-                    <Button variant="contained" onClick={handleAssignChat} sx={{ marginLeft: 1 }}>
-                        Asignar chat
-                    </Button>
+                    {!chatIsAssigned && <Button variant="contained" onClick={handleAssignChat} sx={{ marginLeft: 1 }}>                        Asignar chat
+                    </Button>}
+                 
                     <Button variant="contained" onClick={handleEndChat} sx={{ marginLeft: 1 }}>
                         Finalizar chat
                     </Button>

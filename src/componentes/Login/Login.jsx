@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { loginApi } from '../../Services/services'; //Realiza la llamada a la API de login.
@@ -21,17 +22,15 @@ export default function Login() {
   // 2) setUserData = Una función que te permite actualizar ese valor.
   // 3) useState es el valor inicial del estado
   const [userData, setUserData] = useState({});
-  const [logueado, setLogueado] = useState(false);
+  // const [logueado, setLogueado] = useState(false);
   const [error, setErrorLogin] = useState('');
   const navigate = useNavigate();
 
-
+  const userStore = useSelector((state) => state.userStore);
 
   // Leer el estado de sesión desde localStorage cuando el componente se monta
   useEffect(() => {
-    const logueado = localStorage.getItem('logueado');
-    if (logueado) {
-      setLogueado(true);
+    if (userStore?.logged) {
       navigate('/dashboard');  // Navegar al dashboard si ya está logueado
     }
   }, [navigate]);
@@ -57,7 +56,6 @@ export default function Login() {
     if (!resultado) {
       setErrorLogin('TODO CAMBIAR');
     } else {
-      setLogueado(true);
       navigate('/dashboard'); // Navegar al dashboard después del login.
     }
   };

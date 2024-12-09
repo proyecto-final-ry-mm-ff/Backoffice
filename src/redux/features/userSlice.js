@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { GetRandomString } from '../../Services/helperService';
+
 
 const userSlice = createSlice({
     name: 'users',
@@ -9,41 +11,39 @@ const userSlice = createSlice({
         logged: false,
         assignedChats: [],
         // user: null,
-        // id: null,
+         id: null,
         // status: 'idle',
         // error: null,
     },
     reducers: {
         login: (state, action) => {
-            state.token = action.payload.accessToken;
-            state.refreshToken = action.payload.refreshToken;
-            state.logged = true;
+            // state.token = action.payload.accessToken;
+            // state.refreshToken = action.payload.refreshToken;
+            // state.logged = true;
+            // state.id = GetRandomString(12);
+            return {...state, 
+                token: action.payload.accessToken,
+                 refreshToken:action.payload.refreshToken,
+                 logged: true,
+                 id:  GetRandomString(12)
+            }
         },
         logout: (state) => {
-            state.token = null;
-            state.refreshToken = null;
-            state.logged = false;
+            //  // state.token = null;
+            //     state.refreshToken = null;
+            //     state.logged = false;
+            console.log('Se me deslogueó')
+            return {...state, 
+                token: null,
+                 refreshToken:null,
+                 logged: false,
+                 id:  null
+            }
             // state.user = null;
             // state.id = null;
         },
-        assignChat: (state, action) => {
-            state.assignedChats.push(action.payload); // Agrega un nuevo chat
-        },
-        // setChats: (state, action) => {
-        //     state.chatList = action.payload; // Reemplaza la lista de chats
-        // },
-        // addMessageToChat: (state, action) => {
-        //     // const { connectionId } = action.payload; // Desestructura el ID del chat y el mensaje
-        //     // const chat = state.chatList.find((c) => c.id === connectionId); // Busca el chat por ID
-        //     const { chatId } = action.payload; // Desestructura el ID del chat y el mensaje
-        //     const chat = state.chatList.find((c) => c.id === chatId); // Busca el chat por ID
-        //     if (chat) {
-        //         chat.messages = chat.messages || []; // Asegúrate de que tenga un array de mensajes
-        //         chat.messages.push(action.payload); // Agrega el mensaje al chat correspondiente
-        //     }
-        // },
     }
 });
 
-export const { login, logout, assignChat } = userSlice.actions;
+export const { login, logout } = userSlice.actions;
 export default userSlice.reducer;
