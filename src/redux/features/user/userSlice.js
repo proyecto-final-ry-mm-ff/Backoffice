@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { loginApi, RegistroApi, fetchDepartamentos, fetchCiudades, fetchCategorias, fetchEventos, addEventoApi } from '../../Services/services';
+import { loginApi, RegistroApi, fetchDepartamentos, fetchCiudades, fetchCategorias, fetchEventos, addEventoApi } from '../../../Services/services';
 import { act } from 'react';
 
 

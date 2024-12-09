@@ -1,77 +1,68 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-const urlApi = "http://localhost:5015/Flow";
+const urlFlow = 'http://localhost:5015/Flow';
 
-export const getFlows = createAsyncThunk(
-    'flow/getFlows', // Nombre del thunk
-    async (_, thunkAPI) => {
-        try {
-            const response = await fetch(`${urlApi}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-            });
-            if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`);
-            }
-
-            const data = await response.json();
-            return data; // Esto será action.payload en el fulfilled
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error.message);
-        }
+// Obtener todos los flujos
+export const getFlows = createAsyncThunk('flows/getFlows', async (_, thunkAPI) => {
+    try {
+        const response = await fetch(urlFlow);
+        if (!response.ok) throw new Error('Error al obtener los flujos');
+        return await response.json();
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.message);
     }
-);
+});
 
-
-export const createFlow = createAsyncThunk(
-    'flow/createFlow',
-    async (newFlow, { rejectWithValue }) => {
-        try {
-            const response = await fetch(urlApi, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newFlow),
-            });
-
-            // Si la respuesta no es exitosa, lanza un error
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Error al crear el Flow');
-            }
-
-            // Retorna la respuesta convertida a JSON (no necesitas un 'await' extra aquí)
-            return await response.json(); // Devuelve los datos del flujo recién creado
-        } catch (error) {
-            // Si ocurre un error, retorna el mensaje del error
-            return rejectWithValue(error.message);
-        }
+// Crear un nuevo flujo
+export const createFlow = createAsyncThunk('flows/createFlow', async (newFlow, thunkAPI) => {
+    try {
+        const response = await fetch(urlFlow, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newFlow),
+        });
+        if (!response.ok) throw new Error('Error al crear el flujo');
+        return await response.json();
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.message);
     }
-);
+});
 
+// Actualizar un flujo existente
+export const updateFlow = createAsyncThunk('flows/updateFlow', async (updatedFlow, thunkAPI) => {
+    try {
+        console.log(updatedFlow);
+        const response = await fetch(urlFlow, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedFlow),
+        });
 
-export const deleteFlow = createAsyncThunk(
-    'flow/deleteFlow',
-    async (id, thunkAPI) => {
-        try {
-            const response = await fetch(`${urlApi}/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Error al eliminar el Flow');
-            }
-
-            return id;
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error.message);
+        if (!response.ok) {
+            throw new Error(`Error al actualizar el flujo: ${response.statusText}`);
         }
+
+        const updatedFlowFromBackend = await response.json(); // Espera el flujo actualizado
+        return updatedFlowFromBackend;
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.message);
     }
-);
+});
 
 
 
+
+// Eliminar un flujo
+export const deleteFlow = createAsyncThunk('flows/deleteFlow', async (id, thunkAPI) => {
+    try {
+        const response = await fetch(`${urlFlow}/${id}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) throw new Error('Error al eliminar el flujo');
+        return id;
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.message);
+    }
+});

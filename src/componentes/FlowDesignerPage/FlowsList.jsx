@@ -1,82 +1,80 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createFlow, deleteFlow, getFlows } from '../../Services/flowService';
+import { getFlows, deleteFlow, createFlow, } from '../../Services/flowService';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import FlowDesigner from './FlowDesigner';
+import { setSelectedFlow } from '../../redux/features/flows/flowSlice';
 
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Button,
-} from '@mui/material';
-
-const FlowList = () => {
+const FlowsList = ({ onCreateFlow, onEditFlow }) => {
     const dispatch = useDispatch();
     const { flowsList, status, error } = useSelector((state) => state.flowStore);
 
-    // Estado para manejar si es visible la lista o el canvas
-    const [isDesigning, setIsDesigning] = useState(false); // Estado para alternar entre lista y diseño
-    const [selectedFlowId, setSelectedFlowId] = useState(null); // Almacena la ID del nuevo flow
+    const [isDesigning, setIsDesigning] = useState(false);
 
-
+    // Cargar los flows al montar el componente
     useEffect(() => {
         dispatch(getFlows());
     }, [dispatch]);
 
+    const handleEditFlow = (flow) => {
+        dispatch(setSelectedFlow(flow)); // Configura el flujo seleccionado en Redux
+
+        setIsDesigning(true); // Cambia a la vista del diseñador
+    };
+
+    const handleCreateFlow = async () => {
+        try {
+            const newFlow = {
+                nombre: '',
+                canal: '',
+                autor: 'admin',
+                activo: false,
+                data: '{}',
+            };
+
+            const createdFlow = await dispatch(createFlow(newFlow)).unwrap();
+            dispatch(setSelectedFlow(createdFlow));
+            setIsDesigning(true);
+
+        } catch (err) {
+            console.error('Error al crear el flujo:', err);
+        }
+    };
+
+
+    // Manejar la eliminación de un flujo
     const handleDelete = (id) => {
         dispatch(deleteFlow(id));
     };
 
-    const handleCreateFlow = () => {
-
-        setIsDesigning(true); // Cambia a la vista al diseñador
-    };
-
-    const handleBackToList = () => {
-        dispatch(getFlows()); //TODO no se asigna bien el id, queda en 0, al menos hasta q se vuelva a actualizar
-        setSelectedFlowId(null); //Lipiar ID
-        setIsDesigning(false);
-    };
-
+    // Mostrar estados de carga, error o datos
     if (status === 'loading') return <p>Cargando Flows...</p>;
     if (status === 'failed') return <p>Error: {error}</p>;
 
     return (
         <div>
             {isDesigning ? (
-                <FlowDesigner flowId={selectedFlowId} onBackToList={handleBackToList} />
-
+                <FlowDesigner
+                    onBackToList={() => {
+                        setIsDesigning(false); // Volver a la lista
+                    }}
+                />
             ) : (
-                // Mostrar la lista de flujos
-                <>
-                    <h3>Lista de Flows</h3>
+                <div >
                     <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={() => dispatch(getFlows())}
-                        style={{ marginRight: '10px' }}
-                    >
-                        Actualizar Tabla
-                    </Button>
-                    <Button
-                        variant="outlined"
+                        variant="contained"
                         color="secondary"
                         onClick={handleCreateFlow}
-                        style={{ marginRight: '10px' }}
+                        style={{ marginBottom: '20px' }}
                     >
-                        Nuevo Diagrama
+                        Crear Nuevo Diagrama
                     </Button>
-
                     {flowsList.length > 0 ? (
                         <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Id</TableCell>
+                                        <TableCell>ID</TableCell>
                                         <TableCell>Nombre</TableCell>
                                         <TableCell>Canal</TableCell>
                                         <TableCell>Autor</TableCell>
@@ -88,16 +86,27 @@ const FlowList = () => {
                                     {flowsList.map((flow) => (
                                         <TableRow key={flow.id}>
                                             <TableCell>{flow.id}</TableCell>
-                                            <TableCell>{flow.nombre}</TableCell>
-                                            <TableCell>{flow.canal}</TableCell>
-                                            <TableCell>{flow.autor}</TableCell>
+                                            <TableCell>{flow.nombre || 'Sin nombre'}</TableCell>
+                                            <TableCell>{flow.canal || 'No especificado'}</TableCell>
+                                            <TableCell>{flow.autor || 'No especificado'}</TableCell>
                                             <TableCell>{flow.activo ? 'Sí' : 'No'}</TableCell>
                                             <TableCell>
                                                 <Button
                                                     variant="outlined"
                                                     color="secondary"
-                                                    onClick={() => handleDelete(flow.id)}
+                                                    onClick={() => {
+                                                        handleEditFlow(flow); // Establece el ID del flujo seleccionado
+
+                                                    }}
                                                     style={{ marginRight: '10px' }}
+                                                >
+                                                    Editar
+                                                </Button>
+
+                                                <Button
+                                                    variant="outlined"
+                                                    color="secondary"
+                                                    onClick={() => handleDelete(flow.id)}
                                                 >
                                                     Eliminar
                                                 </Button>
@@ -108,12 +117,13 @@ const FlowList = () => {
                             </Table>
                         </TableContainer>
                     ) : (
-                        <p>No hay Flows disponibles</p>
+                        <p>No hay flows disponibles.</p>
                     )}
-                </>
+                </div>
             )}
         </div>
     );
+
 };
 
-export default FlowList;
+export default FlowsList;

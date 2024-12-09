@@ -1,30 +1,16 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, TextField, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { ReactFlowProvider } from '@xyflow/react';
-import { DnDProvider, useDnD } from './DnDContext';
+import { useDnD } from './DnDContext';
 import FlowSideBar from './FlowSideBar';
-import { useState } from 'react';
-import { createFlow } from '../../Services/flowService';
-import { Dispatch } from '@reduxjs/toolkit';
-import {
-    ReactFlow,
-    MiniMap,
-    Controls,
-    Background,
-    useNodesState,
-    useEdgesState,
-    addEdge,
-    useReactFlow,
-} from '@xyflow/react';
-
+import { ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState, addEdge, useReactFlow, } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { useEffect } from 'react';
+//Nodos
+import TextNode from './Nodes/TextNode'; import ButtonNode from './Nodes/ButtonNode'; import StartNode from './Nodes/StartNode'; import ActionNode from './Nodes/ActionNode'; import AwaitNode from './Nodes/AwaitNode';
 
-import TextNode from './Nodes/TextNode';
-import ButtonNode from './Nodes/ButtonNode';
-import StartNode from './Nodes/StartNode';
-import ActionNode from './Nodes/ActionNode';
-import AwaitNode from './Nodes/AwaitNode';
-import { useDispatch } from 'react-redux';
+//flowService
+import { updateFlow } from '../../Services/flowService';
 
 const initialNodes = [{
     id: '0',
@@ -40,17 +26,32 @@ let id = 1;
 const getId = () => `${id++}`;
 
 const FlowDesigner = ({ onBackToList }) => {
+
     const reactFlowWrapper = useRef(null);
     const dispatch = useDispatch();
-
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes); //Creamos y actualizamos lista de nodos
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges); //Creamos y actualizamos lista de conexiones
-
     const { screenToFlowPosition } = useReactFlow();
     const [type] = useDnD(); //Trae el tipo del nodo almacenado en Drag n' Drop Context
 
-    const [channel, setChannel] = useState(''); // Estado para el select
-    const [diagramName, setDiagramName] = useState(''); // Estado para el nombre del diagrama
+
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [diagramName, setDiagramName] = useState('');
+    const [channel, setChannel] = useState('');
+
+    const selectedFlow = useSelector((state) => state.flowStore.selectedFlow);
+
+    useEffect(() => {
+        if (selectedFlow) {
+            setDiagramName(selectedFlow.nombre || '');
+            setChannel(selectedFlow.canal || '');
+            if (selectedFlow.data) {
+                const parsedData = JSON.parse(selectedFlow.data);
+                setNodes(parsedData.nodes || []);
+                setEdges(parsedData.edges || []);
+            }
+        }
+    }, [selectedFlow]);
+
 
     const onConnect = useCallback(
         (params) => setEdges((eds) => addEdge(params, eds)),
@@ -95,38 +96,36 @@ const FlowDesigner = ({ onBackToList }) => {
         [screenToFlowPosition, type],
     );
 
+
     const handleSaveFlow = async () => {
         const formattedNodes = nodes.map((node) => ({
             id: node.id,
             type: node.type,
             position: node.position,
-            data: { text: node.data?.label || '' },
+            data: node.data,
         }));
 
         const formattedEdges = edges.map((edge) => ({
+            id: edge.id,
             source: edge.source,
             target: edge.target,
         }));
 
         const flowData = {
-            nodes: formattedNodes,
-            edges: formattedEdges,
+            id: selectedFlow?.id, // Incluye el ID del flujo
+            nombre: diagramName, // Nombre actualizado
+            canal: channel, // Canal actualizado
+            autor: selectedFlow?.autor || 'Admin',
+            activo: selectedFlow?.activo || false,
+            data: JSON.stringify({ nodes: formattedNodes, edges: formattedEdges }),
         };
 
-        const newFlow = {
-            Nombre: diagramName,
-            Canal: channel,
-            Autor: '',
-            Activo: false,
-            Data: JSON.stringify(flowData, null, 2),
-        };
-
-        console.log(newFlow)
         try {
-            dispatch(createFlow(newFlow));
+            await dispatch(updateFlow(flowData)).unwrap();
             onBackToList();
-        } catch (error) {
-            console.log('Error al crear el Flow:', error);
+        } catch (err) {
+            console.error('Error al guardar el flujo:', err);
+            alert('Error al guardar el flujo. Revisa los datos y vuelve a intentarlo.');
         }
     };
 
@@ -136,6 +135,7 @@ const FlowDesigner = ({ onBackToList }) => {
             <FlowSideBar />
             <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                 {/* TopBar */}
+
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', }}>
                     <TextField
                         label="Nombre del Diagrama"
@@ -160,17 +160,17 @@ const FlowDesigner = ({ onBackToList }) => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={onBackToList}
-                        sx={{ marginRight: '10px' }}
+                        onClick={handleSaveFlow}
                     >
-                        Volver a la Lista
+                        Guardar
                     </Button>
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleSaveFlow}
+                        onClick={onBackToList}
+                        sx={{ marginRight: '10px' }}
                     >
-                        Guardar
+                        Volver a la Lista
                     </Button>
                 </Box>
 
