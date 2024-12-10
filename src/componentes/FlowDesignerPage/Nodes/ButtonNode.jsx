@@ -12,10 +12,14 @@ const ButtonNode = ({ data }) => {
                 <label style={{ textAlign: 'center' }}>Botón</label>
                 <input
                     type="text"
-
-                    //value={data.label}
-                    //onChange={(e) => data.onChange(e.target.value)} // Actualiza el "Nombre"
-                    style={{ borderColor: 'transparent', width: '100%', marginTop: '5px', background: '#999999' }}
+                    value={data.label || ''}
+                    onChange={(e) => data.onChange && data.onChange(e.target.value)} // Verifica que onChange exista
+                    style={{
+                        borderColor: 'transparent',
+                        width: '100%',
+                        marginTop: '5px',
+                        background: '#999999',
+                    }}
                     placeholder="Escribe un nombre"
                 />
 
@@ -26,5 +30,6 @@ const ButtonNode = ({ data }) => {
         </div>
     );
 };
+
 
 export default ButtonNode;

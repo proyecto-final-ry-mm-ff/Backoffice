@@ -1,15 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { Select, MenuItem, Box, Typography } from '@mui/material';
 
 const ActionNode = ({ data }) => {
-    const [selectedAction, setSelectedAction] = useState('');
-
-    const handleActionChange = (event) => {
-        setSelectedAction(event.target.value);
-        console.log('Acción seleccionada:', event.target.value); // Puedes usar esto para enviar datos al flujo
-    };
-
     return (
         <div
             style={{
@@ -25,20 +17,18 @@ const ActionNode = ({ data }) => {
             <Handle type="target" position={Position.Left} id="target" />
 
             {/* Contenido del nodo */}
-            <Box>
-                <Typography variant="subtitle1" gutterBottom>
-                    Acción
-                </Typography>
+            <div>
+                <label style={{ marginBottom: '10px', display: 'block' }}>Acción:</label>
                 <select
-                    value={selectedAction}
-                    onChange={handleActionChange}
-                    displayEmpty
+                    value={data.label || ''}
+                    onChange={(e) => data.onChange && data.onChange(e.target.value)}
                     style={{
+                        width: '100%',
+                        padding: '5px',
+                        borderRadius: '5px',
+                        border: '1px solid #ccc',
                         background: '#fff',
                         color: '#000',
-                        marginTop: '10px',
-                        borderRadius: '5px',
-                        width: '100%',
                     }}
                 >
                     <option value="" disabled>
@@ -48,8 +38,10 @@ const ActionNode = ({ data }) => {
                     <option value="Generar Ticket">Generar Ticket</option>
                     <option value="Registrar Mail">Registrar Mail</option>
                 </select>
-            </Box>
+            </div>
 
+            {/* Puerto de salida */}
+            <Handle type="source" position={Position.Right} id="source" />
         </div>
     );
 };

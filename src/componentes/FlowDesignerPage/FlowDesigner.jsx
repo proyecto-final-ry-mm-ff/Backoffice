@@ -7,23 +7,18 @@ import { ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState,
 import '@xyflow/react/dist/style.css';
 import { useEffect } from 'react';
 //Nodos
-import TextNode from './Nodes/TextNode'; import ButtonNode from './Nodes/ButtonNode'; import StartNode from './Nodes/StartNode'; import ActionNode from './Nodes/ActionNode'; import AwaitNode from './Nodes/AwaitNode';
+import NodeTypes from './Nodes/NodeTypes';
+import { initializeNodeData } from './Nodes/NodeTypes';
 
 //flowService
 import { updateFlow } from '../../Services/flowService';
 
-const initialNodes = [{
+/*const initialNodes = [{
     id: '0',
     type: 'startNode',
     position: { x: 150, y: 150 },
     //data: { label: '1' }
-},];
-const initialEdges = [
-    //{ id: 'e1-2', source: '1', target: '2' }
-];
-
-let id = 1;
-const getId = () => `${id++}`;
+},];*/
 
 const FlowDesigner = ({ onBackToList }) => {
 
@@ -38,6 +33,8 @@ const FlowDesigner = ({ onBackToList }) => {
     const [diagramName, setDiagramName] = useState('');
     const [channel, setChannel] = useState('');
 
+    const getId = () => `node-${Date.now()}`;
+
     const selectedFlow = useSelector((state) => state.flowStore.selectedFlow);
 
     useEffect(() => {
@@ -46,27 +43,38 @@ const FlowDesigner = ({ onBackToList }) => {
             setChannel(selectedFlow.canal || '');
             if (selectedFlow.data) {
                 const parsedData = JSON.parse(selectedFlow.data);
-                setNodes(parsedData.nodes || []);
+
+                const nodesWithLogic = (parsedData.nodes || []).map((node) => ({
+                    ...node,
+                    data: {
+                        ...node.data,
+                        onChange: (value) => onLabelChange(node.id, value), // Reasignar lógica de eventos
+                    },
+                }));
+
+                setNodes(nodesWithLogic);
                 setEdges(parsedData.edges || []);
             }
         }
     }, [selectedFlow]);
 
 
+    const onLabelChange = (id, value) => {
+        setNodes((nds) =>
+            nds.map((node) =>
+                node.id === id
+                    ? { ...node, data: { ...node.data, label: value } }
+                    : node
+            )
+        );
+    };
+
+    // Arrastrar elementos al canvas
     const onConnect = useCallback(
         (params) => setEdges((eds) => addEdge(params, eds)),
-        [setEdges],
+        [setEdges]
     );
 
-    // Mapeo de nodos
-    const nodeTypes = {
-        textNode: TextNode,
-        buttonNode: ButtonNode,
-        startNode: StartNode,
-        actionNode: ActionNode,
-        awaitNode: AwaitNode
-    };
-    // Arrastrar elementos al canvas
     const onDragOver = useCallback((event) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
@@ -75,10 +83,7 @@ const FlowDesigner = ({ onBackToList }) => {
     const onDrop = useCallback(
         (event) => {
             event.preventDefault();
-
-            if (!type) {
-                return;
-            }
+            if (!type) return;
 
             const position = screenToFlowPosition({
                 x: event.clientX,
@@ -89,12 +94,16 @@ const FlowDesigner = ({ onBackToList }) => {
                 id: getId(),
                 type,
                 position,
+                data: {
+                    ...initializeNodeData(type),
+                    onChange: (value) => onLabelChange(newNode.id, value), // Función para manejar cambios
+                },
             };
             setNodes((nds) => nds.concat(newNode));
-
         },
-        [screenToFlowPosition, type],
+        [screenToFlowPosition, type, setNodes]
     );
+
 
 
     const handleSaveFlow = async () => {
@@ -184,7 +193,7 @@ const FlowDesigner = ({ onBackToList }) => {
                         onConnect={onConnect}
                         onDragOver={onDragOver}
                         onDrop={onDrop}
-                        nodeTypes={nodeTypes}
+                        nodeTypes={NodeTypes}
                     >
                         <Controls />
                         <MiniMap />

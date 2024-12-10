@@ -9,11 +9,11 @@ const TextNode = ({ data }) => {
 
             {/* Contenido del nodo */}
             <div>
-                <label>Texto:</label>
+                <label style={{ textAlign: 'center' }}>Texto</label>
                 <input
                     type="text"
-                    //value={data.label}
-                    //onChange={(e) => data.onChange(e.target.value)} // Dispara un evento para actualizar el texto
+                    value={data.label || ''}
+                    onChange={(e) => data.onChange && data.onChange(e.target.value)} // Verifica que onChange exista
                     style={{ borderColor: 'transparent', width: '100%', marginTop: '5px', background: '#999999' }}
                     placeholder="Escribe un texto"
                 />
