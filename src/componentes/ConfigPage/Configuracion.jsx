@@ -7,8 +7,6 @@ import Grid from '@mui/material/Grid';
 import { ColorModeContext, useMode, codigos } from '../../theme';
 import { CssBaseline, Box, ThemeProvider } from '@mui/material';
 
-//TopBar
-import Topbar from '../Global/Topbar';
 import Sidebar from '../Global/Sidebar';
 
 export default function Configuracion() {
@@ -24,9 +22,7 @@ export default function Configuracion() {
                 <CssBaseline />
                 <div className='app'>
 
-                    <Sidebar />
                     <main className='content' >
-                        <Topbar />
                         <div className='dashboard-content'>
                             <Grid container spacing={2}>
                                 <Grid item xs={5} md={3}>

@@ -1,4 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, TextField, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useDnD } from './DnDContext';
@@ -9,7 +10,6 @@ import { useEffect } from 'react';
 //Nodos
 import NodeTypes from './Nodes/NodeTypes';
 import { initializeNodeData } from './Nodes/NodeTypes';
-
 //flowService
 import { updateFlow } from '../../Services/flowService';
 
@@ -23,19 +23,21 @@ import { updateFlow } from '../../Services/flowService';
 const FlowDesigner = ({ onBackToList }) => {
 
     const reactFlowWrapper = useRef(null);
+    const selectedFlow = useSelector((state) => state.flowStore.selectedFlow);
     const dispatch = useDispatch();
     const { screenToFlowPosition } = useReactFlow();
     const [type] = useDnD(); //Trae el tipo del nodo almacenado en Drag n' Drop Context
 
-
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+    const memoizedNodes = useMemo(() => nodes, [nodes]);
+    const memoizedEdges = useMemo(() => edges, [edges]);
+
     const [diagramName, setDiagramName] = useState('');
     const [channel, setChannel] = useState('');
 
     const getId = () => `node-${Date.now()}`;
-
-    const selectedFlow = useSelector((state) => state.flowStore.selectedFlow);
 
     useEffect(() => {
         if (selectedFlow) {
@@ -59,17 +61,17 @@ const FlowDesigner = ({ onBackToList }) => {
     }, [selectedFlow]);
 
 
-    const onLabelChange = (id, value) => {
-        setNodes((nds) =>
-            nds.map((node) =>
-                node.id === id
-                    ? { ...node, data: { ...node.data, label: value } }
-                    : node
-            )
-        );
-    };
+    const onLabelChange = useCallback(
+        (id, value) => {
+            setNodes((nds) =>
+                nds.map((node) =>
+                    node.id === id ? { ...node, data: { ...node.data, label: value } } : node
+                )
+            );
+        },
+        [setNodes]
+    );
 
-    // Arrastrar elementos al canvas
     const onConnect = useCallback(
         (params) => setEdges((eds) => addEdge(params, eds)),
         [setEdges]
@@ -101,7 +103,7 @@ const FlowDesigner = ({ onBackToList }) => {
             };
             setNodes((nds) => nds.concat(newNode));
         },
-        [screenToFlowPosition, type, setNodes]
+        [screenToFlowPosition, type, setNodes, onLabelChange]
     );
 
 
@@ -185,8 +187,8 @@ const FlowDesigner = ({ onBackToList }) => {
 
                 <div style={{ width: '100%', height: '80vh' }} ref={reactFlowWrapper}>
                     <ReactFlow
-                        nodes={nodes}
-                        edges={edges}
+                        nodes={memoizedNodes}
+                        edges={memoizedEdges}
                         onNodesChange={onNodesChange}
                         onEdgesChange={onEdgesChange}
 

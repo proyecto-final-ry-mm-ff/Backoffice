@@ -1,49 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import Grid from '@mui/material/Grid';
+import React, { useState } from 'react';
 import Chat from './Chat';
 import ChatList from './ChatList';
-import { ColorModeContext, useMode, codigos } from '../../theme';
-import { CssBaseline, Box, ThemeProvider } from '@mui/material';
-import Topbar from '../Global/Topbar';
-import Sidebar from '../Global/Sidebar';
+import { Box } from '@mui/material';
 
-
-export default function ChatPage() {
-
-    const [theme, colorMode] = useMode();
+const ChatPage = () => {
     const [selectedChat, setSelectedChat] = useState(); // Estado para el chat seleccionado
-    const colors = codigos(theme.palette.mode);
 
     return (
-        <ColorModeContext.Provider value={colorMode}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <div className='app'>
-                    <Sidebar />
-                    <main className='content'>
-                        <Topbar />
-                        <div>
-                            <Grid container spacing={2}>
-                                <Grid item xs={3} md={2.5}>
-                                    <Box>
-                                        <ChatList onChatSelect={setSelectedChat} />
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={6} md={7}>
-                                    <Box>
-                                        <Chat chatId={selectedChat?.id} />
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={3} md={2.5}>
-                                    <Box>
-                                        <ChatList onChatSelect={setSelectedChat} />
-                                    </Box>
-                                </Grid>
-                            </Grid>
-                        </div>
-                    </main>
-                </div>
-            </ThemeProvider>
-        </ColorModeContext.Provider>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                overflow: 'hidden',
+                height: '100%',
+            }}
+        >
+            {/* Lista de chats izquierda */}
+            <Box
+                sx={{
+                    flex: '0 0 20%', // Fija la lista al 20% del ancho
+                    backgroundColor: '#ffffff',
+                    borderRight: '1px solid #ddd',
+                    padding: '10px',
+                    //boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                    overflowY: 'auto', // Scroll vertical si es necesario
+                }}
+            >
+                <ChatList onChatSelect={setSelectedChat} />
+            </Box>
+
+            {/* Chat principal */}
+            <Box
+                sx={{
+                    flex: '1 0 60%', // Fija el chat principal al 60% del ancho
+                    backgroundColor: '#ffffff',
+                    // padding: '20px',
+                    overflowY: 'auto', // Scroll vertical si es necesario
+                }}
+            >
+                <Chat chatId={selectedChat?.id} />
+            </Box>
+
+            {/* Lista de chats derecha */}
+            <Box
+                sx={{
+                    flex: '0 0 20%', // Fija la lista al 20% del ancho
+                    backgroundColor: '#ffffff',
+                    borderLeft: '1px solid #ddd',
+                    padding: '10px',
+                    overflowY: 'auto', // Scroll vertical si es necesario
+                }}
+            >
+                <ChatList onChatSelect={setSelectedChat} />
+            </Box>
+        </Box>
     );
 }
+
+export default ChatPage;
