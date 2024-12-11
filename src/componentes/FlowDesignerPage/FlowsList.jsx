@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFlows, deleteFlow, createFlow, } from '../../Services/flowService';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { getFlows, deleteFlow, createFlow } from '../../Services/flowService';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box } from '@mui/material';
 import FlowDesigner from './FlowDesigner';
 import { setSelectedFlow } from '../../redux/features/flows/flowSlice';
+import { useTheme } from '@mui/material/styles';
 
-const FlowsList = ({ onCreateFlow, onEditFlow }) => {
+const FlowsList = () => {
     const dispatch = useDispatch();
     const { flowsList, status, error } = useSelector((state) => state.flowStore);
+    const theme = useTheme();
+    const colors = theme.palette;
 
     const [isDesigning, setIsDesigning] = useState(false);
 
-    // Cargar los flows al montar el componente
     useEffect(() => {
         dispatch(getFlows());
     }, [dispatch]);
 
     const handleEditFlow = (flow) => {
-        dispatch(setSelectedFlow(flow)); // Configura el flujo seleccionado en Redux
-
-        setIsDesigning(true); // Cambia a la vista del diseñador
+        dispatch(setSelectedFlow(flow));
+        setIsDesigning(true);
     };
 
     const handleCreateFlow = async () => {
@@ -31,49 +32,74 @@ const FlowsList = ({ onCreateFlow, onEditFlow }) => {
                 activo: false,
                 data: '{}',
             };
-
             const createdFlow = await dispatch(createFlow(newFlow)).unwrap();
             dispatch(setSelectedFlow(createdFlow));
             setIsDesigning(true);
-
         } catch (err) {
             console.error('Error al crear el flujo:', err);
         }
     };
 
-
-    // Manejar la eliminación de un flujo
     const handleDelete = (id) => {
         dispatch(deleteFlow(id));
     };
 
-    // Mostrar estados de carga, error o datos
-    if (status === 'loading') return <p>Cargando Flows...</p>;
-    if (status === 'failed') return <p>Error: {error}</p>;
+    if (status === 'loading') {
+        return (
+            <Box textAlign="center" mt={4}>
+                <Typography variant="h6" color={colors.neutral}>
+                    Cargando Flows...
+                </Typography>
+            </Box>
+        );
+    }
+
+    if (status === 'failed') {
+        return (
+            <Box textAlign="center" mt={4}>
+                <Typography variant="h6" color={colors.neutral[500]}>
+                    Error: {error}
+                </Typography>
+            </Box>
+        );
+    }
 
     return (
-        <div>
+        <Box p={4}>
             {isDesigning ? (
                 <FlowDesigner
                     onBackToList={() => {
-                        setIsDesigning(false); // Volver a la lista
+                        setIsDesigning(false);
                     }}
                 />
             ) : (
-                <div >
+                <Box>
                     <Button
                         variant="contained"
-                        color="secondary"
+                        sx={{
+                            mb: 3,
+                            backgroundColor: colors.neutral[500],
+                            color: colors.neutral[500],
+                            '&:hover': {
+                                backgroundColor: colors.neutral[500],
+                            },
+                        }}
                         onClick={handleCreateFlow}
-                        style={{ marginBottom: '20px' }}
                     >
                         Crear Nuevo Diagrama
                     </Button>
                     {flowsList.length > 0 ? (
-                        <TableContainer component={Paper}>
+                        <TableContainer
+                            component={Paper}
+                            sx={{
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                                borderRadius: 2,
+                                backgroundColor: colors.background.paper,
+                            }}
+                        >
                             <Table>
                                 <TableHead>
-                                    <TableRow>
+                                    <TableRow sx={{ backgroundColor: colors.background.default }}>
                                         <TableCell>ID</TableCell>
                                         <TableCell>Nombre</TableCell>
                                         <TableCell>Canal</TableCell>
@@ -84,28 +110,49 @@ const FlowsList = ({ onCreateFlow, onEditFlow }) => {
                                 </TableHead>
                                 <TableBody>
                                     {flowsList.map((flow) => (
-                                        <TableRow key={flow.id}>
+                                        <TableRow
+                                            key={flow.id}
+                                            sx={{
+                                                '&:hover': {
+                                                    backgroundColor: colors.background.paper,
+                                                },
+                                            }}
+                                        >
                                             <TableCell>{flow.id}</TableCell>
                                             <TableCell>{flow.nombre || 'Sin nombre'}</TableCell>
                                             <TableCell>{flow.canal || 'No especificado'}</TableCell>
                                             <TableCell>{flow.autor || 'No especificado'}</TableCell>
-                                            <TableCell>{flow.activo ? 'Sí' : 'No'}</TableCell>
+                                            <TableCell>
+                                                <Typography
+                                                    color={flow.activo ? colors.neutral[500] : colors.neutral[500]}
+                                                >
+                                                    {flow.activo ? 'Sí' : 'No'}
+                                                </Typography>
+                                            </TableCell>
                                             <TableCell>
                                                 <Button
                                                     variant="outlined"
-                                                    color="secondary"
-                                                    onClick={() => {
-                                                        handleEditFlow(flow); // Establece el ID del flujo seleccionado
-
+                                                    sx={{
+                                                        mr: 1,
+                                                        color: colors.neutral[500],
+                                                        borderColor: colors.neutral[500],
+                                                        '&:hover': {
+                                                            backgroundColor: colors.neutral[100],
+                                                        },
                                                     }}
-                                                    style={{ marginRight: '10px' }}
+                                                    onClick={() => handleEditFlow(flow)}
                                                 >
                                                     Editar
                                                 </Button>
-
                                                 <Button
                                                     variant="outlined"
-                                                    color="secondary"
+                                                    sx={{
+                                                        color: colors.neutral[500],
+                                                        borderColor: colors.neutral[500],
+                                                        '&:hover': {
+                                                            backgroundColor: colors.neutral[100],
+                                                        },
+                                                    }}
                                                     onClick={() => handleDelete(flow.id)}
                                                 >
                                                     Eliminar
@@ -117,13 +164,14 @@ const FlowsList = ({ onCreateFlow, onEditFlow }) => {
                             </Table>
                         </TableContainer>
                     ) : (
-                        <p>No hay flows disponibles.</p>
+                        <Typography variant="h6" color={colors.textSecondary.main} textAlign="center">
+                            No hay flows disponibles.
+                        </Typography>
                     )}
-                </div>
+                </Box>
             )}
-        </div>
+        </Box>
     );
-
 };
 
 export default FlowsList;

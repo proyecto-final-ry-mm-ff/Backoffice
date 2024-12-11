@@ -40,8 +40,6 @@ const ActionNode = ({ data }) => {
                 </select>
             </div>
 
-            {/* Puerto de salida */}
-            <Handle type="source" position={Position.Right} id="source" />
         </div>
     );
 };

@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 
 
 //Colores
-import { ColorModeContext, useMode, codigos } from '../../theme';
+import { ColorModeContext, useMode, colorsList } from '../../theme';
 import { CssBaseline, Box, ThemeProvider } from '@mui/material';
 
 import Sidebar from '../Global/Sidebar';
@@ -13,7 +13,7 @@ export default function Configuracion() {
 
     const [theme, colorMode] = useMode();
 
-    const colors = codigos(theme.palette.mode);
+    const colors = colorsList(theme.palette.mode);
 
 
     return (

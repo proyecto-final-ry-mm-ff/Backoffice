@@ -10,11 +10,11 @@ import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { Link, useNavigate } from "react-router-dom";
-import { ColorModeContext, codigos } from "../../theme";
+import { ColorModeContext, colorsList } from "../../theme";
 
 const Sidebar = () => {
     const theme = useTheme();
-    const colors = codigos(theme.palette.mode);
+    const colors = colorsList(theme.palette.mode);
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [selected, setSelected] = useState();
     const colorMode = useContext(ColorModeContext);
@@ -28,7 +28,7 @@ const Sidebar = () => {
     const Item = ({ title, to, icon }) => (
         <MenuItem
             active={selected === title}
-            style={{ color: colors.grey[200] }}
+            style={{ color: colors.primary }}
             onClick={() => setSelected(title)}
             icon={icon}
         >
@@ -44,19 +44,20 @@ const Sidebar = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 "& .pro-sidebar-inner": {
-                    background: `${colors.primary[600]} !important`,
+                    background: `${colors.background[300]} !important`,
                 },
                 "& .pro-icon-wrapper": {
                     backgroundColor: "transparent !important",
                 },
                 "& .pro-inner-item": {
-                    padding: "5px 30px 5px 20px !important",
+                    padding: "10px 30px 10px 25px !important",
+                    color: `${colors.textPrimary[500]}`
                 },
                 "& .pro-inner-item:hover": {
-                    color: colors.blueAccent[100] + " !important",
+                    color: colors.accentBlue[100] + " !important",
                 },
                 "& .pro-menu-item.active": {
-                    color: colors.blueAccent[500] + " !important",
+                    color: colors.accentBlue[500] + " !important",
                 },
             }}
         >
@@ -68,12 +69,12 @@ const Sidebar = () => {
                         icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
                         style={{
                             margin: "10px 0 20px 0",
-                            color: colors.grey[200],
+                            color: colors.neutral,
                         }}
                     >
                         {!isCollapsed && (
                             <Box display="flex" justifyContent="space-between" alignItems="center" ml="15px">
-                                <Typography variant="h3" color={colors.grey[200]}>
+                                <Typography variant="h3" color={colors.neutral}>
                                     MENÚ
                                 </Typography>
                                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
@@ -91,17 +92,20 @@ const Sidebar = () => {
                     </Box>
 
                     {/* Íconos de cambiar tema y logout */}
-                    <Box sx={{ flex: 0, display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{
+                        marginTop: 'auto', // Empuja los íconos hacia abajo
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}
+                    >
                         <MenuItem
                             onClick={colorMode.toggleColorMode}
-                            style={{
-                                color: colors.grey[200],
-                            }}
+
                             icon={
                                 theme.palette.mode === 'light' ? (
-                                    <DarkModeOutlinedIcon fontSize="large" />
+                                    <DarkModeOutlinedIcon fontSize="medium" />
                                 ) : (
-                                    <LightModeOutlinedIcon fontSize="large" />
+                                    <LightModeOutlinedIcon fontSize="medium" />
                                 )
                             }
                         >
@@ -111,10 +115,7 @@ const Sidebar = () => {
                         </MenuItem>
                         <MenuItem
                             onClick={logOut}
-                            style={{
-                                color: colors.grey[200],
-                            }}
-                            icon={<LogoutOutlinedIcon fontSize="large" />}
+                            icon={<LogoutOutlinedIcon fontSize="medium" />}
                         >
                             <Typography>
                                 {isCollapsed ? "" : "Cerrar Sesión"}
@@ -123,7 +124,7 @@ const Sidebar = () => {
                     </Box>
                 </Menu>
             </ProSidebar>
-        </Box>
+        </Box >
     );
 };
 

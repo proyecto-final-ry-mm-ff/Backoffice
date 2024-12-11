@@ -13,17 +13,14 @@ const ChatPage = () => {
                 flexDirection: 'row',
                 overflow: 'hidden',
                 height: '100%',
+                width: '100%'
             }}
         >
             {/* Lista de chats izquierda */}
             <Box
                 sx={{
-                    flex: '0 0 20%', // Fija la lista al 20% del ancho
-                    backgroundColor: '#ffffff',
-                    borderRight: '1px solid #ddd',
-                    padding: '10px',
-                    //boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                    overflowY: 'auto', // Scroll vertical si es necesario
+                    flex: '0 0 30%', // Fija la lista al 20% del ancho
+                    overflowY: 'hidden',
                 }}
             >
                 <ChatList onChatSelect={setSelectedChat} />
@@ -32,27 +29,13 @@ const ChatPage = () => {
             {/* Chat principal */}
             <Box
                 sx={{
-                    flex: '1 0 60%', // Fija el chat principal al 60% del ancho
-                    backgroundColor: '#ffffff',
-                    // padding: '20px',
-                    overflowY: 'auto', // Scroll vertical si es necesario
+                    flex: '1', // Ocupa el espacio restante
+                    overflowY: 'hidden',
                 }}
             >
                 <Chat chatId={selectedChat?.id} />
             </Box>
 
-            {/* Lista de chats derecha */}
-            <Box
-                sx={{
-                    flex: '0 0 20%', // Fija la lista al 20% del ancho
-                    backgroundColor: '#ffffff',
-                    borderLeft: '1px solid #ddd',
-                    padding: '10px',
-                    overflowY: 'auto', // Scroll vertical si es necesario
-                }}
-            >
-                <ChatList onChatSelect={setSelectedChat} />
-            </Box>
         </Box>
     );
 }

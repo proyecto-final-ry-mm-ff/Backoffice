@@ -2,20 +2,49 @@ import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material";
 
 // Paleta de colores equilibrada basada en las guías de diseño de Apple
-export const codigos = (mode) => ({
+export const colorsList = (mode) => ({
     ...(mode === 'dark' ? {
-        grey: generateColorPalette("#828282"),
-        primary: generateColorPalette("#202124"),
-        greenAccent: generateColorPalette("#64D99A"),
-        redAccent: generateColorPalette("#FF6666"),
-        blueAccent: generateColorPalette("#6699FF"),
+        // Fondo principal (Background)
+        background: generateColorPalette("#1C1C1E"), // Fondo principal oscuro similar a Apple.
 
+        // Colores de texto
+        textPrimary: generateColorPalette("#FFFFFF"), // Texto principal (alto contraste).
+        textSecondary: generateColorPalette("#8E8E93"), // Texto secundario (para no destacar tanto).
+        textPlaceholder: generateColorPalette("#6C6C70"), // Texto de marcador de posición o inactivo.
+
+        // Colores de botones
+        buttonPrimary: generateColorPalette("#0A84FF"), // Botones importantes (azul Apple-style).
+        buttonPrimaryHover: generateColorPalette("#0066CC"), // Botones al pasar el ratón (más oscuro).
+        buttonSecondary: generateColorPalette("#30D158"), // Botones secundarios (verde brillante).
+
+        // Colores de acento
+        accentGreen: generateColorPalette("#30D158"), // Confirmación o éxito.
+        accentRed: generateColorPalette("#FF3B30"), // Advertencias o errores.
+        accentBlue: generateColorPalette("#0A84FF"), // Información o acciones neutrales.
+
+        // Bordes
+        border: generateColorPalette("#48484A"), // Bordes sutiles para delimitar.
     } : {
-        grey: generateColorPalette("#F2F2F2"),
-        primary: generateColorPalette("#FFFFFF"),
-        greenAccent: generateColorPalette("#34C759"),
-        redAccent: generateColorPalette("#FF3B30"),
-        blueAccent: generateColorPalette("#007AFF"),
+        // Fondo principal (Background)
+        background: generateColorPalette("#FFFFFF"), // Fondo principal claro.
+
+        // Colores de texto
+        textPrimary: generateColorPalette("#000000"), // Texto principal (alto contraste).
+        textSecondary: generateColorPalette("#3C3C43"), // Texto secundario (disminuido).
+        textPlaceholder: generateColorPalette("#8E8E93"), // Texto de marcador de posición o inactivo.
+
+        // Colores de botones
+        buttonPrimary: generateColorPalette("#007AFF"), // Botones importantes (azul Apple-style).
+        buttonPrimaryHover: generateColorPalette("#005BBB"), // Botones al pasar el ratón (más oscuro).
+        buttonSecondary: generateColorPalette("#34C759"), // Botones secundarios (verde brillante).
+
+        // Colores de acento
+        accentGreen: generateColorPalette("#34C759"), // Confirmación o éxito.
+        accentRed: generateColorPalette("#FF3B30"), // Advertencias o errores.
+        accentBlue: generateColorPalette("#0A84FF"), // Información o acciones neutrales.
+
+        // Bordes
+        border: generateColorPalette("#D1D1D6"), // Bordes ligeros y discretos.
     })
 });
 
@@ -34,7 +63,7 @@ const generateColorPalette = (baseColor, reverse = false) => {
     return reverse ? Object.fromEntries(Object.entries(palette).reverse()) : palette;
 };
 
-function lightenDarkenColor(col, amt) {
+const lightenDarkenColor = (col, amt) => {
     let usePound = false;
     if (col[0] === "#") {
         col = col.slice(1);
@@ -50,23 +79,23 @@ function lightenDarkenColor(col, amt) {
     b = Math.max(Math.min(255, b), 0);
 
     return (usePound ? "#" : "") + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
-}
+};
 
 export const themeSettings = (mode) => {
-    const colors = codigos(mode);
+    const colors = colorsList(mode);
     return {
         palette: {
             mode,
-            primary: { main: colors.primary[500] },
-            secondary: { main: colors.greenAccent[500] },
+            primary: { main: colors.textPrimary[500] },
+            secondary: { main: colors.accentGreen[500] },
             neutral: {
-                dark: colors.grey[700],
-                main: colors.grey[500],
-                light: colors.grey[300],
+                dark: colors.textSecondary[700],
+                main: colors.textSecondary[500],
+                light: colors.textSecondary[300],
             },
             background: {
-                default: mode === 'dark' ? colors.primary[600] : colors.primary[100], // Incluye background.default
-                paper: mode === 'dark' ? colors.primary[700] : colors.primary[200], // Opcional
+                default: mode === 'dark' ? colors.background[400] : colors.background[700],
+                paper: mode === 'dark' ? colors.background[700] : colors.background[200],
             },
         },
         typography: {
@@ -79,6 +108,7 @@ export const themeSettings = (mode) => {
         }
     };
 };
+
 
 export const ColorModeContext = createContext({
     toggleColorMode: () => { }

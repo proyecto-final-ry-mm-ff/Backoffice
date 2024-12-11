@@ -1,13 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Box, TextField, Button, Typography, useTheme } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import { ColorModeContext, codigos } from "../../theme";
-import '../../estilos/chat.css';
+import { colorsList } from "../../theme";
 import { sendMessageToChat } from '../../Services/signalRService.js';
 
 const Chat = ({ chatId }) => {
     const theme = useTheme();
-    const colors = codigos(theme.palette.mode);
+    const colors = colorsList(theme.palette.mode);
 
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -49,13 +48,21 @@ const Chat = ({ chatId }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 height: '100%',
-                backgroundColor: colors.primary[500],
+                backgroundColor: colors.background[300],
                 overflow: 'hidden',
-                padding: '16px',
             }}
         >
-            {/* Título del chat */}
-            <Typography variant="h6" sx={{ color: colors.primary[900], marginBottom: '16px' }}>
+            {/* Encabezado */}
+            <Typography
+                variant="h3"
+                sx={{
+                    padding: '16px',
+                    color: colors.textPrimary[500],
+                    fontWeight: 'bold',
+                    textTransform: 'uppercase',
+                }}
+            >
+
                 Chat {chatId}
             </Typography>
 
@@ -64,10 +71,10 @@ const Chat = ({ chatId }) => {
                 className="chat-box"
                 sx={{
                     flex: 1,
+                    maxHeight: '100%',
                     overflowY: 'auto',
-                    padding: '16px',
-                    backgroundColor: colors.primary[600],
-                    marginBottom: '16px',
+                    padding: '15px 50px',
+                    backgroundColor: colors.background[500],
                 }}
             >
                 {messages.map((msg, index) => (
@@ -77,22 +84,26 @@ const Chat = ({ chatId }) => {
                             display: 'flex',
                             justifyContent: msg.isSentByMe ? 'flex-end' : 'flex-start',
                             marginBottom: '8px',
+                            wordWrap: 'break-word', // Habilita el salto de línea automático
+                            whiteSpace: 'pre-wrap', // Permite mantener espacios y saltos de línea
                         }}
                     >
                         <Box
                             sx={{
                                 maxWidth: '70%',
                                 padding: '10px 16px',
-                                borderRadius: '16px',
-                                backgroundColor: msg.isSentByMe ? colors.greenAccent[400] : colors.blueAccent[400],
-                                color: '#fff',
+                                borderRadius: '10px',
+                                backgroundColor: msg.isSentByMe ? colors.accentBlue[500] : colors.accentGreen[500],
+                                color: colors.textPrimary[500],
                                 boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                wordWrap: 'break-word', // Fuerza el salto de línea en palabras largas
+                                whiteSpace: 'pre-wrap', // Respeta los saltos de línea y espacios
                             }}
                         >
                             <Typography variant="body2">{msg.text}</Typography>
                             <Typography
                                 variant="caption"
-                                sx={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '10px', display: 'block', textAlign: 'right' }}
+                                sx={{ color: colors.textSecondary[500], fontSize: '10px', display: 'block', textAlign: 'right' }}
                             >
                                 {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </Typography>
@@ -103,17 +114,17 @@ const Chat = ({ chatId }) => {
             </Box>
 
             {/* Sección para escribir un mensaje */}
-            <Box display="flex" alignItems="center">
+            <Box padding='10px' display="flex" alignItems="center">
                 <TextField
-                    variant="outlined"
                     fullWidth
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Escribe un mensaje..."
                     sx={{
-                        backgroundColor: colors.primary[600],
+
+                        backgroundColor: colors.background[100],
                         borderRadius: '8px',
-                        input: { color: colors.grey[200] },
+                        input: { color: colors.textPrimary[500] },
                     }}
                 />
                 <Button
@@ -124,8 +135,8 @@ const Chat = ({ chatId }) => {
                         borderRadius: '5px',
                         minWidth: '48px',
                         height: '48px',
-                        backgroundColor: colors.greenAccent[300],
-                        '&:hover': { backgroundColor: colors.greenAccent[500] },
+                        backgroundColor: colors.accentBlue[400],
+                        '&:hover': { backgroundColor: colors.accentBlue[500] },
                     }}
                 >
                     <SendIcon />

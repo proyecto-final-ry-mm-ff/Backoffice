@@ -1,54 +1,71 @@
 import React from 'react';
-import { Box, Card, CardContent, Typography, Grid, Button } from '@mui/material';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import { Box, Typography, useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
-// Estilo CSS para el contenedor de chats
-const chatListStyles = {
-    maxHeight: '85vh', // Ajusta la altura máxima según tu diseño
-    overflowY: 'auto', // Habilita el scrollbar vertical
-};
+import { colorsList } from '../../theme';
 
 export default function ChatList({ onChatSelect }) { // Recibe la función como prop
-    // Simulamos una lista de chats vacía
-    const chatPreviews = Array.from({ length: 20 }); // Genera un array con 20 elementos vacíos
 
+    const theme = useTheme();
+    const colors = colorsList(theme.palette.mode);
 
     const chatStore = useSelector((state) => state.chatStore);
     const chats = chatStore.chatList;
-    // Obtiene la lista de chats desde Redux
 
     const handleChatClick = (chatId) => {
-        onChatSelect(chatId); // Llama a la función con el chat seleccionado
+        onChatSelect(chatId);
     };
 
     return (
-        <Box >
-            <Box display="flex" alignItems="center" justifyContent="space-between" >
-                <h3>Chats</h3>
-                <Button variant="contained" color="primary">
-                    < FilterListIcon />
-                </Button>
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            padding: '20px',
+            backgroundColor: colors.background[600],
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+
+            borderRight: `1px solid ${colors.border[400]}`,
+        }}
+        >
+            <Box
+                sx={{
+                    marginBottom: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    borderBottom: `1px solid ${colors.border[600]}`,
+                    paddingBottom: '8px',
+                }}
+            >
+                <Typography
+                    variant="h3"
+                    sx={{
+                        color: colors.textPrimary[200],
+                        fontWeight: 'bold',
+                        textTransform: 'uppercase',
+                    }}
+                >
+                    Chats
+                </Typography>
             </Box>
 
-            <Box sx={chatListStyles}>
+            <Box sx={{ overflowY: 'auto' }}>
                 {chats?.length > 0 ? (
                     chats?.map((chat) => (
-                        <Card
+                        <Box
                             variant="outlined"
                             onClick={() => handleChatClick(chat.id)}
                             style={{ cursor: 'pointer' }}
                         >
-                            <CardContent>
-
+                            <Box>
                                 Chat {chat.id}
-
-                            </CardContent>
-                        </Card>
+                            </Box>
+                        </Box>
                     ))
                 ) : (
-                    <Typography>No hay chats disponibles</Typography>
+                    <Typography> No hay chats pendientes </Typography>
                 )}
             </Box>
-        </Box>
+        </Box >
     );
 }

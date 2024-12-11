@@ -20,11 +20,10 @@ const AppContainer = ({ children }) => {
                 sx={{
                     width: '100%',
                     maxWidth: '1600px', // Limita el ancho máximo
-                    height: '100%',
-                    maxHeight: '96%', // Limita la altura máxima
+                    height: '96%',
                     backgroundColor: theme.palette.background.paper, // Fondo del contenido
                     boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)', // Sombra para efecto de profundidad
-                    overflow: 'hidden',
+                    // overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
                 }}

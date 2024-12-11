@@ -10,7 +10,8 @@ import FlowDesigner from './componentes/FlowDesignerPage/FlowPage';
 import Configuracion from './componentes/ConfigPage/Configuracion';
 import AppContainer from './AppContainer';
 import Layout from './Layout';
-
+import './estilos/scrollbar.css'
+import './index.css'
 const App = () => {
   const [theme, colorMode] = useMode();
   return (

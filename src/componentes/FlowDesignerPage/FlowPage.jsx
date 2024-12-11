@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { CssBaseline, Box, Grid, ThemeProvider } from '@mui/material';
-import { ColorModeContext, useMode, codigos } from '../../theme';
+import { ColorModeContext, useMode, colorsList } from '../../theme';
 import FlowsList from './FlowsList';
 import Sidebar from '../Global/Sidebar';
 import { ReactFlowProvider } from '@xyflow/react';
 import { DnDProvider } from './DnDContext';
 const FlowPage = () => {
     const [theme, colorMode] = useMode();
-    const colors = codigos(theme.palette.mode);
+    const colors = colorsList(theme.palette.mode);
 
     return (
         <ColorModeContext.Provider value={colorMode}>
