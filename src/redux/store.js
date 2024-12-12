@@ -1,13 +1,14 @@
 
 import { configureStore } from '@reduxjs/toolkit';
-import { userReducer } from './features/slice';
-import chatReducer from './features/chatSlice';
-import newUserReducer from './features/userSlice';
+import { userReducer } from './features/user/userSlice';
+
+import chatReducer from './features/chat/chatSlice';
+import flowReducer from './features/flows/flowSlice';
 
 export const store = configureStore({
     reducer: {
-        user: userReducer,
         chatStore: chatReducer,
-        userStore: newUserReducer
+        userStore: userReducer,
+        flowStore: flowReducer,
     }
 });

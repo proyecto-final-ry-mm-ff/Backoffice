@@ -1,0 +1,19 @@
+/* Scrollbar general */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.0);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+
+    background: rgba(0, 0, 0, 0.6);
+    /* Más oscuro al pasar el mouse */
+}

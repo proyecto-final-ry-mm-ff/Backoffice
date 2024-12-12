@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Card, CardContent, TextField, Button, useTheme } from '@mui/material';
-import { ColorModeContext, codigos } from "../../theme";
-import '../../estilos/chat.css';
+import { Box, TextField, Button, Typography, useTheme } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import { colorsList } from "../../theme";
 import { saveChat } from '../../Services/services';
 import { sendMessageToChat, assignOperatorToChat } from '../../Services/signalRService.js';
 import { useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ import { assignChat } from '../../redux/features/chatSlice.js';
 
 const Chat = ({ chatId }) => {
     const theme = useTheme();
-    const colors = codigos(theme.palette.mode);
+    const colors = colorsList(theme.palette.mode);
 
     const chatStore = useSelector((state) => state.chatStore);
     const chats = chatStore.chatList;
@@ -25,11 +25,10 @@ const Chat = ({ chatId }) => {
     const userStore = useSelector((state) => state.userStore);
 
 
-    const [messages, setMessages] = useState([]); // Estado para los mensajes
-    const [newMessage, setNewMessage] = useState(''); // Estado para el nuevo mensaje
-    const messagesEndRef = useRef(null); // Ref para el auto scroll
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState('');
+    const messagesEndRef = useRef(null);
 
-    // Efecto para scroll con nuevo mensaje
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -75,6 +74,8 @@ const Chat = ({ chatId }) => {
             } catch (err) {
                 console.error("Error al enviar mensaje:", err);
             }
+
+            setNewMessage(''); // Limpia la caja de entrada
         }
     };
 
@@ -94,49 +95,106 @@ const Chat = ({ chatId }) => {
     }
 
     return (
-        <Card variant="outlined">
-            <CardContent>
-                <h2>Chat  con {thisChat?.customer?.name} #ChatID: {chatId}</h2>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                backgroundColor: colors.background[300],
+                overflow: 'hidden',
+            }}
+        >
+            {/* Encabezado */}
+            <Typography
+                variant="h3"
+                sx={{
+                    padding: '16px',
+                    color: colors.textPrimary[500],
+                    fontWeight: 'bold',
+                    textTransform: 'uppercase',
+                }}
+            >
 
-                {/*Seccion para ver los mensajes*/}
+                Chat {chatId}
+            </Typography>
 
-                <Box className="chat-box">
-                    {thisChat?.messages?.map((msg, index) => (
-                        <div
-                            key={index}
-                            className={msg.senderType === '2' ? "message-sent" : "message-received"}
+            {/* Canvas de mensajes */}
+            <Box
+                className="chat-box"
+                sx={{
+                    flex: 1,
+                    maxHeight: '100%',
+                    overflowY: 'auto',
+                    padding: '15px 50px',
+                    backgroundColor: colors.background[500],
+                }}
+            >
+                {thisChat?.messages?.map((msg, index) => (
+                    <Box
+                        key={index}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: msg.senderTypeId === 2 ? 'flex-end' : 'flex-start',
+                            marginBottom: '8px',
+                            wordWrap: 'break-word', // Habilita el salto de línea automático
+                            whiteSpace: 'pre-wrap', // Permite mantener espacios y saltos de línea
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                maxWidth: '70%',
+                                padding: '10px 16px',
+                                borderRadius: '10px',
+                                backgroundColor: msg.senderTypeId === 2  ? colors.accentBlue[500] : colors.accentGreen[500],
+                                color: colors.textPrimary[500],
+                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                wordWrap: 'break-word', // Fuerza el salto de línea en palabras largas
+                                whiteSpace: 'pre-wrap', // Respeta los saltos de línea y espacios
+                            }}
                         >
-                            <p className="message">{msg.content}</p>
-                            <span className="time">
+                            <Typography variant="body2">{msg.content}</Typography>
+                            <Typography
+                                variant="caption"
+                                sx={{ color: colors.textSecondary[500], fontSize: '10px', display: 'block', textAlign: 'right' }}
+                            >
                                 {new Date(msg.timeStamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                            </span>
-                        </div>
-                    ))}
-                    <div ref={messagesEndRef} /> {/* Div para el final de los mensajes */}
-                </Box>
+                            </Typography>
+                        </Box>
+                    </Box>
+                ))}
+                <div ref={messagesEndRef} />
+            </Box>
 
-                {/*Seccion para escribir un mensaje*/}
+            {/* Sección para escribir un mensaje */}
+            <Box padding='10px' display="flex" alignItems="center">
+                <TextField
+                    fullWidth
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Escribe un mensaje..."
+                    sx={{
 
-                <Box display="flex">
-                    <TextField
-                        variant="outlined"
-                        fullWidth
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder="Escribe un mensaje..."
-                    />
-                    {!chatIsAssigned && <Button variant="contained" onClick={handleAssignChat} sx={{ marginLeft: 1 }}>                        Asignar chat
-                    </Button>}
-                 
-                    <Button variant="contained" onClick={handleEndChat} sx={{ marginLeft: 1 }}>
-                        Finalizar chat
-                    </Button>
-                    <Button variant="contained" onClick={handleSendMessage} sx={{ marginLeft: 1 }}>
-                        Enviar
-                    </Button>
-                </Box>
-            </CardContent>
-        </Card>
+                        backgroundColor: colors.background[100],
+                        borderRadius: '8px',
+                        input: { color: colors.textPrimary[500] },
+                    }}
+                />
+                <Button
+                    variant="contained"
+                    onClick={handleSendMessage}
+                    sx={{
+                        marginLeft: 1,
+                        borderRadius: '5px',
+                        minWidth: '48px',
+                        height: '48px',
+                        backgroundColor: colors.accentBlue[400],
+                        '&:hover': { backgroundColor: colors.accentBlue[500] },
+                    }}
+                >
+                    <SendIcon />
+                </Button>
+            </Box>
+        </Box>
     );
 };
 
