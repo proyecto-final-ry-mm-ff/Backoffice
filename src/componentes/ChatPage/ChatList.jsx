@@ -20,7 +20,7 @@ export default function ChatList({ onChatSelect }) { // Recibe la función como 
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
-            padding: '20px',
+            padding: '16px',
             backgroundColor: colors.background[600],
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
 

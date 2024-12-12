@@ -2,8 +2,8 @@ import React, { useState, useRef, useCallback, useMemo } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, TextField, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { useDnD } from './DnDContext';
-import FlowSideBar from './FlowSideBar';
+import { useDnD } from './Recursos/DnDContext';
+import FlowSideBar from './Recursos/FlowSideBar';
 import { ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState, addEdge, useReactFlow, } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useEffect } from 'react';

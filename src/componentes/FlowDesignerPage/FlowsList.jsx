@@ -5,12 +5,14 @@ import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRo
 import FlowDesigner from './FlowDesigner';
 import { setSelectedFlow } from '../../redux/features/flows/flowSlice';
 import { useTheme } from '@mui/material/styles';
+import { colorsList } from '../../theme';
 
 const FlowsList = () => {
     const dispatch = useDispatch();
     const { flowsList, status, error } = useSelector((state) => state.flowStore);
+
     const theme = useTheme();
-    const colors = theme.palette;
+    const colors = colorsList(theme.palette.mode);
 
     const [isDesigning, setIsDesigning] = useState(false);
 
@@ -53,11 +55,10 @@ const FlowsList = () => {
             </Box>
         );
     }
-
     if (status === 'failed') {
         return (
             <Box textAlign="center" mt={4}>
-                <Typography variant="h6" color={colors.neutral[500]}>
+                <Typography variant="h6" color={colors.neutral}>
                     Error: {error}
                 </Typography>
             </Box>
@@ -65,7 +66,7 @@ const FlowsList = () => {
     }
 
     return (
-        <Box p={4}>
+        <Box sx={{ height: '100%' }}>
             {isDesigning ? (
                 <FlowDesigner
                     onBackToList={() => {
@@ -73,21 +74,39 @@ const FlowsList = () => {
                     }}
                 />
             ) : (
-                <Box>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            mb: 3,
-                            backgroundColor: colors.neutral[500],
-                            color: colors.neutral[500],
-                            '&:hover': {
-                                backgroundColor: colors.neutral[500],
-                            },
-                        }}
-                        onClick={handleCreateFlow}
-                    >
-                        Crear Nuevo Diagrama
-                    </Button>
+                <Box sx={{
+                    padding: '16px',
+                    backgroundColor: colors.background[600],
+                    height: '100%'
+                }}>
+                    {/* Encabezado */}
+                    <Box sx={{ display: 'flex' }}>
+                        <Typography
+                            variant="h3"
+                            sx={{
+                                color: colors[200],
+                                fontWeight: 'bold',
+                                textTransform: 'uppercase',
+                            }}
+                        >
+                            Diagramas
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                marginLeft: 'auto',
+                                mb: 3,
+                                backgroundColor: colors.neutral,
+                                color: colors.neutral,
+                                '&:hover': {
+                                    backgroundColor: colors.neutral,
+                                },
+                            }}
+                            onClick={handleCreateFlow}
+                        >
+                            Crear Nuevo Diagrama
+                        </Button>
+                    </Box>
                     {flowsList.length > 0 ? (
                         <TableContainer
                             component={Paper}
@@ -124,7 +143,7 @@ const FlowsList = () => {
                                             <TableCell>{flow.autor || 'No especificado'}</TableCell>
                                             <TableCell>
                                                 <Typography
-                                                    color={flow.activo ? colors.neutral[500] : colors.neutral[500]}
+                                                    color={flow.activo ? colors.neutral : colors.neutral}
                                                 >
                                                     {flow.activo ? 'Sí' : 'No'}
                                                 </Typography>
@@ -134,10 +153,10 @@ const FlowsList = () => {
                                                     variant="outlined"
                                                     sx={{
                                                         mr: 1,
-                                                        color: colors.neutral[500],
-                                                        borderColor: colors.neutral[500],
+                                                        color: colors.neutral,
+                                                        borderColor: colors.neutral,
                                                         '&:hover': {
-                                                            backgroundColor: colors.neutral[100],
+                                                            backgroundColor: colors.neutral,
                                                         },
                                                     }}
                                                     onClick={() => handleEditFlow(flow)}
@@ -147,10 +166,10 @@ const FlowsList = () => {
                                                 <Button
                                                     variant="outlined"
                                                     sx={{
-                                                        color: colors.neutral[500],
-                                                        borderColor: colors.neutral[500],
+                                                        color: colors.neutral,
+                                                        borderColor: colors.neutral,
                                                         '&:hover': {
-                                                            backgroundColor: colors.neutral[100],
+                                                            backgroundColor: colors.neutral,
                                                         },
                                                     }}
                                                     onClick={() => handleDelete(flow.id)}
@@ -164,7 +183,7 @@ const FlowsList = () => {
                             </Table>
                         </TableContainer>
                     ) : (
-                        <Typography variant="h6" color={colors.textSecondary.main} textAlign="center">
+                        <Typography variant="h6" color={colors.textSecondary} textAlign="center">
                             No hay flows disponibles.
                         </Typography>
                     )}
