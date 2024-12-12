@@ -1,5 +1,5 @@
 import { store } from '../redux/store'
-import { login } from '../redux/features/userSlice'
+import { login } from '../redux/features/user/userSlice'
 import { GetBearerToken } from './helperService';
 import { connectToHub } from './signalRService';
 

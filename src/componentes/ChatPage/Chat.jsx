@@ -6,7 +6,7 @@ import { saveChat } from '../../Services/services';
 import { sendMessageToChat, assignOperatorToChat } from '../../Services/signalRService.js';
 import { useSelector } from 'react-redux';
 import { store } from '../../redux/store';
-import { assignChat } from '../../redux/features/chatSlice.js';
+import { assignChat } from '../../redux/features/chat/chatSlice.js';
 
 const Chat = ({ chatId }) => {
     const theme = useTheme();

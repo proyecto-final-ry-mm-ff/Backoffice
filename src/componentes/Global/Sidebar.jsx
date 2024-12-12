@@ -86,9 +86,9 @@ const Sidebar = () => {
 
                     {/* Opciones del menú */}
                     <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <Item title="Chats" to="/chatPage" icon={<ChatIcon />} />
-                        <Item title="Diseñador de flujos" to="/flowDesigner" icon={<AccountTreeIcon />} />
-                        <Item title="Configuración" to="/configuracion" icon={<SettingsIcon />} />
+                        <Item title="Chats" to="/chat-page" icon={<ChatIcon />} />
+                        <Item title="Diseñador de flujos" to="/flow-designer" icon={<AccountTreeIcon />} />
+                        <Item title="Configuración" to="/config" icon={<SettingsIcon />} />
                     </Box>
 
                     {/* Íconos de cambiar tema y logout */}

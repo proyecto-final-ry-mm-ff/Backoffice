@@ -1,5 +1,5 @@
 import { store } from '../redux/store'
-import { addChat, addMessageToChat, setChats } from '../redux/features/chatSlice';
+import { addChat, addMessageToChat, setChats } from '../redux/features/chat/chatSlice';
 
 import * as signalR from '@microsoft/signalr'
 
