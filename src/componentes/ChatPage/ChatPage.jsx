@@ -35,6 +35,15 @@ const ChatPage = () => {
             >
                 <Chat chatId={selectedChat?.id} />
             </Box>
+            {/* Lista de chats asignado derecha  */}
+            <Box
+                sx={{
+                    flex: '0 0 30%', // Fija la lista al 20% del ancho
+                    overflowY: 'hidden',
+                }}
+            >
+                <ChatList onChatSelect={setSelectedChat} />
+            </Box>
 
         </Box>
     );
