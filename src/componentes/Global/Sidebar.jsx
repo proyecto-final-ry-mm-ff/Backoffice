@@ -15,9 +15,9 @@ import { ColorModeContext, colorsList } from "../../theme";
 const Sidebar = () => {
     const theme = useTheme();
     const colors = colorsList(theme.palette.mode);
+    const colorMode = useContext(ColorModeContext);
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [selected, setSelected] = useState();
-    const colorMode = useContext(ColorModeContext);
     const navigate = useNavigate();
 
     const logOut = () => {
@@ -42,6 +42,7 @@ const Sidebar = () => {
             sx={{
                 height: "100%",
                 display: 'flex',
+
                 flexDirection: 'column',
                 "& .pro-sidebar-inner": {
                     background: `${colors.background[300]} !important`,
@@ -54,26 +55,26 @@ const Sidebar = () => {
                     color: `${colors.textPrimary[500]}`
                 },
                 "& .pro-inner-item:hover": {
-                    color: colors.accentBlue[100] + " !important",
+                    color: colors.accentBlue[300] + " !important",
                 },
                 "& .pro-menu-item.active": {
                     color: colors.accentBlue[500] + " !important",
                 },
             }}
         >
-            <ProSidebar collapsed={isCollapsed}>
-                <Menu iconShape="square">
+            <ProSidebar collapsed={isCollapsed} >
+                <Menu iconShape="square" >
                     {/* Botón para colapsar/expandir el menú */}
                     <MenuItem
                         onClick={() => setIsCollapsed(!isCollapsed)}
                         icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
                         style={{
                             margin: "10px 0 20px 0",
-                            color: colors.neutral,
+                            color: colors.accentBlue[300],
                         }}
                     >
                         {!isCollapsed && (
-                            <Box display="flex" justifyContent="space-between" alignItems="center" ml="15px">
+                            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", ml: "15px" }}>
                                 <Typography variant="h3" color={colors.neutral}>
                                     MENÚ
                                 </Typography>
@@ -92,15 +93,16 @@ const Sidebar = () => {
                     </Box>
 
                     {/* Íconos de cambiar tema y logout */}
-                    <Box sx={{
-                        marginTop: 'auto', // Empuja los íconos hacia abajo
-                        display: 'flex',
-                        flexDirection: 'column',
-                    }}
+                    <Box
+                        sx={{
+
+                            marginTop: 'auto', // Empuja este contenido hacia abajo
+                            display: 'flex',
+                            flexDirection: 'column',
+                        }}
                     >
                         <MenuItem
                             onClick={colorMode.toggleColorMode}
-
                             icon={
                                 theme.palette.mode === 'light' ? (
                                     <DarkModeOutlinedIcon fontSize="medium" />
@@ -116,6 +118,11 @@ const Sidebar = () => {
                         <MenuItem
                             onClick={logOut}
                             icon={<LogoutOutlinedIcon fontSize="medium" />}
+                            sx={{
+                                '&:hover': {
+                                    backgroundColor: `${colors.accentRed[100]} !important`
+                                },
+                            }}
                         >
                             <Typography>
                                 {isCollapsed ? "" : "Cerrar Sesión"}

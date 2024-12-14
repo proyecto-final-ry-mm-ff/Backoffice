@@ -6,9 +6,10 @@ import { useMode, ColorModeContext } from './theme';
 import { store } from './redux/store';
 import Login from './componentes/Login/Login';
 import ChatPage from './componentes/ChatPage/ChatPage';
-import FlowDesigner from './componentes/FlowDesignerPage/FlowPage';
+import FlowPage from './componentes/FlowDesignerPage/FlowPage';
 import Configuracion from './componentes/ConfigPage/Configuracion';
 import AppContainer from './AppContainer';
+import NotFoundPage from './componentes/Global/NotFoundPage';
 import Layout from './Layout';
 import './estilos/scrollbar.css'
 import './index.css'
@@ -25,11 +26,11 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route element={<Layout />}>
                   <Route path="/chat-page" element={<ChatPage />} />
-                  <Route path="/flow-designer" element={<FlowDesigner />} />
+                  <Route path="/flow-designer" element={<FlowPage />} />
                   <Route path="/config" element={<Configuracion />} />
                   <Route path="/" element={<Navigate to="/login" />} />
                   <Route path="/dashboard" element={<Navigate to="/chat-page" />} />
-                  <Route path="*" element={<p>No se encontró la ruta!</p>} />
+                  <Route path="*" element={<NotFoundPage />} />
                 </Route>
               </Routes>
             </BrowserRouter>

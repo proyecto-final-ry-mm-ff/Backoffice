@@ -1,96 +1,87 @@
-import { store } from '../redux/store'
+import { store } from '../redux/store';
 import { addChat, addMessageToChat, setChats } from '../redux/features/chat/chatSlice';
-
-import * as signalR from '@microsoft/signalr'
+import * as signalR from '@microsoft/signalr';
 
 const wssUrl = "http://localhost:5056/chat-hub";
-
 
 // Conexión al hub de SignalR
 const connection = new signalR.HubConnectionBuilder()
     .withUrl(wssUrl)
     .build();
 
+// Eventos del Hub
+const setupSignalREvents = () => {
+    connection.on("PendingChats", (chats) => {
+        console.log("Chats pendientes:", chats);
+        store.dispatch(setChats(chats));
+    });
 
-// Método para conectar al operador y recibir los chats pendientes
-connection.on("PendingChats", (chats) => {
-    console.log("Chats pendientes:", chats);
-    store.dispatch(setChats(chats));
-});
+    connection.on("NewChatRequest", (chat) => {
+        console.log("NewChatRequest", { chat });
+        store.dispatch(addChat(chat));
+    });
 
-connection.on("NewChatRequest", (chat) => {
-    console.log("NewChatRequest", { chat });
-    store.dispatch(addChat(chat));
-});
+    connection.on("ReceiveMessage", (messageDto) => {
+        console.log("ReceiveMessage", { messageDto });
+        store.dispatch(addMessageToChat(messageDto));
+    });
 
-connection.on("ReceiveMessage", (messageDto) => {
-    console.log("ReceiveMessage", { messageDto });
-    store.dispatch(addMessageToChat(messageDto));
-});
+    connection.on("ChatAssigned", (chat, pendingChats) => {
+        console.log(`Se ha asignado el chat ${chat.id} Nuevos chats pendientes: `, pendingChats);
+        store.dispatch(setChats(pendingChats));
+    });
 
-connection.on("ChatAssigned", (chat, pendingChats) => {
-    console.log(`Se ha asignado el chat ${chat.id} Nuevos chats pendientes: `, pendingChats);
-    store.dispatch(setChats(pendingChats));
- });
+    connection.on("OperatorJoined", (chat) => {
+        console.log(`Te asignaste el chat ${chat.id}`);
+    });
 
- connection.on("OperatorJoined", (chat) => {
-    console.log(`Te asignaste el chat ${chat.id}`);
+    connection.on("ClientDisconnected", (pendingChat) => {
+        console.log(`Se te desconectó el cliente ${pendingChat?.id}`);
+    });
 
- });
+    connection.on("ClientDisconnectedFromPending", (pendingChat) => {
+        console.log(`Un cliente pendiente se desconectó: ${pendingChat?.id}`);
+    });
+};
 
- connection.on("ClientDisconnected", (pendingChat) => {
-    console.log(`Se te desconectó el cliente  ${pendingChat?.id}`);
- });
- connection.on("ClientDisconnectedFromPending", (pendingChat) => {
-    console.log(`Pelotudos, se desconectó un cliente que no le dieron bola...  ${pendingChat?.id}`);
- });
-
-
+// Métodos para manejar la conexión
 export const connectToHub = async () => {
     try {
+        setupSignalREvents(); // Configurar eventos
         await connection.start();
-      //  console.log("1 - Conectado como operador al Hub de SignalR");
         await connection.invoke("OperatorConnect");
+        console.log("Conectado al Hub de SignalR como operador");
     } catch (err) {
         console.error("Error al conectar con el Hub de SignalR", err);
-        //  setTimeout(startConnection, 5000); // Reintento en caso de fallo
+        // Reintentar conexión después de un tiempo
+        setTimeout(connectToHub, 5000);
     }
-}
+};
 
-export const disconnectFromHub = async ()=>{
-    
+export const disconnectFromHub = async () => {
     try {
         await connection.invoke("OperatorDisconnect");
-        console.log('Operador desconectado...');
+        console.log('Operador desconectado del Hub');
     } catch (err) {
-        console.error("Error al desconectar operador:", err);
+        console.error("Error al desconectar del Hub:", err);
     }
-}
+};
 
+// Métodos adicionales del Hub
 export const assignOperatorToChat = async (selectedChatId) => {
     try {
         await connection.invoke("AssignOperatorToChat", selectedChatId);
     } catch (err) {
-        console.error("Error asignar operador:", err);
+        console.error("Error al asignar operador:", err);
     }
-}
+};
 
-// Método para enviar un mensaje al hub
 export const sendMessageToChat = async (chatId, senderTypeId, message) => {
     try {
         await connection.invoke("SendMessageToChat", chatId, senderTypeId, message);
-     //   console.log(`Mensaje enviado existosamente // Chat: ${chatId}, Tipo:${senderTypeId}, Mensaje:${message}`);
     } catch (err) {
         console.error("Error al enviar mensaje:", err);
     }
 };
 
-
-// export const endChat = async (chatInstance) => {
-//     try {
-//         await connection.invoke("EndChat", chatInstance);
-//         console.log(`El chat termino`);
-//     } catch (err) {
-//         console.error("Error al enviar mensaje:", err);
-//     }
-// };
+export default connection;

@@ -1,41 +1,45 @@
-
-import React from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Tabs, Tab, useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { colorsList } from '../../theme';
 
-export default function ChatList({ onChatSelect }) { // Recibe la función como prop
-
+export default function ChatList({ onChatSelect }) {
     const theme = useTheme();
     const colors = colorsList(theme.palette.mode);
 
-    const chatStore = useSelector((state) => state.chatStore);
-    const chats = chatStore.chatList;
+    const chatsList = useSelector((state) => state.chatStore.chatsList);
+    console.log(chatsList);
+    const [selectedTab, setSelectedTab] = useState(0); // Controla el tab activo
+
+    // Manejador de cambio de tab
+    const handleTabChange = (event, newValue) => {
+        setSelectedTab(newValue);
+    };
+
+    // ChatsList filtrados según la tab seleccionada
+    //const chatslist = selectedTab === 0 ? chatStore.ChatList : chatStore.myChats; // All = 0  MY = 1
 
     const handleChatClick = (chat) => {
         onChatSelect(chat);
     };
 
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%',
-            padding: '16px',
-            backgroundColor: colors.background[600],
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-
-            borderRight: `1px solid ${colors.border[400]}`,
-        }}
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                padding: '16px',
+                backgroundColor: colors.background[500],
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            }}
         >
+            {/* Encabezado principal */}
             <Box
                 sx={{
-                    marginBottom: '16px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    borderBottom: `1px solid ${colors.border[600]}`,
+                    marginBottom: '8px',
                     paddingBottom: '8px',
+                    borderBottom: `1px solid ${colors.border[400]}`,
                 }}
             >
                 <Typography
@@ -46,27 +50,65 @@ export default function ChatList({ onChatSelect }) { // Recibe la función como 
                         textTransform: 'uppercase',
                     }}
                 >
-                    Chats
+                    ChatsList
                 </Typography>
             </Box>
 
-            <Box sx={{ overflowY: 'auto' }}>
-                {chats?.length > 0 ? (
-                    chats?.map((chat) => (
+            {/* Tabs para alternar entre "All" y "My" */}
+            <Tabs
+                value={selectedTab}
+                onChange={handleTabChange}
+                sx={{
+                    marginBottom: '8px',
+                    '& .MuiTab-root': {
+                        color: colors.textSecondary[500],
+                        fontWeight: 'bold',
+                    },
+                    '& .Mui-selected': {
+                        color: colors.textPrimary[500],
+                    },
+                    '& .MuiTabs-indicator': {
+                        backgroundColor: colors.accentBlue[500],
+                    },
+                }}
+                variant="fullWidth"
+            >
+                <Tab label="All" />
+                <Tab label="My" />
+            </Tabs>
+
+            {/* Lista de chatslist */}
+            <Box
+                sx={{
+                    overflowY: 'auto',
+                    marginTop: '8px',
+                }}
+            >
+                {chatsList?.length > 0 ? (
+                    chatsList.map((chat) => (
                         <Box
-                            variant="outlined"
+                            key={chat.id}
                             onClick={() => handleChatClick(chat)}
-                            style={{ cursor: 'pointer' }}
+                            sx={{
+                                padding: '10px',
+                                marginBottom: '8px',
+                                backgroundColor: colors.background[200],
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                '&:hover': {
+                                    backgroundColor: colors.background[300],
+                                },
+                            }}
                         >
-                            <Box>
-                                Chat {chat.id}
-                            </Box>
+                            <Typography variant="body1">
+                                {chat.id === selectedTab ? `Chat Seleccionado: ${chat.id}` : `Chat ${chat.id}`}
+                            </Typography>
                         </Box>
                     ))
                 ) : (
-                    <Typography> No hay chats pendientes </Typography>
+                    <Typography>No hay chats disponibles</Typography>
                 )}
             </Box>
-        </Box >
+        </Box>
     );
 }

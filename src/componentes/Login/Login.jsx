@@ -1,19 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import { loginApi } from '../../Services/services'; //Realiza la llamada a la API de login.
-import { Link, useNavigate } from 'react-router-dom'; //Son lol componentes y hooks de react para manejar la navegación.
-import '../../estilos/style.css';
-import { FaUser } from "react-icons/fa";
-import { FaLock } from "react-icons/fa";
-import { Typography, Box, useTheme } from "@mui/material";
-import { codigos } from "../../theme";
-// import Dashboard from './Dashboard';
+import { useNavigate } from 'react-router-dom'; //Son lol componentes y hooks de react para manejar la navegación.
+import { FaUser, FaLock } from "react-icons/fa";
+import { Typography, Box, useTheme, TextField, Button } from "@mui/material";
+import { colorsList } from '../../theme';
 
 export default function Login() {
-
 
   //HOCKS useSate (maneja los estados)
 
@@ -27,6 +21,10 @@ export default function Login() {
   const navigate = useNavigate();
 
   const userStore = useSelector((state) => state.userStore);
+
+  const theme = useTheme();
+  const colors = colorsList(theme.palette.mode);
+
 
   // Leer el estado de sesión desde localStorage cuando el componente se monta
   useEffect(() => {
@@ -61,41 +59,138 @@ export default function Login() {
   };
 
   return (
-    <div className='main'>
-      <div className='wrapper'>
-        <Form onSubmit={handleSubmit}>
-          <h1>Login</h1>
-          <Form.Group className="input-box" >
-            <input
-              type="text"
-              placeholder="Ingrese email"
+    //Fondo 
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        background: colors.background[500],
+      }}
+    >
+      {/* Contenedor */}
+      <Box
+        sx={{
+          padding: 5,
+          borderRadius: 1,
+          //boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+          width: '100%',
+          maxWidth: 400,
+          //background: `linear-gradient(165deg, ${colors.accentBlue[200]}, ${colors.accentBlue[600]})`,
+          background: colors.background[300]
+        }}
+      >
+        <form onSubmit={handleSubmit}>
+          {/* Encabezado */}
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: 'center',
+              marginBottom: 5,
+              color: colors.textPrimary[500],
+              fontWeight: 'bold',
+            }}
+          >
+            Login
+          </Typography>
+
+          {/* Email Input */}
+          <Box sx={{ position: 'relative', marginBottom: 2 }}>
+            <FaUser
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: 10,
+                transform: 'translateY(-50%)',
+                color: colors.textSecondary[500],
+              }}
+            />
+            <TextField
+              fullWidth
               name="email"
+              placeholder="Ingrese email"
+              value={userData.email || ""}
               onChange={handleChangeMultiple}
-              value={userData.email}
-            /><FaUser className='icon' />
-          </Form.Group>
+              InputProps={{
+                sx: { paddingLeft: '30px' },
+              }}
+            />
+          </Box>
 
-          <Form.Group className="input-box" >
-            <input
+          {/* Password Input */}
+          <Box sx={{ position: 'relative', marginBottom: 2 }}>
+            <FaLock
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: 10,
+                transform: 'translateY(-50%)',
+                color: colors.textSecondary[500],
+              }}
+            />
+            <TextField
+              fullWidth
               type="password"
-              placeholder="Password"
               name="password"
+              placeholder="Contraseña"
+              value={userData.password || ""}
               onChange={handleChangeMultiple}
-              value={userData.password}
-            /><FaLock className='icon' />
-          </Form.Group>
+              InputProps={{
+                sx: { paddingLeft: '30px' },
+              }}
+            />
+          </Box>
 
+          {/* Submit Button */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: 4,
+            }}
+          >
+            <Button
+              variant="contained"
+              type='submit'
+              disabled={!userData.email || !userData.password} // Deshabilitado si email o password están vacíos
+              sx={{
+                color: colors.textPrimary[500],
+                background: colors.background[100],
+                padding: '10px 20px',
+                textTransform: 'uppercase',
+                width: '100%',
+                height: '55px',
+                opacity: (!userData.email || !userData.password) ? 0.5 : 1, // Reduce la opacidad cuando está deshabilitado
+                pointerEvents: (!userData.email || !userData.password) ? 'none' : 'auto', // Evita interacción visual
+                '&:hover': {
+                  backgroundColor: colors.buttonPrimaryHover[300],  // Sin cambio si está deshabilitado
+                  cursor: (!userData.email || !userData.password) ? 'default' : 'pointer', // Cambia el cursor
+                },
+              }}
+            >
+              Iniciar sesión
+            </Button>
 
-          <Button variant="primary" type="submit" className='loginBtn'
-            disabled={userData.password === "" || userData.email === ""}>
-            Iniciar Sesión
-          </Button>
+          </Box>
 
-          {/* mostramos el error del HOCK (useState) */}
-          {error && <div style={{ color: 'red' }}>{error}</div>}
-
-        </Form>
-      </div>
-    </div>
+          {/* Error Message */}
+          <Box>
+            {error && (
+              <Typography
+                sx={{
+                  marginTop: 2,
+                  color: colors.accentRed[100],
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                }}
+              >
+                {error}
+              </Typography>
+            )}
+          </Box>
+        </form>
+      </Box >
+    </Box >
   );
 }

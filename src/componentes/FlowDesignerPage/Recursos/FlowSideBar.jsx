@@ -1,7 +1,12 @@
 import React from 'react';
 import { useDnD } from './DnDContext';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, useTheme } from '@mui/material';
+import { colorsList } from '../../../theme';
 
 const FlowSideBar = () => {
+    const theme = useTheme();
+    const colors = colorsList(theme.palette.mode);
+
     const [_, setType] = useDnD();
 
     const onDragStart = (event, nodeType) => {
@@ -10,58 +15,55 @@ const FlowSideBar = () => {
     };
 
     return (
-        <aside style={{ margin: '10px', border: 'solid 1px #555555', borderRadius: '5px', paddingTop: '10px', textAlign: 'center', width: '13vh', }}>
-            <div >
-                <div> <h3>Nodos</h3>  </div>
-                {/* "Start" node */}
-                <div
-                    style={{ padding: '10px' }}
-                    className="dndnode input"
-                    onDragStart={(event) => onDragStart(event, 'startNode')}
-                    draggable
-                >
-                    Inicio
-                </div>
-                {/* "Text" node */}
-                <div
-                    style={{ padding: '10px' }}
-                    className="dndnode input"
-                    onDragStart={(event) => onDragStart(event, 'textNode')}
-                    draggable
-                >
-                    Texto
-                </div>
-                {/* "Button" node */}
-                <div
-                    style={{ padding: '10px' }}
-                    className="dndnode input"
-                    onDragStart={(event) => onDragStart(event, 'buttonNode')}
-                    draggable
-                >
-                    Botón
-                </div>
-                {/* "Action" node */}
-                <div
-                    style={{ padding: '10px' }}
-                    className="dndnode input"
-                    onDragStart={(event) => onDragStart(event, 'actionNode')}
-                    draggable
-                >
-                    Acción
-                </div>
-
-                <div
-                    style={{ padding: '10px' }}
-                    className="dndnode input"
-                    onDragStart={(event) => onDragStart(event, 'awaitNode')}
-                    draggable
-                >
-                    Esperar
-                </div>
-
-
-            </div>
-        </aside >
+        <Box
+            component="aside"
+            sx={{
+                padding: '10px',
+                textAlign: 'center',
+                minWidth: '100px',
+                width: '11%',
+                backgroundColor: colors.background[200],
+                height: '100%',
+                boxShadow: '2px 4px 10px rgba(0, 0, 0, 0.1)',
+            }}
+        >
+            <Typography variant="h3" sx={{ marginBottom: '20px' }}>
+                Nodos
+            </Typography>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px', // Espaciado entre los nodos
+                }}
+            >
+                {[
+                    { label: 'Inicio', type: 'startNode' },
+                    { label: 'Texto', type: 'textNode' },
+                    { label: 'Botón', type: 'buttonNode' },
+                    { label: 'Acción', type: 'actionNode' },
+                    { label: 'Esperar', type: 'awaitNode' },
+                ].map((node) => (
+                    <Paper
+                        key={node.type}
+                        draggable
+                        onDragStart={(event) => onDragStart(event, node.type)}
+                        sx={{
+                            padding: '10px',
+                            backgroundColor: colors.background[100],
+                            textAlign: 'center',
+                            cursor: 'grab',
+                            '&:hover': {
+                                backgroundColor: colors.background[200],
+                                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
+                            },
+                        }}
+                    >
+                        {node.label}
+                    </Paper>
+                ))}
+            </Box>
+        </Box>
     );
 };
 

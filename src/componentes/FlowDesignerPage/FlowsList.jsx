@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFlows, deleteFlow, createFlow } from '../../Services/flowService';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box } from '@mui/material';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, useTheme } from '@mui/material';
 import FlowDesigner from './FlowDesigner';
 import { setSelectedFlow } from '../../redux/features/flows/flowSlice';
-import { useTheme } from '@mui/material/styles';
 import { colorsList } from '../../theme';
 
 const FlowsList = () => {
     const dispatch = useDispatch();
     const { flowsList, status, error } = useSelector((state) => state.flowStore);
-
+    console.log(flowsList);
     const theme = useTheme();
     const colors = colorsList(theme.palette.mode);
 
@@ -45,20 +44,40 @@ const FlowsList = () => {
     const handleDelete = (id) => {
         dispatch(deleteFlow(id));
     };
-
-    if (status === 'loading') {
-        return (
-            <Box textAlign="center" mt={4}>
-                <Typography variant="h6" color={colors.neutral}>
-                    Cargando Flows...
-                </Typography>
-            </Box>
-        );
-    }
+    /*
+        if (status === 'loading') {
+            return (
+                <Box
+                    sx={{
+                        padding: 4,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        display: 'flex',
+                        backgroundColor: colors.background[100],
+                    }}
+                >
+                    <Typography
+                        variant="h3"
+                    >
+                        Cargando diagramas...
+                    </Typography>
+                </Box>
+            );
+        }*/
     if (status === 'failed') {
         return (
-            <Box textAlign="center" mt={4}>
-                <Typography variant="h6" color={colors.neutral}>
+            <Box
+                sx={{
+                    padding: 4,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    backgroundColor: colors.background[100],
+                }}
+            >
+                <Typography
+                    variant="h3"
+                >
                     Error: {error}
                 </Typography>
             </Box>
@@ -66,40 +85,26 @@ const FlowsList = () => {
     }
 
     return (
-        <Box sx={{ height: '100%' }}>
+        <Box sx={{ height: '100%', backgroundColor: colors.background[500] }}>
             {isDesigning ? (
-                <FlowDesigner
-                    onBackToList={() => {
-                        setIsDesigning(false);
-                    }}
-                />
+                <FlowDesigner onBackToList={() => { setIsDesigning(false); }} />
             ) : (
                 <Box sx={{
-                    padding: '16px',
-                    backgroundColor: colors.background[600],
+
+                    width: '100%',
                     height: '100%'
                 }}>
                     {/* Encabezado */}
-                    <Box sx={{ display: 'flex' }}>
-                        <Typography
-                            variant="h3"
-                            sx={{
-                                color: colors[200],
-                                fontWeight: 'bold',
-                                textTransform: 'uppercase',
-                            }}
-                        >
-                            Diagramas
+                    <Box sx={{ padding: 2, display: 'flex', height: '64px', backgroundColor: colors.background[200] }}>
+                        <Typography variant="h3" >
+                            DIAGRAMAS
                         </Typography>
-                        <Button
-                            variant="contained"
+                        <Button variant="contained"
                             sx={{
                                 marginLeft: 'auto',
-                                mb: 3,
-                                backgroundColor: colors.neutral,
-                                color: colors.neutral,
+                                backgroundColor: colors.buttonPrimary[100],
                                 '&:hover': {
-                                    backgroundColor: colors.neutral,
+                                    backgroundColor: colors.buttonPrimary[400]
                                 },
                             }}
                             onClick={handleCreateFlow}
@@ -109,54 +114,77 @@ const FlowsList = () => {
                     </Box>
                     {flowsList.length > 0 ? (
                         <TableContainer
-                            component={Paper}
                             sx={{
-                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                                padding: '20px',
                                 borderRadius: 2,
                                 backgroundColor: colors.background.paper,
+                                overflow: 'hidden',
                             }}
                         >
                             <Table>
+                                {/* Encabezado */}
                                 <TableHead>
-                                    <TableRow sx={{ backgroundColor: colors.background.default }}>
-                                        <TableCell>ID</TableCell>
-                                        <TableCell>Nombre</TableCell>
-                                        <TableCell>Canal</TableCell>
-                                        <TableCell>Autor</TableCell>
-                                        <TableCell>Activo</TableCell>
-                                        <TableCell>Acciones</TableCell>
+                                    <TableRow>
+                                        {['ID', 'Nombre', 'Canal', 'Autor', 'Activo', ''].map((header) => (
+                                            <TableCell
+                                                key={header}
+                                                sx={{
+                                                    fontWeight: 'bold',
+                                                    color: colors.textPrimary[500],
+                                                    borderBottom: `1px solid ${colors.border[600]}`,
+                                                }}
+                                            >
+                                                {header}
+                                            </TableCell>
+                                        ))}
                                     </TableRow>
                                 </TableHead>
-                                <TableBody>
-                                    {flowsList.map((flow) => (
+
+                                {/* Cuerpo */}
+                                <TableBody >
+                                    {flowsList.map((flow, index) => (
                                         <TableRow
                                             key={flow.id}
                                             sx={{
+                                                height: '80px',
+                                                backgroundColor: index % 2 === 0 ? colors.background[200] : colors.background[300], // Alternar colores
                                                 '&:hover': {
-                                                    backgroundColor: colors.background.paper,
+                                                    backgroundColor: colors.background[400],
                                                 },
                                             }}
                                         >
-                                            <TableCell>{flow.id}</TableCell>
-                                            <TableCell>{flow.nombre || 'Sin nombre'}</TableCell>
-                                            <TableCell>{flow.canal || 'No especificado'}</TableCell>
-                                            <TableCell>{flow.autor || 'No especificado'}</TableCell>
                                             <TableCell>
-                                                <Typography
-                                                    color={flow.activo ? colors.neutral : colors.neutral}
-                                                >
-                                                    {flow.activo ? 'Sí' : 'No'}
-                                                </Typography>
+                                                {flow.id}
+                                            </TableCell>
+                                            <TableCell >
+                                                {flow.nombre || 'Sin nombre'}
                                             </TableCell>
                                             <TableCell>
+                                                {flow.canal || 'No especificado'}
+                                            </TableCell>
+                                            <TableCell>
+                                                {flow.autor || 'No especificado'}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    color: flow.activo ? colors.accentGreen[100] : colors.accentRed[100],
+                                                    fontWeight: 'bold',
+                                                    width: '100px',
+                                                }}
+                                            >
+                                                {flow.activo ? 'Sí' : 'No'}
+                                            </TableCell>
+                                            <TableCell align="center" sx={{ width: '260px' }} >
                                                 <Button
-                                                    variant="outlined"
+                                                    variant="contained"
                                                     sx={{
                                                         mr: 1,
-                                                        color: colors.neutral,
-                                                        borderColor: colors.neutral,
+                                                        backgroundColor: colors.buttonPrimary[100],
+                                                        //color: colors.textPrimary[500],
+                                                        width: '70px',
+                                                        //textTransform: 'none',
                                                         '&:hover': {
-                                                            backgroundColor: colors.neutral,
+                                                            backgroundColor: colors.buttonPrimaryHover[100],
                                                         },
                                                     }}
                                                     onClick={() => handleEditFlow(flow)}
@@ -164,28 +192,42 @@ const FlowsList = () => {
                                                     Editar
                                                 </Button>
                                                 <Button
-                                                    variant="outlined"
+                                                    variant="contained"
                                                     sx={{
-                                                        color: colors.neutral,
-                                                        borderColor: colors.neutral,
+                                                        ml: 1,
+                                                        backgroundColor: colors.accentRed[100],
+                                                        //color: colors.textPrimary[500],
+                                                        width: '70px',
+                                                        //textTransform: 'none',
                                                         '&:hover': {
-                                                            backgroundColor: colors.neutral,
+                                                            backgroundColor: colors.accentRed[300],
                                                         },
                                                     }}
                                                     onClick={() => handleDelete(flow.id)}
                                                 >
                                                     Eliminar
                                                 </Button>
+
                                             </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
                         </TableContainer>
+
                     ) : (
-                        <Typography variant="h6" color={colors.textSecondary} textAlign="center">
-                            No hay flows disponibles.
-                        </Typography>
+                        <Box
+                            sx={{
+                                padding: 4,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                display: 'flex',
+                            }}
+                        >
+                            <Typography variant="h3">
+                                No hay flows disponibles.
+                            </Typography>
+                        </Box>
                     )}
                 </Box>
             )}

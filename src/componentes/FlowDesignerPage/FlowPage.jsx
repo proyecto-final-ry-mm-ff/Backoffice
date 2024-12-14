@@ -1,26 +1,15 @@
 
-import { CssBaseline, ThemeProvider } from '@mui/material';
-import { ColorModeContext, useMode } from '../../theme';
 import { ReactFlowProvider } from '@xyflow/react';
 import { DnDProvider } from './Recursos/DnDContext';
 import FlowsList from './FlowsList';
 
 const FlowPage = () => {
-
-    const [theme, colorMode] = useMode();
-
     return (
-
-        <ColorModeContext.Provider value={colorMode}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <ReactFlowProvider>
-                    <DnDProvider>
-                        <FlowsList />
-                    </DnDProvider>
-                </ReactFlowProvider>
-            </ThemeProvider>
-        </ColorModeContext.Provider>
+        <ReactFlowProvider>
+            <DnDProvider>
+                <FlowsList />
+            </DnDProvider>
+        </ReactFlowProvider>
     );
 };
 

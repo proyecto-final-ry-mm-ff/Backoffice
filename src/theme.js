@@ -5,8 +5,8 @@ import { createTheme } from "@mui/material";
 export const colorsList = (mode) => ({
     ...(mode === 'dark' ? {
         // Fondo principal (Background)
-        background: generateColorPalette("#1C1C1E"), // Fondo principal oscuro similar a Apple.
-
+        background: generateColorPalette("#121212"), // Fondo base oscuro
+        surface: generateColorPalette("#1E1E1E"), // Superficies elevadas
         // Colores de texto
         textPrimary: generateColorPalette("#FFFFFF"), // Texto principal (alto contraste).
         textSecondary: generateColorPalette("#8E8E93"), // Texto secundario (para no destacar tanto).
@@ -26,7 +26,8 @@ export const colorsList = (mode) => ({
         border: generateColorPalette("#48484A"), // Bordes sutiles para delimitar.
     } : {
         // Fondo principal (Background)
-        background: generateColorPalette("#FFFFFF"), // Fondo principal claro.
+        background: generateColorPalette("#F5F5F5"), // Fondo base claro
+        surface: generateColorPalette("#FFFFFF"), // Superficies elevadas
 
         // Colores de texto
         textPrimary: generateColorPalette("#000000"), // Texto principal (alto contraste).
@@ -101,10 +102,10 @@ export const themeSettings = (mode) => {
         typography: {
             fontFamily: ["Source Sans 3", "sans-serif"].join(","),
             fontSize: 12,
-            h1: { fontFamily: "Source Sans 3", fontSize: 40 },
-            h2: { fontFamily: "Source Sans 3", fontSize: 32 },
-            h3: { fontFamily: "Source Sans 3", fontSize: 24 },
-            h4: { fontFamily: "Source Sans 3", fontSize: 20 },
+            h1: { fontFamily: "Source Sans 3", fontSize: 40, fontWeight: 'bold', color: colors.textPrimary[500] },
+            h2: { fontFamily: "Source Sans 3", fontSize: 32, fontWeight: 'bold', color: colors.textPrimary[500] },
+            h3: { fontFamily: "Source Sans 3", fontSize: 24, fontWeight: 'bold', color: colors.textPrimary[500] },
+            h4: { fontFamily: "Source Sans 3", fontSize: 20, fontWeight: 'bold', color: colors.textPrimary[500] },
         }
     };
 };
@@ -115,13 +116,12 @@ export const ColorModeContext = createContext({
 });
 
 export const useMode = () => {
-    const [mode, setMode] = useState("dark");  //Almacena el tema
+    const [mode, setMode] = useState("dark");
 
     const colorMode = useMemo(
         () => ({
             toggleColorMode: () =>
                 setMode((prev) => (prev === 'light' ? 'dark' : 'light')),
-            //Si el tema anterior era 'claro' que sea 'oscuro', sino, 'claro'
         }), []
     );
 

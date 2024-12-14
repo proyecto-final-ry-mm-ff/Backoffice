@@ -16,14 +16,13 @@ const Chat = ({ chatId }) => {
     const chats = chatStore.chatList;
     let thisChat = chats?.find(c => c.id === chatId) || null;
     let chatIsAssigned = false;
-    
-    if(!thisChat){
+
+    if (!thisChat) {
         thisChat = chatStore.assignedChats?.find(c => c.id === chatId) || null;
         chatIsAssigned = true;
     }
 
     const userStore = useSelector((state) => state.userStore);
-
 
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -62,20 +61,13 @@ const Chat = ({ chatId }) => {
 
     const handleSendMessage = async () => {
         if (newMessage.trim()) {
-            //  setMessages((prevMessages) => [...prevMessages, { text: newMessage, isSentByMe: true }]);
-
-            // Enviar el mensaje a SignalR
-
-            const senderTypeId = 2; //2 siempre es usuario operador
             try {
-                // Llamar a sendMessageToChat desde SignalRService
+                const senderTypeId = 2; // Operador
                 await sendMessageToChat(chatId, senderTypeId, newMessage);
                 setNewMessage('');
-            } catch (err) {
-                console.error("Error al enviar mensaje:", err);
+            } catch (error) {
+                console.error("Error al enviar mensaje:", error);
             }
-
-            setNewMessage(''); // Limpia la caja de entrada
         }
     };
 
@@ -90,8 +82,8 @@ const Chat = ({ chatId }) => {
     }
 
     const handleAssignChat = async () => {
-        store.dispatch(assignChat({userId: userStore.id, chat: thisChat}));
-        await assignOperatorToChat(thisChat.id);
+        //store.dispatch(assignChat({ userId: userStore.id, chat: thisChat }));
+        //await assignOperatorToChat(thisChat.id);
     }
 
     return (
@@ -105,19 +97,11 @@ const Chat = ({ chatId }) => {
             }}
         >
             {/* Encabezado */}
-            <Typography
-                variant="h3"
-                sx={{
-                    padding: '16px',
-                    color: colors.textPrimary[500],
-                    fontWeight: 'bold',
-                    textTransform: 'uppercase',
-                }}
-            >
-
-                Chat {chatId}
-            </Typography>
-
+            <Box sx={{ padding: 2, height: '64px', backgroundColor: colors.background[200] }}>
+                <Typography variant="h3" >
+                    CHAT {chatId}
+                </Typography>
+            </Box>
             {/* Canvas de mensajes */}
             <Box
                 className="chat-box"
@@ -126,7 +110,7 @@ const Chat = ({ chatId }) => {
                     maxHeight: '100%',
                     overflowY: 'auto',
                     padding: '15px 50px',
-                    backgroundColor: colors.background[500],
+                    backgroundColor: colors.background[600],
                 }}
             >
                 {thisChat?.messages?.map((msg, index) => (
@@ -145,7 +129,7 @@ const Chat = ({ chatId }) => {
                                 maxWidth: '70%',
                                 padding: '10px 16px',
                                 borderRadius: '10px',
-                                backgroundColor: msg.senderTypeId === 2  ? colors.accentBlue[500] : colors.accentGreen[500],
+                                backgroundColor: msg.senderTypeId === 2 ? colors.accentBlue[500] : colors.accentGreen[500],
                                 color: colors.textPrimary[500],
                                 boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                                 wordWrap: 'break-word', // Fuerza el salto de línea en palabras largas
@@ -166,32 +150,45 @@ const Chat = ({ chatId }) => {
             </Box>
 
             {/* Sección para escribir un mensaje */}
-            <Box padding='10px' display="flex" alignItems="center">
+            <Box padding='10px' display="flex" alignItems="center" height="80px">
                 <TextField
                     fullWidth
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Escribe un mensaje..."
+                    variant="outlined"
                     sx={{
-
-                        backgroundColor: colors.background[100],
+                        backgroundColor: colors.background[200], // Fondo del TextField
                         borderRadius: '8px',
-                        input: { color: colors.textPrimary[500] },
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)', // Sombra para profundidad
+                        input: {
+                            color: colors.textPlaceholder[500], // Color del texto
+
+                        },
+                        '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                border: 'transparent',
+                            },
+                            '&:hover fieldset': {
+                                border: 'transparent',
+                            },
+                            '&.Mui-focused fieldset': {
+                                border: 'transparent',
+                            },
+                        },
                     }}
                 />
                 <Button
-                    variant="contained"
                     onClick={handleSendMessage}
                     sx={{
                         marginLeft: 1,
-                        borderRadius: '5px',
-                        minWidth: '48px',
-                        height: '48px',
-                        backgroundColor: colors.accentBlue[400],
-                        '&:hover': { backgroundColor: colors.accentBlue[500] },
+                        borderRadius: 100,
+                        backgroundColor: 'transparent',
+                        '&:hover': { backgroundColor: 'transparent', color: colors.accentBlue[500] },
+
                     }}
                 >
-                    <SendIcon />
+                    <SendIcon sx={{ fontSize: '30px' }} />
                 </Button>
             </Box>
         </Box>

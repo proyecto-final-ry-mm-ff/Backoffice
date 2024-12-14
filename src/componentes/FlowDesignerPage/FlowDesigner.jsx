@@ -1,7 +1,8 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, TextField, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, TextField, Box, FormControl, InputLabel, Select, MenuItem, useTheme } from '@mui/material';
+import { colorsList } from '../../theme';
 import { useDnD } from './Recursos/DnDContext';
 import FlowSideBar from './Recursos/FlowSideBar';
 import { ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState, addEdge, useReactFlow, } from '@xyflow/react';
@@ -21,6 +22,9 @@ import { updateFlow } from '../../Services/flowService';
 },];*/
 
 const FlowDesigner = ({ onBackToList }) => {
+
+    const theme = useTheme();
+    const colors = colorsList(theme.palette.mode);
 
     const reactFlowWrapper = useRef(null);
     const selectedFlow = useSelector((state) => state.flowStore.selectedFlow);
@@ -143,11 +147,11 @@ const FlowDesigner = ({ onBackToList }) => {
     return (<>
         <Box sx={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
 
-            <FlowSideBar />
-            <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                {/* TopBar */}
 
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+
+                {/* TopBar */}
+                <Box sx={{ padding: 2, display: 'flex', height: '64px', backgroundColor: colors.background[200] }}>
                     <TextField
                         label="Nombre del Diagrama"
                         variant="outlined"
@@ -185,7 +189,8 @@ const FlowDesigner = ({ onBackToList }) => {
                     </Button>
                 </Box>
 
-                <div style={{ width: '100%', height: '80vh' }} ref={reactFlowWrapper}>
+                <div style={{ display: 'flex', flexDirection: 'row', padding: 0, width: '100%', height: '100%' }} ref={reactFlowWrapper}>
+                    <FlowSideBar />
                     <ReactFlow
                         nodes={memoizedNodes}
                         edges={memoizedEdges}
@@ -197,6 +202,7 @@ const FlowDesigner = ({ onBackToList }) => {
                         onDrop={onDrop}
                         nodeTypes={NodeTypes}
                     >
+
                         <Controls />
                         <MiniMap />
                         <Background variant="dots" gap={12} size={1} />
