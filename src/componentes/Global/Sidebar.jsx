@@ -42,8 +42,8 @@ const Sidebar = () => {
             sx={{
                 height: "100%",
                 display: 'flex',
-
                 flexDirection: 'column',
+
                 "& .pro-sidebar-inner": {
                     background: `${colors.background[300]} !important`,
                 },
@@ -62,7 +62,10 @@ const Sidebar = () => {
                 },
             }}
         >
-            <ProSidebar collapsed={isCollapsed} >
+            <ProSidebar collapsed={isCollapsed}
+                sx={{
+                    height: '100%', // Asegura que ocupe todo el espacio disponible
+                }} >
                 <Menu iconShape="square" >
                     {/* Botón para colapsar/expandir el menú */}
                     <MenuItem
@@ -86,7 +89,7 @@ const Sidebar = () => {
                     </MenuItem>
 
                     {/* Opciones del menú */}
-                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <Item title="Chats" to="/chat-page" icon={<ChatIcon />} />
                         <Item title="Diseñador de flujos" to="/flow-designer" icon={<AccountTreeIcon />} />
                         <Item title="Configuración" to="/config" icon={<SettingsIcon />} />
@@ -95,7 +98,6 @@ const Sidebar = () => {
                     {/* Íconos de cambiar tema y logout */}
                     <Box
                         sx={{
-
                             marginTop: 'auto', // Empuja este contenido hacia abajo
                             display: 'flex',
                             flexDirection: 'column',

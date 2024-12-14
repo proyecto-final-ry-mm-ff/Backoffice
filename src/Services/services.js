@@ -7,7 +7,7 @@ const urlApi = "http://localhost:5015";
 
 
 export const loginApi = async (userData) => {
-   // console.log("Paso 1 - Me identifico como Operador");
+    // console.log("Paso 1 - Me identifico como Operador");
     const response = await fetch(`${urlApi}/login`, {
         headers: { "Content-Type": "application/json" },
         method: "POST",
@@ -29,31 +29,7 @@ export const loginApi = async (userData) => {
 }
 
 
-export const saveChat = async (token, chat) => {
-    // const token = GetBearerToken(); //TODO:  Hay que manejar una lógica de pedir refresh token si este expiró
-    // console.log("Voy a guardar la instancia de chat...");
-    // console.log({ chat });
-    const chatUpdateDto = {
-        chatId: chat.id,
-        customerId: chat.customer.id,
-        status: 4,
-        messages: chat.messages
-    };
-    const response = await fetch(`${urlApi}/chat/${chat.id}`, {
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        method: "PUT",
-        body: JSON.stringify(chatUpdateDto),
-    });
 
-    const parsedResponse = await response.json();
-    // console.log({ parsedResponse });
-    if (response.ok) {
-        return true;
-    }
-
-    return false;
-
-}
 
 
 

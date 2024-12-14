@@ -6,10 +6,16 @@ import FlowDesigner from './FlowDesigner';
 import { setSelectedFlow } from '../../redux/features/flows/flowSlice';
 import { colorsList } from '../../theme';
 
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+
 const FlowsList = () => {
     const dispatch = useDispatch();
     const { flowsList, status, error } = useSelector((state) => state.flowStore);
-    console.log(flowsList);
+
     const theme = useTheme();
     const colors = colorsList(theme.palette.mode);
 
@@ -99,26 +105,27 @@ const FlowsList = () => {
                         <Typography variant="h3" >
                             DIAGRAMAS
                         </Typography>
-                        <Button variant="contained"
+                        <Button
                             sx={{
+                                color: colors.textPrimary[500],
                                 marginLeft: 'auto',
-                                backgroundColor: colors.buttonPrimary[100],
+                                backgroundColor: colors.buttonPrimary[500],
                                 '&:hover': {
                                     backgroundColor: colors.buttonPrimary[400]
                                 },
                             }}
                             onClick={handleCreateFlow}
                         >
-                            Crear Nuevo Diagrama
+                            <AddOutlinedIcon /> Nuevo Diagrama
                         </Button>
                     </Box>
                     {flowsList.length > 0 ? (
                         <TableContainer
                             sx={{
+                                maxHeight: '88vh',
+                                overflowY: 'auto',
                                 padding: '20px',
-                                borderRadius: 2,
                                 backgroundColor: colors.background.paper,
-                                overflow: 'hidden',
                             }}
                         >
                             <Table>
@@ -129,8 +136,8 @@ const FlowsList = () => {
                                             <TableCell
                                                 key={header}
                                                 sx={{
+                                                    background: colors.background[400],
                                                     fontWeight: 'bold',
-                                                    color: colors.textPrimary[500],
                                                     borderBottom: `1px solid ${colors.border[600]}`,
                                                 }}
                                             >
@@ -141,7 +148,7 @@ const FlowsList = () => {
                                 </TableHead>
 
                                 {/* Cuerpo */}
-                                <TableBody >
+                                <TableBody>
                                     {flowsList.map((flow, index) => (
                                         <TableRow
                                             key={flow.id}
@@ -172,16 +179,16 @@ const FlowsList = () => {
                                                     width: '100px',
                                                 }}
                                             >
-                                                {flow.activo ? 'Sí' : 'No'}
+                                                {flow.activo ? <DoneOutlinedIcon /> : <ClearOutlinedIcon />}
                                             </TableCell>
                                             <TableCell align="center" sx={{ width: '260px' }} >
                                                 <Button
                                                     variant="contained"
                                                     sx={{
-                                                        mr: 1,
                                                         backgroundColor: colors.buttonPrimary[100],
                                                         //color: colors.textPrimary[500],
-                                                        width: '70px',
+                                                        minWidth: 'unset',
+                                                        width: '50px',
                                                         //textTransform: 'none',
                                                         '&:hover': {
                                                             backgroundColor: colors.buttonPrimaryHover[100],
@@ -189,15 +196,16 @@ const FlowsList = () => {
                                                     }}
                                                     onClick={() => handleEditFlow(flow)}
                                                 >
-                                                    Editar
+                                                    <EditOutlinedIcon />
                                                 </Button>
                                                 <Button
                                                     variant="contained"
                                                     sx={{
-                                                        ml: 1,
+                                                        m: 1,
                                                         backgroundColor: colors.accentRed[100],
                                                         //color: colors.textPrimary[500],
-                                                        width: '70px',
+                                                        minWidth: 'unset',
+                                                        width: '50px',
                                                         //textTransform: 'none',
                                                         '&:hover': {
                                                             backgroundColor: colors.accentRed[300],
@@ -205,7 +213,7 @@ const FlowsList = () => {
                                                     }}
                                                     onClick={() => handleDelete(flow.id)}
                                                 >
-                                                    Eliminar
+                                                    <DeleteOutlinedIcon />
                                                 </Button>
 
                                             </TableCell>
@@ -230,8 +238,9 @@ const FlowsList = () => {
                         </Box>
                     )}
                 </Box>
-            )}
-        </Box>
+            )
+            }
+        </Box >
     );
 };
 

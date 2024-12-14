@@ -2,8 +2,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    chatsList: [], // Lista de todos los flujos
-    assignedChats: [],
+    allChats: [], // Lista de todos los flujos
+    myChats: [],
+    selectedChat: null,
 };
 
 const chatSlice = createSlice({
@@ -11,23 +12,49 @@ const chatSlice = createSlice({
     initialState,
     reducers: {
         setChats: (state, action) => {
-            state.chatsList = action.payload;
+            state.allChats = action.payload;
         },
         addChat: (state, action) => {
-            state.chatsList.push(action.payload);
+            state.allChats.push(action.payload);
         },
         addMessageToChat: (state, action) => {
             const { chatId, ...message } = action.payload;
-            const chat = state.chatsList.find((c) => c.id === chatId);
+            const chat = state.allChats.find((c) => c.id === chatId);
             if (chat) {
-                chat.messages = chat.messages || [];
-                chat.messages.push(message);
+                chat.messages = [...(chat.messages || []), message]; // Asegura inmutabilidad
             }
+        },
+        // Asignar
+        assignChat(state, action) {
+            const { chatId } = action.payload;
+            const chatIndex = state.allChats.findIndex(chat => chat.id === chatId);
+            console.log(state.allChats)
+            if (chatIndex > -1) {
+                const [chat] = state.allChats.splice(chatIndex, 1);
+                state.myChats.push(chat);
+            }
+        },
+        // Desasignar
+        unassignChat(state, action) {
+            const chatId = action.payload;
+            const chatIndex = state.myChats.findIndex(chat => chat.id === chatId);
+            if (chatIndex > -1) {
+                const [chat] = state.myChats.splice(chatIndex, 1);
+                state.allChats.push(chat);
+            }
+        },
+        // Seleccionar
+        setSelectedChat: (state, action) => {
+            state.selectedChat = action.payload;
+        },
+        // Deseleccionar
+        clearSelectedChat: (state) => {
+            state.selectedChat = null;
         },
     },
 });
 
-export const { setChats, addChat, addMessageToChat } = chatSlice.actions;
+export const { setChats, addChat, addMessageToChat, assignChat, unassignChat, setSelectedChat, clearSelectedChat, } = chatSlice.actions;
 export default chatSlice.reducer;
 
 /*const chatSlice = createSlice({

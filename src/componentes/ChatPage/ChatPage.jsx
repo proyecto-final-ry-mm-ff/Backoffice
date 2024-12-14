@@ -32,7 +32,7 @@ const ChatPage = () => {
                     overflowY: 'hidden',
                 }}
             >
-                <Chat chatId={selectedChat?.id} />
+                <Chat chat={selectedChat} />
             </Box>
         </Box>
     );

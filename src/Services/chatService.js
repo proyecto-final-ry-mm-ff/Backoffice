@@ -14,32 +14,28 @@ export const getChats = async () => {
     return await response.json();
 };
 
-// Enviar mensaje a un chat
-export const sendChatMessage = async (chatId, message) => {
-    const token = GetBearerToken();
-    const response = await fetch(`${urlChat}/${chatId}/messages`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ content: message })
+export const saveChat = async (token, chat) => {
+    // const token = GetBearerToken(); //TODO:  Hay que manejar una lógica de pedir refresh token si este expiró
+    // console.log("Voy a guardar la instancia de chat...");
+    // console.log({ chat });
+    const chatUpdateDto = {
+        chatId: chat.id,
+        customerId: chat.customer.id,
+        status: 4,
+        messages: chat.messages
+    };
+    const response = await fetch(`${urlChat}/chat/${chat.id}`, {
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        method: "PUT",
+        body: JSON.stringify(chatUpdateDto),
     });
-    if (!response.ok) throw new Error('Error al enviar mensaje');
-    return await response.json();
-};
 
-// Asignar un operador al chat
-export const assignOperatorToChat = async (chatId, userId) => {
-    const token = GetBearerToken();
-    const response = await fetch(`${urlChat}/${chatId}/assign`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ userId })
-    });
-    if (!response.ok) throw new Error('Error al asignar operador');
-    store.dispatch(assignChat({ chatId, userId }));
-};
+    const parsedResponse = await response.json();
+    // console.log({ parsedResponse });
+    if (response.ok) {
+        return true;
+    }
+
+    return false;
+
+}

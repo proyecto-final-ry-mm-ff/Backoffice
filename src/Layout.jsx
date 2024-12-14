@@ -13,12 +13,10 @@ const Layout = () => {
             sx={{
                 display: 'flex',
                 height: '100%',
-
             }}
         >
             <Sidebar
                 sx={{
-                    flex: '1 0 20%',
                     maxWidth: '300px',
                     minWidth: '250px',
                 }}

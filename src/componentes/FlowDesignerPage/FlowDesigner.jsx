@@ -8,6 +8,9 @@ import FlowSideBar from './Recursos/FlowSideBar';
 import { ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState, addEdge, useReactFlow, } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useEffect } from 'react';
+
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+
 //Nodos
 import NodeTypes from './Nodes/NodeTypes';
 import { initializeNodeData } from './Nodes/NodeTypes';
@@ -173,15 +176,11 @@ const FlowDesigner = ({ onBackToList }) => {
                         </Select>
                     </FormControl>
                     <Button
-                        variant="contained"
-                        color="primary"
                         onClick={handleSaveFlow}
                     >
                         Guardar
                     </Button>
                     <Button
-                        variant="contained"
-                        color="primary"
                         onClick={onBackToList}
                         sx={{ marginRight: '10px' }}
                     >
@@ -202,9 +201,6 @@ const FlowDesigner = ({ onBackToList }) => {
                         onDrop={onDrop}
                         nodeTypes={NodeTypes}
                     >
-
-                        <Controls />
-                        <MiniMap />
                         <Background variant="dots" gap={12} size={1} />
                     </ReactFlow>
 

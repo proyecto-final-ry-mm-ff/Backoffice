@@ -8,62 +8,50 @@ import { useSelector } from 'react-redux';
 import { store } from '../../redux/store';
 import { assignChat } from '../../redux/features/chat/chatSlice.js';
 
-const Chat = ({ chatId }) => {
+const Chat = ({ chat }) => {
     const theme = useTheme();
     const colors = colorsList(theme.palette.mode);
 
-    const chatStore = useSelector((state) => state.chatStore);
-    const chats = chatStore.chatList;
-    let thisChat = chats?.find(c => c.id === chatId) || null;
-    let chatIsAssigned = false;
-
-    if (!thisChat) {
-        thisChat = chatStore.assignedChats?.find(c => c.id === chatId) || null;
-        chatIsAssigned = true;
-    }
-
-    const userStore = useSelector((state) => state.userStore);
-
-    const [messages, setMessages] = useState([]);
+    // Usa el chat directamente desde props
+    const [messages, setMessages] = useState(chat?.messages || []);
     const [newMessage, setNewMessage] = useState('');
     const messagesEndRef = useRef(null);
 
+    const selectedChat = useSelector((state) =>
+        state.chatStore.allChats.find((c) => c.id === chat?.id)
+    );
+
+    // Desplaza automáticamente hacia el último mensaje
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [messages]);
 
-    //Para asignar operador al chat
-    // useEffect(() => {
-    //     handleAssignOperatorToChat(chatId);
-    // }, [chatId])
+    //let thisChat = chats?.find(c => c.id === chat.id) || null;
 
-    // // Cargar los mensajes
-    // useEffect(() => {
-    //     if (chatId) {
-    //         //TODO / Cargar mensajes
-    //         setMessages([
-    //             { id: 1, text: "¡Hola! ¿Cómo estás?", isSentByMe: false },
-    //             { id: 2, text: "¡Bien, gracias! ¿Y tú?", isSentByMe: true },
-    //         ]);
-    //     }
-    // }, [chatId]); // Atento a cada vez que el chatId cambie
+    /* if (!thisChat) {
+        thisChat = chatStore.assignedChats?.find(c => c.id === chatId) || null;
+        chatIsAssigned = true;
+    } */
 
-
-    // const handleAssignOperatorToChat = async (chatId) => {
-    //     await assignOperatorToChat(chatId);
-    //     store.dispatch(assignChat(thisChat));
-    //     const remainingChats = chats.filter(chat=>chat.id != thisChat.id);
-    //     console.log('RemainignCHats', remainingChats);
-    //     store.dispatch(setChats(remainingChats))
-    // }
-
+    // Envía mensajes desde el usuario
     const handleSendMessage = async () => {
         if (newMessage.trim()) {
             try {
                 const senderTypeId = 2; // Operador
-                await sendMessageToChat(chatId, senderTypeId, newMessage);
+                const newMessageObj = {
+                    chatId: selectedChat.id,
+                    senderTypeId,
+                    content: newMessage,
+                    timeStamp: new Date().toISOString(),
+                };
+
+                // Envía el mensaje al servidor
+                await sendMessageToChat(selectedChat.id, senderTypeId, newMessage);
+
+                // Añade el mensaje localmente hasta recibir confirmación del servidor
+                setMessages((prevMessages) => [...prevMessages, newMessageObj]);
                 setNewMessage('');
             } catch (error) {
                 console.error("Error al enviar mensaje:", error);
@@ -71,19 +59,22 @@ const Chat = ({ chatId }) => {
         }
     };
 
-    const handleEndChat = async () => {
-        try {
-            // Pegarle al endChat de signalRF
-            const token = userStore.token;
-            await saveChat(token, thisChat);
-        } catch (err) {
-            console.error("Error al enviar mensaje:", err);
-        }
-    }
-
-    const handleAssignChat = async () => {
-        //store.dispatch(assignChat({ userId: userStore.id, chat: thisChat }));
-        //await assignOperatorToChat(thisChat.id);
+    if (!chat) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100%',
+                    backgroundColor: colors.background[400],
+                }}
+            >
+                <Typography variant="h5" color={colors.textPrimary[500]}>
+                    Selecciona un chat para comenzar
+                </Typography>
+            </Box>
+        );
     }
 
     return (
@@ -99,7 +90,7 @@ const Chat = ({ chatId }) => {
             {/* Encabezado */}
             <Box sx={{ padding: 2, height: '64px', backgroundColor: colors.background[200] }}>
                 <Typography variant="h3" >
-                    CHAT {chatId}
+                    CHAT {selectedChat?.id}
                 </Typography>
             </Box>
             {/* Canvas de mensajes */}
@@ -113,7 +104,7 @@ const Chat = ({ chatId }) => {
                     backgroundColor: colors.background[600],
                 }}
             >
-                {thisChat?.messages?.map((msg, index) => (
+                {selectedChat?.messages?.map((msg, index) => (
                     <Box
                         key={index}
                         sx={{
