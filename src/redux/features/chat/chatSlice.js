@@ -23,16 +23,23 @@ const chatSlice = createSlice({
             if (chat) {
                 chat.messages = [...(chat.messages || []), message]; // Asegura inmutabilidad
             }
+
+            const assignedChat = state.myChats.find((c) => c.id === chatId); // Busca el chat por ID
+            if (assignedChat) {
+                assignedChat.messages = [...(assignedChat.messages || []), message]; // Asegura inmutabilidad
+            }
         },
         // Asignar
         assignChat(state, action) {
             const { chatId } = action.payload;
-            const chatIndex = state.allChats.findIndex(chat => chat.id === chatId);
-            console.log(state.allChats)
-            if (chatIndex > -1) {
-                const [chat] = state.allChats.splice(chatIndex, 1);
-                state.myChats.push(chat);
-            }
+
+            //  const chatIndex = state.allChats.findIndex(chat => chat.id === chatId);
+            const theChat = state.allChats.find(chat => chat.id === chatId);
+            console.log('Aca el chat asignado: ', theChat)
+            //if (chatIndex > -1) {
+            // const [chat] = state.allChats.splice(chatIndex, 1);
+            state.myChats.push(theChat);
+            //  }
         },
         // Desasignar
         unassignChat(state, action) {

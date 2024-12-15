@@ -11,6 +11,7 @@ import UnarchiveIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import { assignOperatorToChat } from '../../Services/signalRService';
+
 export default function ChatList({ onChatSelect }) {
     const theme = useTheme();
     const colors = colorsList(theme.palette.mode);
@@ -36,6 +37,7 @@ export default function ChatList({ onChatSelect }) {
 
     // Handle para definir el chat seleccionado
     const handleChatClick = (chat) => {
+        console.log('clickeaste el chat: ', { chat })
         onChatSelect(chat);
     };
 
@@ -46,8 +48,8 @@ export default function ChatList({ onChatSelect }) {
 
     const handleAssignUnassign = async (chatId) => {
         if (selectedTab === 0) {
-            dispatch(assignChat(chatId));
-            //await assignOperatorToChat(chatId);
+            dispatch(assignChat({ userId: userStore.id, chatId }));
+            await assignOperatorToChat(chatId);
         } else {
             dispatch(unassignChat(chatId)); // Desasignar chat
         }

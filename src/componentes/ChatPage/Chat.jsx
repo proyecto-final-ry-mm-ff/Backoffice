@@ -17,9 +17,13 @@ const Chat = ({ chat }) => {
     const [newMessage, setNewMessage] = useState('');
     const messagesEndRef = useRef(null);
 
-    const selectedChat = useSelector((state) =>
-        state.chatStore.allChats.find((c) => c.id === chat?.id)
-    );
+    const chatStore = useSelector((state) => state.chatStore);
+
+    let selectedChat = chatStore?.allChats.find((c) => c.id === chat?.id);
+
+    if (!selectedChat) {
+        selectedChat = chatStore?.myChats.find((c) => c.id === chat?.id);
+    }
 
     // Desplaza automáticamente hacia el último mensaje
     useEffect(() => {
@@ -30,10 +34,7 @@ const Chat = ({ chat }) => {
 
     //let thisChat = chats?.find(c => c.id === chat.id) || null;
 
-    /* if (!thisChat) {
-        thisChat = chatStore.assignedChats?.find(c => c.id === chatId) || null;
-        chatIsAssigned = true;
-    } */
+
 
     // Envía mensajes desde el usuario
     const handleSendMessage = async () => {
@@ -51,7 +52,7 @@ const Chat = ({ chat }) => {
                 await sendMessageToChat(selectedChat.id, senderTypeId, newMessage);
 
                 // Añade el mensaje localmente hasta recibir confirmación del servidor
-                setMessages((prevMessages) => [...prevMessages, newMessageObj]);
+              //  setMessages((prevMessages) => [...prevMessages, newMessageObj]);
                 setNewMessage('');
             } catch (error) {
                 console.error("Error al enviar mensaje:", error);
@@ -109,7 +110,7 @@ const Chat = ({ chat }) => {
                         key={index}
                         sx={{
                             display: 'flex',
-                            justifyContent: msg.senderTypeId === 2 ? 'flex-end' : 'flex-start',
+                            justifyContent: msg.senderType === 2 ? 'flex-end' : 'flex-start',
                             marginBottom: '8px',
                             wordWrap: 'break-word', // Habilita el salto de línea automático
                             whiteSpace: 'pre-wrap', // Permite mantener espacios y saltos de línea
@@ -120,7 +121,7 @@ const Chat = ({ chat }) => {
                                 maxWidth: '70%',
                                 padding: '10px 16px',
                                 borderRadius: '10px',
-                                backgroundColor: msg.senderTypeId === 2 ? colors.accentBlue[500] : colors.accentGreen[500],
+                                backgroundColor: msg.senderType === 2 ? colors.accentBlue[500] : colors.accentGreen[500],
                                 color: colors.textPrimary[500],
                                 boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                                 wordWrap: 'break-word', // Fuerza el salto de línea en palabras largas
