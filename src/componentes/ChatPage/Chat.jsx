@@ -19,10 +19,10 @@ const Chat = ({ chat }) => {
 
     const chatStore = useSelector((state) => state.chatStore);
 
-    let selectedChat = chatStore?.allChats.find((c) => c.id === chat?.id);
+    let selectedChat = chatStore?.allChats.find((c) => c?.id === chat?.id);
 
     if (!selectedChat) {
-        selectedChat = chatStore?.myChats.find((c) => c.id === chat?.id);
+        selectedChat = chatStore?.myChats.find((c) => c?.id === chat?.id);
     }
 
     // Desplaza automáticamente hacia el último mensaje
@@ -52,7 +52,7 @@ const Chat = ({ chat }) => {
                 await sendMessageToChat(selectedChat.id, senderTypeId, newMessage);
 
                 // Añade el mensaje localmente hasta recibir confirmación del servidor
-              //  setMessages((prevMessages) => [...prevMessages, newMessageObj]);
+                //  setMessages((prevMessages) => [...prevMessages, newMessageObj]);
                 setNewMessage('');
             } catch (error) {
                 console.error("Error al enviar mensaje:", error);

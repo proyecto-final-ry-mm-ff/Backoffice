@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography, Tabs, Tab, useTheme, Button, TextField } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { colorsList } from '../../theme';
-import { assignChat, unassignChat } from '../../redux/features/chat/chatSlice';
+import { assignChat } from '../../redux/features/chat/chatSlice';
 
 //import ArchiveIcon from '@mui/icons-material/ArchiveOutlined';
 //import UnarchiveIcon from '@mui/icons-material/UnarchiveOutlined';
@@ -11,7 +11,6 @@ import UnarchiveIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import { assignOperatorToChat } from '../../Services/signalRService';
-
 export default function ChatList({ onChatSelect }) {
     const theme = useTheme();
     const colors = colorsList(theme.palette.mode);
@@ -37,7 +36,6 @@ export default function ChatList({ onChatSelect }) {
 
     // Handle para definir el chat seleccionado
     const handleChatClick = (chat) => {
-        console.log('clickeaste el chat: ', { chat })
         onChatSelect(chat);
     };
 
@@ -46,18 +44,15 @@ export default function ChatList({ onChatSelect }) {
         await assignOperatorToChat(thisChat.id);
     }*/
 
-    const handleAssignUnassign = async (chatId) => {
-        if (selectedTab === 0) {
-            dispatch(assignChat({ userId: userStore.id, chatId }));
-            await assignOperatorToChat(chatId);
-        } else {
-            dispatch(unassignChat(chatId)); // Desasignar chat
-        }
+    const handleAssignChat = async (chatId) => {
+        dispatch(assignChat({ userStoreId: userStore.id, chatId }));
+        await assignOperatorToChat(chatId);
+
     };
 
     const handleEndChat = async (chatId) => {
         /* try {
-            // Pegarle al endChat de signalRF
+            // Pegarle al endChat de signalRF-
             const token = userStore.token;
             await saveChat(token, thisChat);
         } catch (err) {
@@ -223,10 +218,10 @@ export default function ChatList({ onChatSelect }) {
                                     transform: 'translateX(-10px)', // Posición inicial
                                     transition: 'transform 0.3s ease', // Transición suave
                                 }}>
-                                {`Chat ${chat.id}`}
+                                {`Chat ${chat?.id}`}
                             </Typography>
                             <Button
-                                onClick={() => handleAssignUnassign(chat.id)}
+                                onClick={() => handleAssignChat(chat?.id)}
                                 sx={{
                                     minWidth: 'unset',
                                     display: 'flex',
@@ -239,7 +234,7 @@ export default function ChatList({ onChatSelect }) {
                                     },
                                 }}
                             >
-                                {selectedTab === 0 ? <ArchiveIcon /> : <UnarchiveIcon />}
+                                {selectedTab === 0 ? <ArchiveIcon /> : ''}
                             </Button>
                         </Box>
                     ))

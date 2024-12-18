@@ -30,9 +30,9 @@ const chatSlice = createSlice({
             }
         },
         // Asignar
-        assignChat(state, action) {
+        assignChat: (state, action) => {
             const { chatId } = action.payload;
-
+            console.log(action.payload)
             //  const chatIndex = state.allChats.findIndex(chat => chat.id === chatId);
             const theChat = state.allChats.find(chat => chat.id === chatId);
             console.log('Aca el chat asignado: ', theChat)

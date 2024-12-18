@@ -15,7 +15,12 @@ const setupSignalREvents = () => {
         console.log("Chats pendientes:", chats);
         store.dispatch(setChats(chats));
     });
-
+    /* 
+        connection.on("AssignedChats", (chats) => {
+            console.log("Chats asignados:", chats);
+            store.dispatch(setAssignedChats(chats));
+        });
+     */
     connection.on("NewChatRequest", (chat) => {
         console.log("NewChatRequest", { chat });
         store.dispatch(addChat(chat));
