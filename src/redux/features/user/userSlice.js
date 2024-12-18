@@ -1,44 +1,46 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { GetRandomString } from '../../../Services/helperService';
-
+import { disconnectFromHub } from '../../../Services/signalRService';
 
 
 const userSlice = createSlice({
     name: 'users',
     initialState:
     {
-        token: null,
-        refreshToken: null,
-        logged: false,
+        token: localStorage.getItem('token') || null,
+        refreshToken: localStorage.getItem('refreshToken') || null,
+        logged: localStorage.getItem('logged') === 'true' || false,
         assignedChats: [],
+        id: localStorage.getItem('id') || null,
         // user: null,
-         id: null,
         // status: 'idle',
         // error: null,
     },
     reducers: {
         login: (state, action) => {
-            // state.token = action.payload.accessToken;
-            // state.refreshToken = action.payload.refreshToken;
-            // state.logged = true;
-            // state.id = GetRandomString(12);
-            return {...state, 
-                token: action.payload.accessToken,
-                 refreshToken:action.payload.refreshToken,
-                 logged: true,
-                 id:  GetRandomString(12)
+            const { accessToken, refreshToken } = action.payload;
+            localStorage.setItem('token', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+            localStorage.setItem('logged', true);
+            localStorage.setItem('id', state.id); // Genera un ID único si no existe
+            return {
+                ...state,
+                token: accessToken,
+                refreshToken,
+                logged: true,
+                id: state.id || GetRandomString(12)
             }
         },
         logout: (state) => {
-            //  // state.token = null;
-            //     state.refreshToken = null;
-            //     state.logged = false;
-            console.log('Se me deslogueó')
-            return {...state, 
+            disconnectFromHub();
+            console.log('Se deslogueó')
+            localStorage.clear();
+            return {
+                ...state,
                 token: null,
-                 refreshToken:null,
-                 logged: false,
-                 id:  null
+                refreshToken: null,
+                logged: false,
+                id: null
             }
             // state.user = null;
             // state.id = null;

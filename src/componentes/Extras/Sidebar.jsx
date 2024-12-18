@@ -11,6 +11,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import { ColorModeContext, colorsList } from "../../theme";
+import { logout } from "../../redux/features/user/userSlice";
+import { useDispatch } from "react-redux";
 
 const Sidebar = () => {
     const theme = useTheme();
@@ -19,10 +21,10 @@ const Sidebar = () => {
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [selected, setSelected] = useState();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const logOut = () => {
-        localStorage.clear();
-        navigate('/login');
+        dispatch(logout());
     };
 
     const Item = ({ title, to, icon }) => (

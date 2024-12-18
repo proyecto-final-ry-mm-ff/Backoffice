@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, CssBaseline, useTheme } from '@mui/material';
 import { ColorModeContext, useMode, colorsList } from './theme';
-import Sidebar from './componentes/Global/Sidebar';
+import Sidebar from './componentes/Extras/Sidebar';
 import { Outlet } from 'react-router-dom';
 
 const Layout = () => {

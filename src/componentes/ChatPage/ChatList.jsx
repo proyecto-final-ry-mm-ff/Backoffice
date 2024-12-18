@@ -234,7 +234,7 @@ export default function ChatList({ onChatSelect }) {
                                     },
                                 }}
                             >
-                                {selectedTab === 0 ? <ArchiveIcon /> : ''}
+                                {selectedTab === 0 ? <ArchiveIcon /> : <UnarchiveIcon />}
                             </Button>
                         </Box>
                     ))

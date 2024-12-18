@@ -65,8 +65,12 @@ export const connectToHub = async () => {
 
 export const disconnectFromHub = async () => {
     try {
-        await connection.invoke("OperatorDisconnect");
-        console.log('Operador desconectado del Hub');
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            await connection.invoke("OperatorDisconnect");
+            console.log('OperatorDisconnect se invocó correctamente.');
+        }
+        await connection.stop();
+        console.log('Conexión detenida correctamente.');
     } catch (err) {
         console.error("Error al desconectar del Hub:", err);
     }

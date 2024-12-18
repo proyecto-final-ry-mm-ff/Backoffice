@@ -28,8 +28,9 @@ export default function Login() {
 
   // Leer el estado de sesión desde localStorage cuando el componente se monta
   useEffect(() => {
-    if (userStore?.logged) {
-      navigate('/dashboard');  // Navegar al dashboard si ya está logueado
+    const logged = localStorage.getItem('logged') === 'true';
+    if (logged) {
+      navigate('/dashboard');
     }
   }, [navigate]);
 
