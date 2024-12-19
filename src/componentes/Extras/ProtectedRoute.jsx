@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 const ProtectedRoute = ({ children }) => {
     const isLogged = useSelector((state) => state.userStore.logged); // Leer estado directamente desde Redux
-
+    console.log(isLogged);
     return isLogged ? children : <Navigate to="/login" />;
 };
 

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Box, TextField, Button, Typography, useTheme } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { colorsList } from "../../theme";
-import { saveChat } from '../../Services/services';
+import { saveChat } from '../../Services/userService.js';
 import { sendMessageToChat, assignOperatorToChat } from '../../Services/signalRService.js';
 import { useSelector } from 'react-redux';
 import { store } from '../../redux/store';

@@ -14,32 +14,41 @@ import Layout from './Layout';
 import './estilos/scrollbar.css'
 import './index.css'
 import ProtectedRoute from './componentes/Extras/ProtectedRoute';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from 'redux-persist';
+
+const persistor = persistStore(store);
+
 const App = () => {
   const [theme, colorMode] = useMode();
   const isLogged = localStorage.getItem('logged') === 'true';
   return (
-    <Provider store={store}>
-      <ColorModeContext.Provider value={colorMode}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <AppContainer>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/login" element={isLogged ? <Navigate to="/dashboard" /> : <Login />} />
-                <Route element={<Layout />}>
-                  <Route path="/chat-page" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
-                  <Route path="/flow-designer" element={<ProtectedRoute><FlowPage /></ProtectedRoute>} />
-                  <Route path="/config" element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
-                  <Route path="/" element={<Navigate to="/login" />} />
-                  <Route path="/dashboard" element={<ProtectedRoute><Navigate to="/chat-page" /></ProtectedRoute>} />
-                  <Route path="*" element={<ProtectedRoute><NotFoundPage /></ProtectedRoute>} />
-                </Route>
-              </Routes>
-            </BrowserRouter>
-          </AppContainer>
-        </ThemeProvider>
-      </ColorModeContext.Provider>
-    </Provider>
+    <React.StrictMode>
+      <PersistGate persistor={persistor}>
+        <Provider store={store}>
+          <ColorModeContext.Provider value={colorMode}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <AppContainer>
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/login" element={isLogged ? <Navigate to="/dashboard" /> : <Login />} />
+                    <Route element={<Layout />}>
+                      <Route path="/chat-page" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+                      <Route path="/flow-designer" element={<ProtectedRoute><FlowPage /></ProtectedRoute>} />
+                      <Route path="/config" element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
+                      <Route path="/" element={<Navigate to="/login" />} />
+                      <Route path="/dashboard" element={<ProtectedRoute><Navigate to="/chat-page" /></ProtectedRoute>} />
+                      <Route path="*" element={<ProtectedRoute><NotFoundPage /></ProtectedRoute>} />
+                    </Route>
+                  </Routes>
+                </BrowserRouter>
+              </AppContainer>
+            </ThemeProvider>
+          </ColorModeContext.Provider>
+        </Provider>
+      </PersistGate>
+    </React.StrictMode>
   );
 };
 

@@ -7,7 +7,6 @@ const urlApi = "http://localhost:5015";
 
 
 export const loginApi = async (userData) => {
-    // console.log("Paso 1 - Me identifico como Operador");
     const response = await fetch(`${urlApi}/login`, {
         headers: { "Content-Type": "application/json" },
         method: "POST",

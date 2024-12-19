@@ -3,6 +3,7 @@ import { GetRandomString } from '../../../Services/helperService';
 import { disconnectFromHub } from '../../../Services/signalRService';
 
 
+
 const userSlice = createSlice({
     name: 'users',
     initialState:
@@ -12,9 +13,6 @@ const userSlice = createSlice({
         logged: localStorage.getItem('logged') === 'true' || false,
         assignedChats: [],
         id: localStorage.getItem('id') || null,
-        // user: null,
-        // status: 'idle',
-        // error: null,
     },
     reducers: {
         login: (state, action) => {
@@ -42,8 +40,6 @@ const userSlice = createSlice({
                 logged: false,
                 id: null
             }
-            // state.user = null;
-            // state.id = null;
         },
     }
 });

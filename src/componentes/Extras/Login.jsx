@@ -1,32 +1,22 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { loginApi } from '../../Services/services'; //Realiza la llamada a la API de login.
+import { loginApi } from '../../Services/userService'; //Realiza la llamada a la API de login.
 import { useNavigate } from 'react-router-dom'; //Son lol componentes y hooks de react para manejar la navegación.
 import { FaUser, FaLock } from "react-icons/fa";
 import { Typography, Box, useTheme, TextField, Button } from "@mui/material";
 import { colorsList } from '../../theme';
 
 export default function Login() {
-
-  //HOCKS useSate (maneja los estados)
-
-  // useSate devuelve un array con dos elementos:
-  // 1) userData = El valor actual del estado.
-  // 2) setUserData = Una función que te permite actualizar ese valor.
-  // 3) useState es el valor inicial del estado
-  const [userData, setUserData] = useState({});
-  // const [logueado, setLogueado] = useState(false);
-  const [error, setErrorLogin] = useState('');
-  const navigate = useNavigate();
-
-  const userStore = useSelector((state) => state.userStore);
-
   const theme = useTheme();
   const colors = colorsList(theme.palette.mode);
 
+  const [userData, setUserData] = useState({});
+  const [error, setErrorLogin] = useState('');
+  const navigate = useNavigate();
 
-  // Leer el estado de sesión desde localStorage cuando el componente se monta
+
+  // Verificamos que no no esté iniciada ya una sesión
   useEffect(() => {
     const logged = localStorage.getItem('logged') === 'true';
     if (logged) {
@@ -34,9 +24,7 @@ export default function Login() {
     }
   }, [navigate]);
 
-
-  // Cada vez que el usuario cambia los valores en los campos del formulario, se llama a handleChangeMultiple
-  // y dentro se llama a setUserData(HOCK) para actualizar el estado.
+  // Actualiza los datos de los inputs en userData
   const handleChangeMultiple = (e) => {
     setUserData((userData) => ({
       ...userData,
@@ -44,29 +32,27 @@ export default function Login() {
     }));
   };
 
-
+  // Hace la llamada a la API
   const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    // reseteo el mensaje de error en cada llamada
+    e.preventDefault();
     setErrorLogin('');
 
-    const resultado = await loginApi(userData); //Realiza la llamada a la API de loginApi y espera al return
+    const resultado = await loginApi(userData);
     if (!resultado) {
       setErrorLogin('TODO CAMBIAR');
     } else {
-      navigate('/dashboard'); // Navegar al dashboard después del login.
+      navigate('/chat-page');
     }
   };
 
   return (
-    //Fondo 
     <Box
       sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh',
+        height: '100%',
         background: colors.background[500],
       }}
     >
