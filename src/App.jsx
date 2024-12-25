@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react'; // Importa useEffect correctamente
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { useMode, ColorModeContext } from './theme';
 import { store } from './redux/store';
@@ -11,28 +11,32 @@ import ConfigPage from './componentes/ConfigPage/ConfigPage';
 import AppContainer from './AppContainer';
 import NotFoundPage from './componentes/Extras/NotFoundPage';
 import Layout from './Layout';
-import './estilos/scrollbar.css'
-import './index.css'
+import './estilos/scrollbar.css';
+import './index.css';
 import ProtectedRoute from './componentes/Extras/ProtectedRoute';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
+import { login } from './redux/features/user/userSlice'; // Importa la acción de login
 
 const persistor = persistStore(store);
 
 const App = () => {
   const [theme, colorMode] = useMode();
-  const isLogged = localStorage.getItem('logged') === 'true';
+
   return (
     <React.StrictMode>
-      <PersistGate persistor={persistor}>
-        <Provider store={store}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
           <ColorModeContext.Provider value={colorMode}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
               <AppContainer>
                 <BrowserRouter>
                   <Routes>
-                    <Route path="/login" element={isLogged ? <Navigate to="/dashboard" /> : <Login />} />
+                    {/* Ruta para el login */}
+                    <Route path="/login" element={localStorage.getItem('logged') === 'true' ? <Navigate to="/dashboard" /> : <Login />} />
+
+                    {/* Rutas protegidas */}
                     <Route element={<Layout />}>
                       <Route path="/chat-page" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
                       <Route path="/flow-designer" element={<ProtectedRoute><FlowPage /></ProtectedRoute>} />
@@ -46,8 +50,8 @@ const App = () => {
               </AppContainer>
             </ThemeProvider>
           </ColorModeContext.Provider>
-        </Provider>
-      </PersistGate>
+        </PersistGate>
+      </Provider>
     </React.StrictMode>
   );
 };

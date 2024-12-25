@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Box, TextField, Button, Typography, useTheme } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { colorsList } from "../../theme";
-import { saveChat } from '../../Services/userService.js';
 import { sendMessageToChat, assignOperatorToChat } from '../../Services/signalRService.js';
 import { useSelector } from 'react-redux';
 import { store } from '../../redux/store';
@@ -20,7 +19,9 @@ const Chat = ({ chat }) => {
     const chatStore = useSelector((state) => state.chatStore);
 
     let selectedChat = chatStore?.allChats.find((c) => c?.id === chat?.id);
-
+    // Determinar si el chat está asignado al operador
+    const isAssigned = chatStore.myChats.some((c) => c.id === chat?.id);
+    
     if (!selectedChat) {
         selectedChat = chatStore?.myChats.find((c) => c?.id === chat?.id);
     }
@@ -149,6 +150,7 @@ const Chat = ({ chat }) => {
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Escribe un mensaje..."
                     variant="outlined"
+                    disabled={!isAssigned} // Campo deshabilitado si no está asignado
                     sx={{
                         backgroundColor: colors.background[200], // Fondo del TextField
                         borderRadius: '8px',

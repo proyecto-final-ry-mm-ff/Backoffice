@@ -12,11 +12,11 @@ import flowReducer from './features/flows/flowSlice';
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['chatStore', 'userStore']
+    whitelist: ['chatStore', 'userStore'] 
 }
 
 // Combinar reducers
-const rootReducer = combineReducers({
+const rootReducer = combineReducers({ 
     chatStore: chatReducer,
     userStore: userReducer,
     flowStore: flowReducer,
@@ -30,7 +30,7 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: false, // Necesario para redux-persist
-        }).concat(thunk), // Agrega redux-thunk
+        }),
 });
 
 // Persistor

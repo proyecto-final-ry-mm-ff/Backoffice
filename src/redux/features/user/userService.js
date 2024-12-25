@@ -1,7 +1,6 @@
-import { store } from '../redux/store'
-import { login } from '../redux/features/user/userSlice'
-import { GetBearerToken } from './helperService';
-import { connectToHub } from './signalRService';
+import { store } from '../../store';
+import { login } from './userSlice';
+import { connectToHub } from '../../../Services/signalRService';
 
 const urlApi = "http://localhost:5015";
 

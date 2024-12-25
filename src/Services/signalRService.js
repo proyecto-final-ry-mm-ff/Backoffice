@@ -1,7 +1,7 @@
 import { store } from '../redux/store';
 import { addChat, addMessageToChat, setChats } from '../redux/features/chat/chatSlice';
 import * as signalR from '@microsoft/signalr';
-
+import { assignChat } from '../redux/features/chat/chatSlice';
 const wssUrl = "http://localhost:5056/chat-hub";
 
 // Conexión al hub de SignalR
@@ -12,8 +12,8 @@ const connection = new signalR.HubConnectionBuilder()
 // Eventos del Hub
 const setupSignalREvents = () => {
     connection.on("PendingChats", (chats) => {
-        console.log("Chats pendientes:", chats);
-        store.dispatch(setChats(chats));
+        const uniqueChats = Array.from(new Map(chats.map(chat => [chat.id, chat])).values());
+        store.dispatch(setChats(uniqueChats));
     });
     /* 
         connection.on("AssignedChats", (chats) => {
@@ -79,11 +79,23 @@ export const disconnectFromHub = async () => {
 // Métodos adicionales del Hub
 export const assignOperatorToChat = async (selectedChatId) => {
     try {
-        await connection.invoke("AssignOperatorToChat", selectedChatId);
+        // Llamar al backend y esperar confirmación
+        const result = await connection.invoke("AssignOperatorToChat", selectedChatId);
+
+        if (result.success) {
+            // Despachar acción para actualizar Redux
+            store.dispatch(assignChat({ chatId: selectedChatId }));
+            console.log(`Chat ${selectedChatId} asignado exitosamente.`);
+        } else {
+            console.error(`Error desde el backend: ${result.message}`);
+        }
     } catch (err) {
         console.error("Error al asignar operador:", err);
+        alert("No se pudo asignar el chat. Inténtalo nuevamente.");
     }
 };
+
+
 
 export const sendMessageToChat = async (chatId, senderTypeId, message) => {
     try {

@@ -12,12 +12,15 @@ const chatSlice = createSlice({
     initialState,
     reducers: {
         setChats: (state, action) => {
+            console.log('se setean chats');
             state.allChats = action.payload;
         },
         addChat: (state, action) => {
+            console.log('se agrega chat');
             state.allChats.push(action.payload);
         },
         addMessageToChat: (state, action) => {
+            console.log('se manda un mensaje al chat');
             const { chatId, ...message } = action.payload;
             const chat = state.allChats.find((c) => c.id === chatId);
             if (chat) {
@@ -31,18 +34,26 @@ const chatSlice = createSlice({
         },
         // Asignar
         assignChat: (state, action) => {
+            console.log('se asigna un chat');
             const { chatId } = action.payload;
-            console.log(action.payload)
-            //  const chatIndex = state.allChats.findIndex(chat => chat.id === chatId);
-            const theChat = state.allChats.find(chat => chat.id === chatId);
-            console.log('Aca el chat asignado: ', theChat)
-            //if (chatIndex > -1) {
-            // const [chat] = state.allChats.splice(chatIndex, 1);
-            state.myChats.push(theChat);
-            //  }
+        
+            // Verificar si ya está en myChats para evitar duplicados
+            const existsInMyChats = state.myChats.some(chat => chat.id === chatId);
+            if (!existsInMyChats) {
+                // Buscar el chat en allChats
+                const theChat = state.allChats.find(chat => chat.id === chatId);
+                if (theChat) {
+                    // Mover el chat a myChats
+                    state.myChats = [...state.myChats, theChat];
+                    // Eliminar el chat de allChats
+                    state.allChats = state.allChats.filter(chat => chat.id !== chatId);
+                }
+            }
         },
+        
         // Desasignar
         unassignChat(state, action) {
+            console.log('se desasigna un chat');
             const chatId = action.payload;
             const chatIndex = state.myChats.findIndex(chat => chat.id === chatId);
             if (chatIndex > -1) {
@@ -52,10 +63,12 @@ const chatSlice = createSlice({
         },
         // Seleccionar
         setSelectedChat: (state, action) => {
+            console.log('se selecciona un chat');
             state.selectedChat = action.payload;
         },
         // Deseleccionar
         clearSelectedChat: (state) => {
+            console.log('se deselecciona un chat')
             state.selectedChat = null;
         },
     },

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { loginApi } from '../../Services/userService'; //Realiza la llamada a la API de login.
+import { loginApi } from '../../redux/features/user/userService';
 import { useNavigate } from 'react-router-dom'; //Son lol componentes y hooks de react para manejar la navegación.
 import { FaUser, FaLock } from "react-icons/fa";
 import { Typography, Box, useTheme, TextField, Button } from "@mui/material";

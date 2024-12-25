@@ -25,6 +25,7 @@ const Sidebar = () => {
 
     const logOut = () => {
         dispatch(logout());
+        navigate("/login"); 
     };
 
     const Item = ({ title, to, icon }) => (

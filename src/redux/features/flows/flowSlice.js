@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getFlows, createFlow, deleteFlow, updateFlow } from '../../../Services/flowService';
+import { getFlows, createFlow, deleteFlow, updateFlow } from './flowService';
 
 const initialState = {
     flowsList: [], // Lista de todos los flujos

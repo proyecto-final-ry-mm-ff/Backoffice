@@ -32,7 +32,10 @@ const userSlice = createSlice({
         logout: (state) => {
             disconnectFromHub();
             console.log('Se deslogueó')
-            localStorage.clear();
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('logged');
+            localStorage.removeItem('id');
             return {
                 ...state,
                 token: null,
