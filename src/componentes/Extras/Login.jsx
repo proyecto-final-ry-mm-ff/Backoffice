@@ -20,7 +20,7 @@ export default function Login() {
   useEffect(() => {
     const logged = localStorage.getItem('logged') === 'true';
     if (logged) {
-      navigate('/dashboard');
+      navigate('/chat-page');
     }
   }, [navigate]);
 

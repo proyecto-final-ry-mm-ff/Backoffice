@@ -34,7 +34,7 @@ const App = () => {
                 <BrowserRouter>
                   <Routes>
                     {/* Ruta para el login */}
-                    <Route path="/login" element={localStorage.getItem('logged') === 'true' ? <Navigate to="/dashboard" /> : <Login />} />
+                    <Route path="/login" element={<Login/>} />
 
                     {/* Rutas protegidas */}
                     <Route element={<Layout />}>
