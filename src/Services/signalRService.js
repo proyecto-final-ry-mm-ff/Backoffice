@@ -7,20 +7,25 @@ const wssUrl = "http://localhost:5056/chat-hub";
 // Conexión al hub de SignalR
 const connection = new signalR.HubConnectionBuilder()
     .withUrl(wssUrl)
+    .withAutomaticReconnect([0, 2000, 5000, 10000]) // Tiempos entre intentos de reconexión
     .build();
 
 // Eventos del Hub
 const setupSignalREvents = () => {
+
+    connection.off("PendingChats");
+    connection.off("NewChatRequest");
+    connection.off("ReceiveMessage");
+    connection.off("ChatAssigned");
+    connection.off("OperatorJoined");
+    connection.off("ClientDisconnected");
+    connection.off("ClientDisconnectedFromPending");
+
     connection.on("PendingChats", (chats) => {
+        console.log("PendingChats ", { chats });
         const uniqueChats = Array.from(new Map(chats.map(chat => [chat.id, chat])).values());
         store.dispatch(setChats(uniqueChats));
     });
-    /* 
-        connection.on("AssignedChats", (chats) => {
-            console.log("Chats asignados:", chats);
-            store.dispatch(setAssignedChats(chats));
-        });
-     */
     connection.on("NewChatRequest", (chat) => {
         console.log("NewChatRequest", { chat });
         store.dispatch(addChat(chat));
@@ -47,13 +52,20 @@ const setupSignalREvents = () => {
     connection.on("ClientDisconnectedFromPending", (pendingChat) => {
         console.log(`Un cliente pendiente se desconectó: ${pendingChat?.id}`);
     });
+
 };
 
 // Métodos para manejar la conexión
 export const connectToHub = async () => {
     try {
-        setupSignalREvents(); // Configurar eventos
-        await connection.start();
+        if (connection.state === signalR.HubConnectionState.Disconnected) {
+            await connection.start();
+            console.log("Conexión al Hub iniciada correctamente.");
+        }
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            console.log("Registrando eventos del Hub...");
+            setupSignalREvents(); // Configurar eventos solo si aún no se han configurado
+        }
         await connection.invoke("OperatorConnect");
         console.log("Conectado al Hub de SignalR como operador");
     } catch (err) {
@@ -69,7 +81,7 @@ export const disconnectFromHub = async () => {
             await connection.invoke("OperatorDisconnect");
             console.log('OperatorDisconnect se invocó correctamente.');
         }
-        await connection.stop();
+        await connection.stop()
         console.log('Conexión detenida correctamente.');
     } catch (err) {
         console.error("Error al desconectar del Hub:", err);
@@ -91,7 +103,6 @@ export const assignOperatorToChat = async (selectedChatId) => {
         }
     } catch (err) {
         console.error("Error al asignar operador:", err);
-        alert("No se pudo asignar el chat. Inténtalo nuevamente.");
     }
 };
 

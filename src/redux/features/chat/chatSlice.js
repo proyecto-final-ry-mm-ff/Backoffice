@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    allChats: [], // Lista de todos los flujos
+    allChats: [],
     myChats: [],
     selectedChat: null,
 };
@@ -12,15 +12,12 @@ const chatSlice = createSlice({
     initialState,
     reducers: {
         setChats: (state, action) => {
-            console.log('se setean chats');
             state.allChats = action.payload;
         },
         addChat: (state, action) => {
-            console.log('se agrega chat');
             state.allChats.push(action.payload);
         },
         addMessageToChat: (state, action) => {
-            console.log('se manda un mensaje al chat');
             const { chatId, ...message } = action.payload;
             const chat = state.allChats.find((c) => c.id === chatId);
             if (chat) {
@@ -50,7 +47,6 @@ const chatSlice = createSlice({
                 }
             }
         },
-        
         // Desasignar
         unassignChat(state, action) {
             console.log('se desasigna un chat');

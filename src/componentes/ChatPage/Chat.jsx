@@ -5,7 +5,6 @@ import { colorsList } from "../../theme";
 import { sendMessageToChat, assignOperatorToChat } from '../../Services/signalRService.js';
 import { useSelector } from 'react-redux';
 import { store } from '../../redux/store';
-import { assignChat } from '../../redux/features/chat/chatSlice.js';
 
 const Chat = ({ chat }) => {
     const theme = useTheme();

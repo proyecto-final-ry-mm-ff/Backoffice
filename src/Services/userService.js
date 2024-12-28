@@ -17,13 +17,7 @@ export const loginApi = async (email, password) => {
     
         if (!response.ok) {
             throw new Error(parsedResponse.message || "Error al iniciar sesión");
-            /*store.dispatch(login(parsedResponse));
-            localStorage.setItem('token', parsedResponse.accessToken);
-            localStorage.setItem('refreshToken', parsedResponse.refreshToken);
-            localStorage.setItem('logged', true);
-            await connectToHub();*/
         }
-
         return parsedResponse;
     } catch (error) {
         console.error("Error en loginUserApi:", error);
