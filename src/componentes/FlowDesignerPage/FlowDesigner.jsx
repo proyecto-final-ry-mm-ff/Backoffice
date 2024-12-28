@@ -80,7 +80,9 @@ const FlowDesigner = ({ onBackToList }) => {
     );
 
     const onConnect = useCallback(
-        (params) => setEdges((eds) => addEdge(params, eds)),
+        (params) => setEdges((eds) =>
+            addEdge({ ...params, condition: null }, eds)
+        ),
         [setEdges]
     );
 
@@ -127,6 +129,7 @@ const FlowDesigner = ({ onBackToList }) => {
             id: edge.id,
             source: edge.source,
             target: edge.target,
+            condition: edge.condition
         }));
 
         const flowData = {
