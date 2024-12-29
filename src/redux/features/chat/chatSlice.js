@@ -49,7 +49,6 @@ const chatSlice = createSlice({
         },
         // Desasignar
         unassignChat(state, action) {
-            console.log('se desasigna un chat');
             const chatId = action.payload;
             const chatIndex = state.myChats.findIndex(chat => chat.id === chatId);
             if (chatIndex > -1) {
@@ -59,18 +58,19 @@ const chatSlice = createSlice({
         },
         // Seleccionar
         setSelectedChat: (state, action) => {
-            console.log('se selecciona un chat');
             state.selectedChat = action.payload;
         },
         // Deseleccionar
         clearSelectedChat: (state) => {
-            console.log('se deselecciona un chat')
             state.selectedChat = null;
         },
+        clearMyChats: (state) => {
+            state.myChats = [];
+        }
     },
 });
 
-export const { setChats, addChat, addMessageToChat, assignChat, unassignChat, setSelectedChat, clearSelectedChat, } = chatSlice.actions;
+export const { setChats, addChat, addMessageToChat, assignChat, unassignChat, setSelectedChat, clearSelectedChat, clearMyChats } = chatSlice.actions;
 export default chatSlice.reducer;
 
 /*const chatSlice = createSlice({
