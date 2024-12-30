@@ -11,6 +11,8 @@ export const loginThunk = (email, password) => async (dispatch) => {
         // Si el login es exitoso, actualiza el store
         dispatch(login(response));
         connectToHub();
+
+
         // Generar ID único si no existe
         const userId = localStorage.getItem('id') || GetRandomString(12);
 
@@ -36,9 +38,14 @@ export const logoutThunk = () => async (dispatch) => {
         localStorage.removeItem('logged');
         localStorage.removeItem('id');
 
-        dispatch(logout()); //Slice
+        // Actualizar el estado global 
+        dispatch(logout()); 
         dispatch(clearMyChats());
-        disconnectFromHub(); //Service
+
+        // Desconectar del backend y detener SignalR
+        await disconnectFromHub(); 
+
+        console.log("Logout completado exitosamente.");
     } catch (error) {
         console.error('Error durante el logout:', error);
     }

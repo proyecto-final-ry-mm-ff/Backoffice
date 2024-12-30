@@ -17,6 +17,11 @@ const chatSlice = createSlice({
         addChat: (state, action) => {
             state.allChats.push(action.payload);
         },
+        removeChat: (state, action) => {
+            console.log("action.payload");
+            const chatId = action.payload; // `pendingChat.id` del evento
+            state.allChats = state.allChats.filter(chat => chat.id !== chatId);
+        },
         addMessageToChat: (state, action) => {
             const { chatId, ...message } = action.payload;
             const chat = state.allChats.find((c) => c.id === chatId);
@@ -70,7 +75,7 @@ const chatSlice = createSlice({
     },
 });
 
-export const { setChats, addChat, addMessageToChat, assignChat, unassignChat, setSelectedChat, clearSelectedChat, clearMyChats } = chatSlice.actions;
+export const { setChats, addChat, removeChat, addMessageToChat, assignChat, unassignChat, setSelectedChat, clearSelectedChat, clearMyChats } = chatSlice.actions;
 export default chatSlice.reducer;
 
 /*const chatSlice = createSlice({

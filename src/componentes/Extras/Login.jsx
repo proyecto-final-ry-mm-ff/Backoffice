@@ -25,7 +25,7 @@ export default function Login() {
     if (logged) {
       navigate('/chat-page');
     }
-  }, [navigate]);
+  }, [navigate, setErrorLogin]);
 
   // Actualiza los datos de los inputs en userData
   const handleChangeMultiple = (e) => {
@@ -46,12 +46,6 @@ export default function Login() {
     } catch (error) {
         setErrorLogin(error.message || 'Error al iniciar sesión');
     }
-    /*const resultado = await loginApi(userData);
-    if (!resultado) {
-      setErrorLogin('TODO CAMBIAR');
-    } else {
-      navigate('/chat-page');
-    }*/
   };
 
   return (
