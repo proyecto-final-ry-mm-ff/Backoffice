@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { loginApi } from '../../redux/features/user/userService';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginApi } from '../../Services/userService';
 import { useNavigate } from 'react-router-dom'; //Son lol componentes y hooks de react para manejar la navegación.
 import { FaUser, FaLock } from "react-icons/fa";
 import { Typography, Box, useTheme, TextField, Button } from "@mui/material";
 import { colorsList } from '../../theme';
+import { loginThunk } from '../../redux/features/user/userThunk';
+
 
 export default function Login() {
   const theme = useTheme();
@@ -13,8 +15,9 @@ export default function Login() {
 
   const [userData, setUserData] = useState({});
   const [error, setErrorLogin] = useState('');
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Verificamos que no no esté iniciada ya una sesión
   useEffect(() => {
@@ -22,7 +25,7 @@ export default function Login() {
     if (logged) {
       navigate('/chat-page');
     }
-  }, [navigate]);
+  }, [navigate, setErrorLogin]);
 
   // Actualiza los datos de los inputs en userData
   const handleChangeMultiple = (e) => {
@@ -32,17 +35,16 @@ export default function Login() {
     }));
   };
 
-  // Hace la llamada a la API
+  // Hace la llamada al thunk
   const handleSubmit = async (e) => {
-
     e.preventDefault();
     setErrorLogin('');
 
-    const resultado = await loginApi(userData);
-    if (!resultado) {
-      setErrorLogin('TODO CAMBIAR');
-    } else {
-      navigate('/chat-page');
+    try {
+      await dispatch(loginThunk(userData.email, userData.password));
+      navigate('/chat-page'); // Redirige si el login es exitoso
+    } catch (error) {
+        setErrorLogin(error.message || 'Error al iniciar sesión');
     }
   };
 

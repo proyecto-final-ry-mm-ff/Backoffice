@@ -15,7 +15,7 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import NodeTypes from './Nodes/NodeTypes';
 import { initializeNodeData } from './Nodes/NodeTypes';
 //flowService
-import { updateFlow } from '../../redux/features/flows/flowService';
+import { updateFlow } from '../../Services/flowService';
 
 /*const initialNodes = [{
     id: '0',

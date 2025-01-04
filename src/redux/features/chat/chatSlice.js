@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    allChats: [], // Lista de todos los flujos
+    allChats: [],
     myChats: [],
     selectedChat: null,
 };
@@ -12,15 +12,17 @@ const chatSlice = createSlice({
     initialState,
     reducers: {
         setChats: (state, action) => {
-            console.log('se setean chats');
             state.allChats = action.payload;
         },
         addChat: (state, action) => {
-            console.log('se agrega chat');
             state.allChats.push(action.payload);
         },
+        removeChat: (state, action) => {
+            console.log("action.payload");
+            const chatId = action.payload; // `pendingChat.id` del evento
+            state.allChats = state.allChats.filter(chat => chat.id !== chatId);
+        },
         addMessageToChat: (state, action) => {
-            console.log('se manda un mensaje al chat');
             const { chatId, ...message } = action.payload;
             const chat = state.allChats.find((c) => c.id === chatId);
             if (chat) {
@@ -50,10 +52,8 @@ const chatSlice = createSlice({
                 }
             }
         },
-        
         // Desasignar
         unassignChat(state, action) {
-            console.log('se desasigna un chat');
             const chatId = action.payload;
             const chatIndex = state.myChats.findIndex(chat => chat.id === chatId);
             if (chatIndex > -1) {
@@ -63,18 +63,19 @@ const chatSlice = createSlice({
         },
         // Seleccionar
         setSelectedChat: (state, action) => {
-            console.log('se selecciona un chat');
             state.selectedChat = action.payload;
         },
         // Deseleccionar
         clearSelectedChat: (state) => {
-            console.log('se deselecciona un chat')
             state.selectedChat = null;
         },
+        clearMyChats: (state) => {
+            state.myChats = [];
+        }
     },
 });
 
-export const { setChats, addChat, addMessageToChat, assignChat, unassignChat, setSelectedChat, clearSelectedChat, } = chatSlice.actions;
+export const { setChats, addChat, removeChat, addMessageToChat, assignChat, unassignChat, setSelectedChat, clearSelectedChat, clearMyChats } = chatSlice.actions;
 export default chatSlice.reducer;
 
 /*const chatSlice = createSlice({

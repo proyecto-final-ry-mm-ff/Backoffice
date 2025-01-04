@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDnD } from './DnDContext';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, useTheme } from '@mui/material';
+import { Paper, Typography, Box, useTheme } from '@mui/material';
 import { colorsList } from '../../../theme';
 
 const FlowSideBar = () => {

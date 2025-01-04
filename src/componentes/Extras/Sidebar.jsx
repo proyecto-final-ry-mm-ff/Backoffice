@@ -11,8 +11,9 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import { ColorModeContext, colorsList } from "../../theme";
-import { logout } from "../../redux/features/user/userSlice";
 import { useDispatch } from "react-redux";
+import { logoutThunk } from "../../redux/features/user/userThunk";
+
 
 const Sidebar = () => {
     const theme = useTheme();
@@ -23,8 +24,8 @@ const Sidebar = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const logOut = () => {
-        dispatch(logout());
+    const handleLogout = () => {
+        dispatch(logoutThunk());
         navigate("/login"); 
     };
 
@@ -121,7 +122,7 @@ const Sidebar = () => {
                             </Typography>
                         </MenuItem>
                         <MenuItem
-                            onClick={logOut}
+                            onClick={handleLogout}
                             icon={<LogoutOutlinedIcon fontSize="medium" />}
                             sx={{
                                 '&:hover': {

@@ -3,14 +3,12 @@ import { Box, Typography, Tabs, Tab, useTheme, Button, TextField } from '@mui/ma
 import { useSelector, useDispatch } from 'react-redux';
 import { colorsList } from '../../theme';
 import { assignChat } from '../../redux/features/chat/chatSlice';
-
-//import ArchiveIcon from '@mui/icons-material/ArchiveOutlined';
-//import UnarchiveIcon from '@mui/icons-material/UnarchiveOutlined';
 import ArchiveIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import UnarchiveIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import { assignOperatorToChat } from '../../Services/signalRService';
+
 export default function ChatList({ onChatSelect }) {
     const theme = useTheme();
     const colors = colorsList(theme.palette.mode);
