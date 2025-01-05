@@ -2,6 +2,8 @@ import { store } from '../redux/store';
 import { addChat, addMessageToChat, setChats, removeChat } from '../redux/features/chat/chatSlice';
 import * as signalR from '@microsoft/signalr';
 import { assignChat } from '../redux/features/chat/chatSlice';
+import { saveMessageToChat } from './chatService';
+import { useSelector } from 'react-redux';
 const wssUrl = "http://localhost:5056/chat-hub";
 
 // Conexión al hub de SignalR
@@ -15,48 +17,49 @@ let isEventsRegistered = false; // Bandera para evitar múltiples registros de e
 
 // Eventos del Hub
 const setupSignalREvents = () => {
-        console.log("x");
-        connection.on("PendingChats", (chats) => {
-            console.log("PendingChats ", { chats });
-            const uniqueChats = Array.from(new Map(chats.map(chat => [chat.id, chat])).values());
-            store.dispatch(setChats(uniqueChats));
-        });
-        connection.on("NewChatRequest", (chat) => {
-            console.log("NewChatRequest", { chat });
-            store.dispatch(addChat(chat));
-        });
+    connection.on("PendingChats", (chats) => {
+        console.log("PendingChats ", { chats });
+        const uniqueChats = Array.from(new Map(chats.map(chat => [chat.id, chat])).values());
+        store.dispatch(setChats(uniqueChats));
+    });
+    connection.on("NewChatRequest", (chat) => {
+        console.log("NewChatRequest", { chat });
+        store.dispatch(addChat(chat));
+    });
 
-        connection.on("ReceiveMessage", (messageDto) => {
-            console.log("ReceiveMessage", { messageDto });
-            store.dispatch(addMessageToChat(messageDto));
-        });
+    connection.on("ReceiveMessage", (messageDto) => {
+        console.log("--|| ReceiveMessage ||--", { messageDto });
+        store.dispatch(addMessageToChat(messageDto));
+        const { chatId, ...message } = messageDto;
+        saveMessageToChat(chatId, messageDto);
+    });
 
-        connection.on("ChatAssigned", (chat, pendingChats) => {
-            console.log(`Se ha asignado el chat ${chat.id} Nuevos chats pendientes: `, pendingChats);
-            store.dispatch(setChats(pendingChats));
-        });
+    connection.on("ChatAssigned", (chat, pendingChats) => {
+        console.log(`Se ha asignado el chat ${chat.id} Nuevos chats pendientes: `, pendingChats);
+        store.dispatch(setChats(pendingChats));
+    });
 
-        connection.on("OperatorJoined", (chat) => {
-            console.log(`Te asignaste el chat ${chat.id}`);
-        });
+    connection.on("OperatorJoined", (chat) => {
+        console.log(`Te asignaste el chat ${chat.id}`);
+    });
 
-        connection.on("OperatorDisconnected", (pendingChats) => {
-            console.log(`Se desconectó el operador ${pendingChats}`);
-        });
+    connection.on("OperatorDisconnected", (pendingChats) => {
+        console.log(`Se desconectó el operador ${pendingChats}`);
+    });
 
-        connection.on("ClientDisconnected", (pendingChat) => {
-            console.log(`Se desconectó el cliente ${pendingChat?.id}`);
-        });
-        
-        connection.on("ClientDisconnectedFromPending", (pendingChat) => {
-            console.log(`Un cliente pendiente se desconectó: ${pendingChat?.id}`);
-            store.dispatch(removeChat(pendingChat?.id));
-        });
+    connection.on("ClientDisconnected", (pendingChat) => {
+        console.log(`Se desconectó el cliente ${pendingChat?.id}`);
+    });
 
-        connection.on("Error", (errorMessage) => {
-            console.error("Error recibido desde el servidor:", errorMessage);
-            alert(`Error: ${errorMessage}`);
-        });
+    connection.on("ClientDisconnectedFromPending", (pendingChat) => {
+        console.log(`Un cliente pendiente se desconectó: ${pendingChat?.id}`);
+        store.dispatch(removeChat(pendingChat?.id));
+    });
+
+    connection.on("Error", (errorMessage) => {
+        console.error("Error recibido desde el servidor:", errorMessage);
+        alert(`Error: ${errorMessage}`);
+    });
 };
 
 // Métodos para manejar la conexión
@@ -108,8 +111,6 @@ export const assignOperatorToChat = async (selectedChatId) => {
         console.error("Error al asignar operador:", err);
     }
 };
-
-
 
 export const sendMessageToChat = async (chatId, senderTypeId, message) => {
     try {

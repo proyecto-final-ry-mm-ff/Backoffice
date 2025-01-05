@@ -8,6 +8,8 @@ import UnarchiveIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import { assignOperatorToChat } from '../../Services/signalRService';
+import { saveChat } from '../../Services/chatService';
+import { GetBearerToken } from '../../Services/helperService';
 
 export default function ChatList({ onChatSelect }) {
     const theme = useTheme();
@@ -49,15 +51,25 @@ export default function ChatList({ onChatSelect }) {
     };
 
     const handleEndChat = async (chatId) => {
-        /* try {
-            // Pegarle al endChat de signalRF-
+        try {
             const token = userStore.token;
-            await saveChat(token, thisChat);
+            const chat = chats.myChats.find(c => c.id === chatId);
+
+            if (!chat) {
+                console.error("Chat no encontrado en mi lista.");
+                return;
+            }
+
+            const success = await saveChat(token, chat);
+            if (success) {
+                console.log("Chat guardado y finalizado correctamente.");
+            } else {
+                console.error("Error al guardar y finalizar el chat.");
+            }
         } catch (err) {
-            console.error("Error al enviar mensaje:", err);
+            console.error("Error al finalizar el chat:", err);
         }
-       console.log("Chat terminado") */
-    }
+    };
 
     return (
         <Box

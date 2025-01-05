@@ -16,15 +16,16 @@ export const getChats = async () => {
 
 export const saveChat = async (token, chat) => {
     // const token = GetBearerToken(); //TODO:  Hay que manejar una lógica de pedir refresh token si este expiró
-    // console.log("Voy a guardar la instancia de chat...");
-    // console.log({ chat });
+    console.log("Voy a guardar la instancia de chat...");
+    console.log({ chat });
+    token = GetBearerToken();
     const chatUpdateDto = {
         chatId: chat.id,
-        customerId: chat.customer.id,
-        status: 4,
-        messages: chat.messages
+        customerId: chat.customerId,
+        status: 4, //4 es terminado
+        messages: []
     };
-    const response = await fetch(`${urlChat}/chat/${chat.id}`, {
+    const response = await fetch(`${urlChat}/${chat.id}`, {
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         method: "PUT",
         body: JSON.stringify(chatUpdateDto),
@@ -39,3 +40,25 @@ export const saveChat = async (token, chat) => {
     return false;
 
 }
+
+export const saveMessageToChat = async (chatId, message) => {
+    const token = GetBearerToken();
+    try {
+        const response = await fetch(`${urlChat}/${chatId}/message`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            method: "POST",
+            body: JSON.stringify(message),
+        });
+
+        if (!response.ok) {
+            throw new Error("No se pudo guardar el mensaje en la base de datos.");
+        }
+
+        console.log("Mensaje guardado en la base de datos.");
+    } catch (err) {
+        console.error("Error al guardar el mensaje:", err);
+    }
+};

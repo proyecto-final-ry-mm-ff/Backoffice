@@ -1,11 +1,10 @@
 
-import { useSelector } from 'react-redux';
+import { store } from '../redux/store';
 
 
 export const GetBearerToken = () => {
-    const user = useSelector((state) => state.userStore);
-    return user.token || null;
-    // return localStorage.getItem("token") || null;
+    const state = store.getState();
+    return state.userStore?.token || null;
 }
 
 export const GetRandomString = length => {
