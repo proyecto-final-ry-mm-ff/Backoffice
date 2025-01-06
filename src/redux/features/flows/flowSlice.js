@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getFlows, createFlow, deleteFlow, updateFlow } from '../../../Services/flowService';
-
+import { toggleFlowActiveThunk } from './flowThunks';
 const initialState = {
     flowsList: [], // Lista de todos los flujos
     selectedFlow: null, // Flujo seleccionado para edición o creación
@@ -24,23 +24,16 @@ const flowSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // Obtener Flujos
-            .addCase(getFlows.pending, (state) => {
-                state.status = 'loading';
-            })
+            // Get Flows
             .addCase(getFlows.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.flowsList = action.payload;
             })
-            .addCase(getFlows.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.payload;
-            })
-            // Crear Flujos
+            // Create Flow
             .addCase(createFlow.fulfilled, (state, action) => {
                 state.flowsList.push(action.payload);
             })
-            // Eliminar Flujos
+            // Delete Flow
             .addCase(deleteFlow.fulfilled, (state, action) => {
                 state.flowsList = state.flowsList.filter((flow) => flow.id !== action.payload);
             })
@@ -49,6 +42,13 @@ const flowSlice = createSlice({
                 const index = state.flowsList.findIndex((flow) => flow.id === action.payload.id);
                 if (index !== -1) {
                     state.flowsList[index] = action.payload; // Actualiza el flujo en la lista
+                }
+            })
+            .addCase(toggleFlowActiveThunk.fulfilled, (state, action) => {
+                // Encuentra el flujo actualizado y reemplázalo
+                const index = state.flowsList.findIndex(flow => flow.id === action.payload.id);
+                if (index !== -1) {
+                    state.flowsList[index] = action.payload;
                 }
             });
     },

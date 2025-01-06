@@ -5,6 +5,7 @@ import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRo
 import FlowDesigner from './FlowDesigner';
 import { setSelectedFlow } from '../../redux/features/flows/flowSlice';
 import { colorsList } from '../../theme';
+import { toggleFlowActiveThunk } from '../../redux/features/flows/flowThunks';
 
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
@@ -50,26 +51,7 @@ const FlowsList = () => {
     const handleDelete = (id) => {
         dispatch(deleteFlow(id));
     };
-    /*
-        if (status === 'loading') {
-            return (
-                <Box
-                    sx={{
-                        padding: 4,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        display: 'flex',
-                        backgroundColor: colors.background[100],
-                    }}
-                >
-                    <Typography
-                        variant="h3"
-                    >
-                        Cargando diagramas...
-                    </Typography>
-                </Box>
-            );
-        }*/
+   
     if (status === 'failed') {
         return (
             <Box
@@ -179,17 +161,33 @@ const FlowsList = () => {
                                                     width: '100px',
                                                 }}
                                             >
-                                                {flow.activo ? <DoneOutlinedIcon /> : <ClearOutlinedIcon />}
+                                                <Button
+                                                    variant="outlined"
+                                                    sx={{
+                                                        borderRadius: "100%",
+                                                        color: flow.activo ? colors.accentGreen[100] : colors.accentRed[100],
+                                                        borderColor: flow.activo ? colors.accentGreen[100] : colors.accentRed[100],
+                                                        '&:hover': {
+                                                            color: flow.activo ? colors.accentGreen[400] : colors.accentRed[400],
+                                                            borderColor: flow.activo ? colors.accentGreen[400] : colors.accentRed[400],
+                                                            background: flow.activo ? colors.background[600] : colors.background[200] ,
+                                                        },
+                                                        minWidth: 'unset',
+                                                        width: '35px',
+                                                        height: '35px'
+                                                    }}
+                                                    onClick={() => dispatch(toggleFlowActiveThunk(flow.id))}
+                                                >
+                                                    {flow.activo ? <DoneOutlinedIcon /> : <ClearOutlinedIcon />}
+                                                </Button>
                                             </TableCell>
                                             <TableCell align="center" sx={{ width: '260px' }} >
                                                 <Button
                                                     variant="contained"
                                                     sx={{
                                                         backgroundColor: colors.buttonPrimary[100],
-                                                        //color: colors.textPrimary[500],
                                                         minWidth: 'unset',
                                                         width: '50px',
-                                                        //textTransform: 'none',
                                                         '&:hover': {
                                                             backgroundColor: colors.buttonPrimaryHover[100],
                                                         },

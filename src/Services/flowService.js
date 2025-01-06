@@ -51,9 +51,6 @@ export const updateFlow = createAsyncThunk('flows/updateFlow', async (updatedFlo
     }
 });
 
-
-
-
 // Eliminar un flujo
 export const deleteFlow = createAsyncThunk('flows/deleteFlow', async (id, thunkAPI) => {
     try {
@@ -66,3 +63,23 @@ export const deleteFlow = createAsyncThunk('flows/deleteFlow', async (id, thunkA
         return thunkAPI.rejectWithValue(error.message);
     }
 });
+
+
+export const toggleFlowActive = async (id) => {
+    try{
+        const response = await fetch(`${urlFlow}/toggle-active/${id}`, {
+            method: "PUT",
+        });
+    
+        if (!response.ok) {
+            throw new Error(`Error al alternar el estado del flujo: ${response.statusText}`);
+        }
+
+        const updatedFlow = await response.json();
+        
+        return updatedFlow;
+    } catch (error) {
+        console.error("Error en toggleFlowActive:", error);
+        throw error;
+    }
+};
