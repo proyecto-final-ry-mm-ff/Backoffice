@@ -7,6 +7,7 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import ChatIcon from "@mui/icons-material/Chat";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import HubIcon from '@mui/icons-material/Hub';
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { Link, useNavigate } from "react-router-dom";
@@ -66,11 +67,8 @@ const Sidebar = () => {
                 },
             }}
         >
-            <ProSidebar collapsed={isCollapsed}
-                sx={{
-                    height: '100%', // Asegura que ocupe todo el espacio disponible
-                }} >
-                <Menu iconShape="square" >
+            <ProSidebar collapsed={isCollapsed} sx={{ height: '100%', }} >
+                <Menu>
                     {/* Botón para colapsar/expandir el menú */}
                     <MenuItem
                         onClick={() => setIsCollapsed(!isCollapsed)}
@@ -93,18 +91,19 @@ const Sidebar = () => {
                     </MenuItem>
 
                     {/* Opciones del menú */}
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column'}}>
                         <Item title="Chats" to="/chat-page" icon={<ChatIcon />} />
                         <Item title="Diseñador de flujos" to="/flow-designer" icon={<AccountTreeIcon />} />
+                        <Item title="Clientes" to="/clients-page" icon={<HubIcon />} />
                         <Item title="Configuración" to="/config" icon={<SettingsIcon />} />
+                        
                     </Box>
-
-                    {/* Íconos de cambiar tema y logout */}
-                    <Box
-                        sx={{
-                            marginTop: 'auto', // Empuja este contenido hacia abajo
+                </Menu>
+                <Menu
+                        style={{
                             display: 'flex',
                             flexDirection: 'column',
+                            marginTop: 'auto',
                         }}
                     >
                         <MenuItem
@@ -134,8 +133,7 @@ const Sidebar = () => {
                                 {isCollapsed ? "" : "Cerrar Sesión"}
                             </Typography>
                         </MenuItem>
-                    </Box>
-                </Menu>
+                    </Menu>
             </ProSidebar>
         </Box >
     );

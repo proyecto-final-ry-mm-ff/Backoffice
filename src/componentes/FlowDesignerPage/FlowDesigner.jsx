@@ -9,8 +9,6 @@ import { ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState,
 import '@xyflow/react/dist/style.css';
 import { useEffect } from 'react';
 
-import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
-
 //Nodos
 import NodeTypes from './Nodes/NodeTypes';
 import { initializeNodeData } from './Nodes/NodeTypes';
