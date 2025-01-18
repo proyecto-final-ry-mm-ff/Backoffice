@@ -40,8 +40,9 @@ const FlowsList = () => {
                 activo: false,
                 data: '{}',
             };
-            const createdFlow = await dispatch(createFlow(newFlow)).unwrap();
-            dispatch(setSelectedFlow(createdFlow));
+            //const createdFlow = await dispatch(createFlow(newFlow)).unwrap();            
+            //dispatch(setSelectedFlow(createdFlow));
+            dispatch(setSelectedFlow(newFlow));
             setIsDesigning(true);
         } catch (err) {
             console.error('Error al crear el flujo:', err);
@@ -51,6 +52,20 @@ const FlowsList = () => {
     const handleDelete = (id) => {
         dispatch(deleteFlow(id));
     };
+
+    const handleActiveToggle = (id) => {
+        const selectedFlow = flowsList.find(flow => flow.id == id);
+        console.log(selectedFlow);
+        const flowsActivosMismoCanal = flowsList.filter(flow => flow.canal == selectedFlow.canal && flow.activo == true);
+        console.log(flowsActivosMismoCanal);
+
+        if(flowsActivosMismoCanal.length > 0 && !selectedFlow.activo){ // revisa si hay un flow activo con el mismo canal que el seleccionado y si el seleccionado esta inactivo (o sea se está queriendo activarlo)
+           alert("Ya hay un flujo activo para ese canal, debe desactivarlo primero");                
+        }
+        else{
+            dispatch(toggleFlowActiveThunk(id));    
+        }              
+    }
    
     if (status === 'failed') {
         return (
@@ -176,7 +191,7 @@ const FlowsList = () => {
                                                         width: '35px',
                                                         height: '35px'
                                                     }}
-                                                    onClick={() => dispatch(toggleFlowActiveThunk(flow.id))}
+                                                    onClick={() => handleActiveToggle(flow.id)}
                                                 >
                                                     {flow.activo ? <DoneOutlinedIcon /> : <ClearOutlinedIcon />}
                                                 </Button>

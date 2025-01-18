@@ -15,7 +15,7 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import NodeTypes from './Nodes/NodeTypes';
 import { initializeNodeData } from './Nodes/NodeTypes';
 //flowService
-import { updateFlow } from '../../Services/flowService';
+import { updateFlow, createFlow } from '../../Services/flowService';
 
 /*const initialNodes = [{
     id: '0',
@@ -115,6 +115,31 @@ const FlowDesigner = ({ onBackToList }) => {
         [screenToFlowPosition, type, setNodes, onLabelChange]
     );
 
+    const validateFlow = () => {
+        const nodosInicio = nodes.filter((node) => node.type == "startNode");
+
+        if((nodosInicio).length < 1) {
+            throw new Error('Debe haber un nodo inicio');
+        }
+
+        if((nodosInicio).length > 1) {
+            throw new Error('No puede haber más de un nodo inicio');
+        }           
+        // provisorio: se podrían poner estas validaciones en la activación de flujo, ver cual opcion es mejor
+        // nodos desconectados        
+        const idNodos = nodes.map(node => node.id);        
+                
+        const idNodosConectados = idNodos.filter((id) => edges.find(edge => edge.source === id || edge.target === id));
+        if(idNodosConectados.length < nodes.length){
+            throw new Error('No puede haber nodos desconectados');
+        }        
+        // sin canal seleccionado
+        if(channel == ""){
+            throw new Error('Debe seleccionar un canal');
+        }
+       
+    }
+
 
 
     const handleSaveFlow = async () => {
@@ -139,16 +164,61 @@ const FlowDesigner = ({ onBackToList }) => {
             autor: selectedFlow?.autor || 'Admin',
             activo: selectedFlow?.activo || false,
             data: JSON.stringify({ nodes: formattedNodes, edges: formattedEdges }),
-        };
+        };        
 
-        try {
+        if(flowData.id){ // si el flow existe (esta siendo editado uno ya existente) hace el update
+
+            flowData.activo = false; // para evitar que si se está modificando un flow activo y se le cambia el canal, puedan quedar 2 flows activos con el mismo canal            
+
+            try {
+                validateFlow();
+                await dispatch(updateFlow(flowData)).unwrap();
+                onBackToList();
+            } catch (err) {
+                console.error('Error al guardar el flujo:', err);
+                alert('Error al guardar el flujo: ' + err.message);
+            }
+        }
+        else{ // si está siendo creado un nuevo flow, se hace el create
+            try {
+                validateFlow();
+                await dispatch(createFlow(flowData)).unwrap();                
+                onBackToList();
+            } catch (err) {
+                console.error('Error al guardar el flujo:', err);
+                alert('Error al guardar el flujo: ' + err.message);
+            }
+
+        }
+
+        
+        /*try {
+            validateFlow();
             await dispatch(updateFlow(flowData)).unwrap();
             onBackToList();
         } catch (err) {
             console.error('Error al guardar el flujo:', err);
             alert('Error al guardar el flujo. Revisa los datos y vuelve a intentarlo.');
-        }
+        }      */       
+        
     };
+
+    // validar conexiones entre nodos
+    const isValidConnection = (connection) => {
+        const {source, target} = connection;        
+
+        const sourceNode = nodes.find((node)  => node.id == source);
+        const targetNode = nodes.find((node)  => node.id == target);              
+
+        if(source === target) { // para que no se conecte a si mismo
+            return false;
+        }
+        if(sourceNode.type == "buttonNode" && targetNode.type == "buttonNode"){ // evitar que se conecten 2 botones
+            return false;
+        }
+
+        return true;
+    } 
 
     return (<>
         <Box sx={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
@@ -203,6 +273,7 @@ const FlowDesigner = ({ onBackToList }) => {
                         onDragOver={onDragOver}
                         onDrop={onDrop}
                         nodeTypes={NodeTypes}
+                        isValidConnection={isValidConnection}
                     >
                         <Background variant="dots" gap={12} size={1} />
                     </ReactFlow>
