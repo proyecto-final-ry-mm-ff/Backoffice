@@ -1,34 +1,58 @@
-import React from 'react';
+import React, { useEffect } from 'react'; // Importa useEffect correctamente
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { useMode, ColorModeContext } from './theme';
 import { store } from './redux/store';
-//import { ChatProvider } from './context/ChatContext'; // Importa el ChatProvider
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Login from './componentes/Login/Login';
+import Login from './componentes/Extras/Login';
 import ChatPage from './componentes/ChatPage/ChatPage';
-import FlowDesigner from './componentes/FlowDesignerPage/FlowPage';
-import Configuracion from './componentes/ConfigPage/Configuracion';
+import FlowPage from './componentes/FlowDesignerPage/FlowPage';
+import ConfigPage from './componentes/ConfigPage/ConfigPage';
+import AppContainer from './AppContainer';
+import NotFoundPage from './componentes/Extras/NotFoundPage';
+import Layout from './Layout';
+import './estilos/scrollbar.css';
+import './index.css';
+import ProtectedRoute from './componentes/Extras/ProtectedRoute';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from 'redux-persist';
+import { login } from './redux/features/user/userSlice'; // Importa la acción de login
+
+const persistor = persistStore(store);
 
 const App = () => {
+  const [theme, colorMode] = useMode();
+
   return (
-    <Provider store={store}>
-      {/* <ChatProvider> */}
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/chatPage" element={<ChatPage />} />
-          <Route path="/flowDesigner" element={<FlowDesigner />} />
-          <Route path="/configuracion" element={<Configuracion />} />
+    <React.StrictMode>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <ColorModeContext.Provider value={colorMode}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <AppContainer>
+                <BrowserRouter>
+                  <Routes>
+                    {/* Ruta para el login */}
+                    <Route path="/login" element={<Login/>} />
 
-          {/* Redirección al iniciar la app */}
-          <Route path="/" element={<Navigate to="/chatPage" />} />
-          <Route path="/dashboard" element={<Navigate to="/chatPage" />} />
-
-          <Route path="*" element={<p>No se encontró la ruta!</p>} />
-        </Routes>
-      </BrowserRouter>
-      {/* <ChatProvider/> */}
-    </Provider>
+                    {/* Rutas protegidas */}
+                    <Route element={<Layout />}>
+                      <Route path="/chat-page" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+                      <Route path="/flow-designer" element={<ProtectedRoute><FlowPage /></ProtectedRoute>} />
+                      <Route path="/config" element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
+                      <Route path="/" element={<Navigate to="/login" />} />
+                      <Route path="/dashboard" element={<ProtectedRoute><Navigate to="/chat-page" /></ProtectedRoute>} />
+                      <Route path="*" element={<ProtectedRoute><NotFoundPage /></ProtectedRoute>} />
+                    </Route>
+                  </Routes>
+                </BrowserRouter>
+              </AppContainer>
+            </ThemeProvider>
+          </ColorModeContext.Provider>
+        </PersistGate>
+      </Provider>
+    </React.StrictMode>
   );
 };
 
