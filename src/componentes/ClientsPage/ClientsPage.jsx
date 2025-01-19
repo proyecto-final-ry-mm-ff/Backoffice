@@ -16,6 +16,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { colorsList } from '../../theme';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
 const ClientsPageStyled = () => {
   const theme = useTheme();
@@ -60,10 +61,11 @@ const ClientsPageStyled = () => {
             }}
             onClick={handleAddClient}
             >
-            Agregar Cliente
+            <AddOutlinedIcon /> NUEVO CLIENTE
             </Button>
         </Box>
         {/* Tabla */}
+        {clients.length > 0 ? (
         <Box>
         <TableContainer
         sx={{
@@ -162,6 +164,20 @@ const ClientsPageStyled = () => {
         </Table>
       </TableContainer>
         </Box>
+        ) : (
+        <Box
+          sx={{
+              padding: 4,
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: 'flex',
+          }}
+      >
+          <Typography variant="h3">
+              No hay clientes disponibles.
+          </Typography>
+      </Box>
+      )}
     </Box>
   );
 };
