@@ -8,6 +8,7 @@ import Login from './componentes/Extras/Login';
 import ChatPage from './componentes/ChatPage/ChatPage';
 import FlowPage from './componentes/FlowDesignerPage/FlowPage';
 import ConfigPage from './componentes/ConfigPage/ConfigPage';
+import ClientsPage from './componentes/ClientsPage/ClientsPage';
 import AppContainer from './AppContainer';
 import NotFoundPage from './componentes/Extras/NotFoundPage';
 import Layout from './Layout';
@@ -38,11 +39,12 @@ const App = () => {
 
                     {/* Rutas protegidas */}
                     <Route element={<Layout />}>
-                      <Route path="/chat-page" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
-                      <Route path="/flow-designer" element={<ProtectedRoute><FlowPage /></ProtectedRoute>} />
-                      <Route path="/config" element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
                       <Route path="/" element={<Navigate to="/login" />} />
                       <Route path="/dashboard" element={<ProtectedRoute><Navigate to="/chat-page" /></ProtectedRoute>} />
+                      <Route path="/chat-page" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+                      <Route path="/flow-designer" element={<ProtectedRoute><FlowPage /></ProtectedRoute>} />
+                      <Route path="/clients-page" element={<ProtectedRoute><ClientsPage /></ProtectedRoute>} />
+                      <Route path="/config" element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
                       <Route path="*" element={<ProtectedRoute><NotFoundPage /></ProtectedRoute>} />
                     </Route>
                   </Routes>

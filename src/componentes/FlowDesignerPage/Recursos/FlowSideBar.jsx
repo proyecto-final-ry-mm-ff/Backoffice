@@ -42,7 +42,6 @@ const FlowSideBar = () => {
                     { label: 'Texto', type: 'textNode' },
                     { label: 'Botón', type: 'buttonNode' },
                     { label: 'Acción', type: 'actionNode' },
-                    { label: 'Esperar', type: 'awaitNode' },
                 ].map((node) => (
                     <Paper
                         key={node.type}
