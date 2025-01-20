@@ -91,7 +91,7 @@ const Chat = ({ chat }) => {
             {/* Encabezado */}
             <Box sx={{ padding: 2, height: '64px', backgroundColor: colors.background[200] }}>
                 <Typography variant="h3" >
-                    CHAT {selectedChat?.id} con {selectedChat?.customer?.name} - Desde {selectedChat?.client?.name}
+                    CHAT con {selectedChat?.customer?.name} - Desde {selectedChat?.client?.name} [{selectedChat?.id}]
                 </Typography>
             </Box>
             {/* Canvas de mensajes */}
