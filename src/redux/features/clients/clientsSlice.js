@@ -1,6 +1,10 @@
-// src/redux/features/clients/clientsSlice.js
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchClients, createClient, removeClient } from "./clientsThunks";
+import {
+  fetchClients,
+  createClient,
+  removeClient,
+  updateClient,
+} from "./clientsThunks";
 
 const initialState = {
   clients: [],
@@ -11,7 +15,7 @@ const initialState = {
 const clientsSlice = createSlice({
   name: "clients",
   initialState,
-  reducers: {},
+  reducers: {}, // Deja vacío si no necesitas acciones sincrónicas
   extraReducers: (builder) => {
     builder
       .addCase(fetchClients.pending, (state) => {
@@ -32,6 +36,13 @@ const clientsSlice = createSlice({
         state.clients = state.clients.filter(
           (client) => client.id !== action.payload
         );
+      })
+      .addCase(updateClient.fulfilled, (state, action) => {
+        const { id, clientDto } = action.payload;
+        const index = state.clients.findIndex((c) => c.id === id);
+        if (index !== -1) {
+          state.clients[index] = { id, ...clientDto }; // Reemplaza los datos del cliente
+        }
       });
   },
 });

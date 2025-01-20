@@ -34,23 +34,23 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
   };
 
   const handleSave = async () => {
-    setIsLoading(true); // Mostrar indicador de carga
+    setIsLoading(true);
 
     const updatedData = {
-      ...formData,
-      allowedDomainsJson: formData.allowedDomainsJson
-        .split(",")
-        .map((url) => url.trim())
-        .filter((url) => url), // Limpiar los dominios vacíos
+      name: formData.name,
+      allowedDomains: formData.allowedDomainsJson
+        .split(",") // Divide la cadena en un array
+        .map((url) => url.trim()) // Elimina espacios extra
+        .filter((url) => url), // Filtra valores vacíos
     };
 
     try {
-      await onSave(updatedData); // Esperar a que la acción sea satisfactoria
-      onClose(); // Cerrar el diálogo si la acción fue exitosa
+      await onSave(updatedData);
+      onClose();
     } catch (error) {
       console.error("Error al guardar el cliente:", error);
     } finally {
-      setIsLoading(false); // Ocultar indicador de carga
+      setIsLoading(false);
     }
   };
 

@@ -24,15 +24,15 @@ export const createClient = createAsyncThunk(
   "clients/createClient",
   async (clientDto, thunkAPI) => {
     try {
-      // Transformar allowedDomainsJson a allowedDomains
+      // Transformar allowedDomainsJson en allowedDomains
       const transformedClient = {
         name: clientDto.name,
-        allowedDomains: clientDto.allowedDomainsJson, // Renombrar propiedad
+        allowedDomains: clientDto.allowedDomains,
       };
 
       console.log("Transformed client:", transformedClient);
 
-      // Llamar al servicio con el formato correcto
+      // Enviar al servicio
       return await postClientService(transformedClient);
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -60,8 +60,8 @@ export const updateClient = createAsyncThunk(
   "clients/updateClient",
   async ({ id, clientDto }, thunkAPI) => {
     try {
-      await putClient(id, clientDto); // Llama al servicio para actualizar el cliente
-      return { id, clientDto }; // Devuelve el ID y los datos actualizados al reducer
+      const updatedClient = await putClient(id, clientDto);
+      return { id, clientDto: updatedClient || clientDto }; // Usa el DTO si no hay respuesta
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
