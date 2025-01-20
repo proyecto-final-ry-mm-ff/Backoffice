@@ -218,33 +218,34 @@ const FlowsList = () => {
                         <Button
                           variant="contained"
                           sx={{
+                            m: 1,
                             backgroundColor: colors.buttonPrimary[100],
                             minWidth: "unset",
-                            width: "50px",
+                            width: "65px",
+                            height: "38px",
                             "&:hover": {
                               backgroundColor: colors.buttonPrimaryHover[100],
                             },
                           }}
                           onClick={() => handleEditFlow(flow)}
                         >
-                          <EditOutlinedIcon />
+                          <EditOutlinedIcon sx={{ fontSize: "24px" }} />
                         </Button>
                         <Button
                           variant="contained"
                           sx={{
                             m: 1,
                             backgroundColor: colors.accentRed[100],
-                            //color: colors.textPrimary[500],
                             minWidth: "unset",
-                            width: "50px",
-                            //textTransform: 'none',
+                            width: "65px",
+                            height: "38px",
                             "&:hover": {
                               backgroundColor: colors.accentRed[300],
                             },
                           }}
                           onClick={() => handleDelete(flow.id)}
                         >
-                          <DeleteOutlinedIcon />
+                          <DeleteOutlinedIcon sx={{ fontSize: "24px" }} />
                         </Button>
                       </TableCell>
                     </TableRow>

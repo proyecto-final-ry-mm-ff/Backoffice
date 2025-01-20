@@ -108,12 +108,16 @@ const ClientsPage = () => {
             backgroundColor: colors.background.paper,
           }}
         >
-          <Table>
+          <Table
+            sx={{
+              tableLayout: "fixed", // Fija el ancho de las columnas
+            }}
+          >
             <TableHead>
               <TableRow>
-                {["ID", "Nombre", "URL", "Acciones"].map((header) => (
+                {["Nombre", "URL", ""].map((header, index) => (
                   <TableCell
-                    key={header}
+                    key={header || index}
                     sx={{
                       background: colors.background[400],
                       fontWeight: "bold",
@@ -140,47 +144,63 @@ const ClientsPage = () => {
                     },
                   }}
                 >
-                  <TableCell>{client.id}</TableCell>
-                  <TableCell>{client.name}</TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      whiteSpace: "normal", // Permite saltos de línea
+                      wordWrap: "break-word", // Corta palabras largas
+                      overflow: "hidden",
+                    }}
+                  >
+                    {client.name}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      whiteSpace: "normal",
+                      wordWrap: "break-word",
+                      overflow: "hidden",
+                    }}
+                  >
                     {client.allowedDomainsJson &&
                     client.allowedDomainsJson.length > 0
-                      ? client.allowedDomainsJson.join(", ") // Combina las URLs en una cadena
-                      : "Sin dominios asignados"}{" "}
-                    {/* Muestra un texto si no hay URLs */}
+                      ? client.allowedDomainsJson.join(", ")
+                      : "Sin dominios asignados"}
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: "right", // Alinea los botones a la derecha
+                    }}
+                  >
                     <Button
                       variant="contained"
                       sx={{
+                        m: 1,
                         backgroundColor: colors.buttonPrimary[100],
                         minWidth: "unset",
-                        width: "50px",
+                        width: "65px",
+                        height: "38px",
                         "&:hover": {
                           backgroundColor: colors.buttonPrimaryHover[100],
                         },
                       }}
                       onClick={() => handleEditClient(client)}
                     >
-                      <EditOutlinedIcon />
+                      <EditOutlinedIcon sx={{ fontSize: "24px" }} />
                     </Button>
                     <Button
                       variant="contained"
-                      color="error"
                       sx={{
                         m: 1,
                         backgroundColor: colors.accentRed[100],
-                        //color: colors.textPrimary[500],
                         minWidth: "unset",
-                        width: "50px",
-                        //textTransform: 'none',
+                        width: "65px",
+                        height: "38px",
                         "&:hover": {
                           backgroundColor: colors.accentRed[300],
                         },
                       }}
                       onClick={() => handleDeleteClient(client.id)}
                     >
-                      <DeleteOutlinedIcon />
+                      <DeleteOutlinedIcon sx={{ fontSize: "24px" }} />
                     </Button>
                   </TableCell>
                 </TableRow>
