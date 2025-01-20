@@ -36,7 +36,7 @@ const ClientsPage = () => {
 
   useEffect(() => {
     dispatch(fetchClients());
-  }, [dispatch]);
+  }, [dispatch, clients]);
 
   const handleEditClient = (client) => {
     setSelectedClient({
@@ -53,14 +53,21 @@ const ClientsPage = () => {
   };
 
   const handleSaveClient = async (formData) => {
-    if (selectedClient?.id) {
-      await dispatch(
-        updateClient({ id: selectedClient.id, clientDto: formData })
-      ).unwrap();
-    } else {
-      await dispatch(createClient(formData)).unwrap();
+    try {
+      if (selectedClient?.id) {
+        // Actualizar cliente existente
+        await dispatch(
+          updateClient({ id: selectedClient.id, clientDto: formData })
+        ).unwrap();
+      } else {
+        // Crear nuevo cliente
+        await dispatch(createClient(formData)).unwrap();
+      }
+      setIsDialogOpen(false); // Cerrar el diálogo solo si fue exitoso
+    } catch (error) {
+      console.error("Error al guardar el cliente:", error);
+      throw error; // Propagar el error para manejarlo en el diálogo
     }
-    setIsDialogOpen(false);
   };
 
   const handleDeleteClient = (id) => {
