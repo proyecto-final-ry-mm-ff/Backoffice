@@ -6,21 +6,29 @@ import { saveMessageToChat } from './chatService';
 import { useSelector } from 'react-redux';
 const wssUrl = "http://localhost:5056/chat-hub";
 
+let eventsRegistered = false;
+
 // Conexión al hub de SignalR
 const connection = new signalR.HubConnectionBuilder()
     .withUrl(wssUrl)
     .withAutomaticReconnect([0, 2000, 5000, 10000]) // Tiempos entre intentos de reconexión
     .build();
 
-let isEventsRegistered = false; // Bandera para evitar múltiples registros de eventos
-
-
 // Eventos del Hub
 const setupSignalREvents = () => {
+
+    if (eventsRegistered) return;
+
+    eventsRegistered = true;
+
     connection.on("PendingChats", (chats) => {
         console.log("PendingChats ", { chats });
         const uniqueChats = Array.from(new Map(chats.map(chat => [chat.id, chat])).values());
         store.dispatch(setChats(uniqueChats));
+    });
+
+    connection.on("assignedChats", (chats) => {
+        console.log("assignedChats ", { chats });
     });
     connection.on("NewChatRequest", (chat) => {
         console.log("NewChatRequest", { chat });
@@ -64,15 +72,21 @@ const setupSignalREvents = () => {
 
 // Métodos para manejar la conexión
 export const connectToHub = async () => {
-    console.warn(`inicio de sesión`);
     try {
+        const oldConnectionId = localStorage.getItem("connectionId");
         if (connection.state === signalR.HubConnectionState.Disconnected) {
             await connection.start(); // Conexión al Hub
         }
         if (connection.state === signalR.HubConnectionState.Connected) {
             setupSignalREvents(); // Configurar eventos solo si aún no se han configurado
+            localStorage.setItem("connectionId", connection.connectionId);
         }
         await connection.invoke("OperatorConnect");
+        
+        if (oldConnectionId) {
+            await connection.invoke("UpdateOperatorConnectionId", oldConnectionId);
+        }
+
         console.log("Conectado al Hub de SignalR como operador");
     } catch (err) {
         console.error("Error al conectar con el Hub de SignalR", err);

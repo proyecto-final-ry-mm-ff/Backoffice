@@ -10,7 +10,7 @@ export const loginThunk = (email, password) => async (dispatch) => {
 
         // Si el login es exitoso, actualiza el store
         dispatch(login(response));
-        connectToHub();
+        await connectToHub();
 
 
         // Generar ID único si no existe
@@ -26,7 +26,7 @@ export const loginThunk = (email, password) => async (dispatch) => {
         console.error("Error en loginThunk:", error);
 
         dispatch(logout()); //Slice
-        disconnectFromHub(); //Service
+        await disconnectFromHub(); //Service
     }
 };
 
