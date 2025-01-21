@@ -1,8 +1,11 @@
-import { login, logout } from './userSlice';
-import { loginApi } from '../../../Services/userService';
-import { GetRandomString } from '../../../Services/helperService';
-import { connectToHub, disconnectFromHub } from '../../../Services/signalRService';
-import { clearMyChats } from '../chat/chatSlice';
+import { login, logout } from "./userSlice";
+import { loginApi } from "../../../Services/userService";
+import { GetRandomString } from "../../../Services/helperService";
+import {
+    connectToHub,
+    disconnectFromHub,
+} from "../../../Services/signalRService";
+import { clearMyChats } from "../chat/chatSlice";
 
 export const loginThunk = (email, password) => async (dispatch) => {
     try {
@@ -12,16 +15,14 @@ export const loginThunk = (email, password) => async (dispatch) => {
         dispatch(login(response));
         await connectToHub();
 
-
         // Generar ID único si no existe
-        const userId = localStorage.getItem('id') || GetRandomString(12);
+        const userId = localStorage.getItem("id") || GetRandomString(12);
 
         // Guardar datos en el localStorage
-        localStorage.setItem('id', userId);
-        localStorage.setItem('token', response.accessToken);
-        localStorage.setItem('refreshToken', response.refreshToken);
-        localStorage.setItem('logged', true);
-
+        localStorage.setItem("id", userId);
+        localStorage.setItem("token", response.accessToken);
+        localStorage.setItem("refreshToken", response.refreshToken);
+        localStorage.setItem("logged", true);
     } catch (error) {
         console.error("Error en loginThunk:", error);
 
@@ -33,20 +34,20 @@ export const loginThunk = (email, password) => async (dispatch) => {
 export const logoutThunk = () => async (dispatch) => {
     try {
         // Limpiar el almacenamiento local
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('logged');
-        localStorage.removeItem('id');
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("logged");
+        localStorage.removeItem("id");
 
-        // Actualizar el estado global 
-        dispatch(logout()); 
+        // Actualizar el estado global
+        dispatch(logout());
         dispatch(clearMyChats());
 
         // Desconectar del backend y detener SignalR
-        await disconnectFromHub(); 
+        await disconnectFromHub();
 
         console.log("Logout completado exitosamente.");
     } catch (error) {
-        console.error('Error durante el logout:', error);
+        console.error("Error durante el logout:", error);
     }
 };

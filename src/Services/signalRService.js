@@ -1,9 +1,13 @@
-import { store } from '../redux/store';
-import { addChat, addMessageToChat, setChats, removeChat } from '../redux/features/chat/chatSlice';
-import * as signalR from '@microsoft/signalr';
-import { assignChat } from '../redux/features/chat/chatSlice';
-import { saveMessageToChat } from './chatService';
-import { useSelector } from 'react-redux';
+import { store } from "../redux/store";
+import {
+    addChat,
+    addMessageToChat,
+    setChats,
+    removeChat,
+} from "../redux/features/chat/chatSlice";
+import * as signalR from "@microsoft/signalr";
+import { assignChat } from "../redux/features/chat/chatSlice";
+import { saveMessageToChat } from "./chatService";
 const wssUrl = "http://localhost:5056/chat-hub";
 
 let eventsRegistered = false;
@@ -43,7 +47,10 @@ const setupSignalREvents = () => {
     });
 
     connection.on("ChatAssigned", (chat, pendingChats) => {
-        console.log(`Se ha asignado el chat ${chat.id} Nuevos chats pendientes: `, pendingChats);
+        console.log(
+            `Se ha asignado el chat ${chat.id} Nuevos chats pendientes: `,
+            pendingChats
+        );
         store.dispatch(setChats(pendingChats));
     });
 
@@ -82,7 +89,7 @@ export const connectToHub = async () => {
             localStorage.setItem("connectionId", connection.connectionId);
         }
         await connection.invoke("OperatorConnect");
-        
+
         if (oldConnectionId) {
             await connection.invoke("UpdateOperatorConnectionId", oldConnectionId);
         }
@@ -99,10 +106,10 @@ export const disconnectFromHub = async () => {
     try {
         if (connection.state === signalR.HubConnectionState.Connected) {
             await connection.invoke("OperatorDisconnect");
-            console.log('OperatorDisconnect se invocó correctamente.');
+            console.log("OperatorDisconnect se invocó correctamente.");
         }
-        await connection.stop()
-        console.log('Conexión detenida correctamente.');
+        await connection.stop();
+        console.log("Conexión detenida correctamente.");
     } catch (err) {
         console.error("Error al desconectar del Hub:", err);
     }
@@ -112,7 +119,10 @@ export const disconnectFromHub = async () => {
 export const assignOperatorToChat = async (selectedChatId) => {
     try {
         // Llamar al backend y esperar confirmación
-        const result = await connection.invoke("AssignOperatorToChat", selectedChatId);
+        const result = await connection.invoke(
+            "AssignOperatorToChat",
+            selectedChatId
+        );
 
         if (result.success) {
             // Despachar acción para actualizar Redux
