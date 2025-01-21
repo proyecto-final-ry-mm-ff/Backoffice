@@ -153,8 +153,8 @@ export default function ChatList({ onChatSelect }) {
         }}
         variant="fullWidth"
       >
-        <Tab label="All" />
-        <Tab label="My" />
+        <Tab label="Pendientes" />
+        <Tab label="Asignados" />
       </Tabs>
 
       {/* Lista de chatslist */}
@@ -238,7 +238,7 @@ export default function ChatList({ onChatSelect }) {
                   transition: "transform 0.3s ease", // Transición suave
                 }}
               >
-                {`Chat ${chat?.id}`}
+              {`${chat?.client?.name} - ${chat?.customer?.name}`}
               </Typography>
               <Button
                 onClick={() => handleAssignChat(chat?.id)}
