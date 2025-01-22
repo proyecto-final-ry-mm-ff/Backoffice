@@ -232,3 +232,4 @@ const FlowDesigner = ({ onBackToList }) => {
     </>
   );
 };
+export default FlowDesigner;
