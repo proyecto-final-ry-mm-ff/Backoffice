@@ -14,6 +14,7 @@ export const getChats = async () => {
   return await response.json();
 };
 
+//Este sería como un end chat
 export const saveChat = async (token, chat) => {
   // const token = GetBearerToken(); //TODO:  Hay que manejar una lógica de pedir refresh token si este expiró
   console.log("Voy a guardar la instancia de chat...");

@@ -63,7 +63,8 @@ const setupSignalREvents = () => {
     });
 
     connection.on("ClientDisconnected", (pendingChat) => {
-        console.log(`Se desconectó el cliente ${pendingChat?.id}`);
+        alert(`Se desconectó el cliente ${pendingChat?.id}`);
+        store.dispatch(removeChat(pendingChat?.id));
     });
 
     connection.on("ClientDisconnectedFromPending", (pendingChat) => {
