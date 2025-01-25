@@ -10,6 +10,11 @@ import {
   Typography,
   Box,
   useTheme,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
@@ -31,8 +36,10 @@ const ClientsPage = () => {
 
   const { clients, status } = useSelector((state) => state.clientsStore);
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // Díalogo de creación / edición de un cliente
   const [selectedClient, setSelectedClient] = useState(null);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false); // Dialogo de confirmación al eliminar
+  const [clientToDelete, setClientToDelete] = useState(null);
 
   useEffect(() => {
     dispatch(fetchClients());
@@ -48,30 +55,39 @@ const ClientsPage = () => {
   };
 
   const handleAddClient = () => {
-    setSelectedClient({ name: "", allowedDomainsJson: "" }); // Datos vacíos
+    setSelectedClient({ name: "", allowedDomainsJson: "" });
     setIsDialogOpen(true);
   };
 
   const handleSaveClient = async (formData) => {
     try {
       if (selectedClient?.id) {
-        // Actualizar cliente existente
         await dispatch(
           updateClient({ id: selectedClient.id, clientDto: formData })
         ).unwrap();
       } else {
-        // Crear nuevo cliente
         await dispatch(createClient(formData)).unwrap();
       }
-      setIsDialogOpen(false); // Cerrar el diálogo solo si fue exitoso
+      setIsDialogOpen(false);
     } catch (error) {
       console.error("Error al guardar el cliente:", error);
-      throw error; // Propagar el error para manejarlo en el diálogo
+      throw error;
     }
   };
 
-  const handleDeleteClient = (id) => {
-    dispatch(removeClient(id));
+  // Eliminar ->
+  const confirmDeleteClient = (client) => {
+    setClientToDelete(client);
+    setIsConfirmDialogOpen(true);
+  };
+
+  // Confirmar ->
+  const handleDeleteClient = async () => {
+    if (clientToDelete) {
+      await dispatch(removeClient(clientToDelete.id));
+      setIsConfirmDialogOpen(false);
+      setClientToDelete(null);
+    }
   };
 
   return (
@@ -108,11 +124,7 @@ const ClientsPage = () => {
             backgroundColor: colors.background.paper,
           }}
         >
-          <Table
-            sx={{
-              tableLayout: "fixed", // Fija el ancho de las columnas
-            }}
-          >
+          <Table sx={{ tableLayout: "fixed" }}>
             <TableHead>
               <TableRow>
                 {["Nombre", "URL", ""].map((header, index) => (
@@ -146,8 +158,8 @@ const ClientsPage = () => {
                 >
                   <TableCell
                     sx={{
-                      whiteSpace: "normal", // Permite saltos de línea
-                      wordWrap: "break-word", // Corta palabras largas
+                      whiteSpace: "normal",
+                      wordWrap: "break-word",
                       overflow: "hidden",
                     }}
                   >
@@ -165,11 +177,7 @@ const ClientsPage = () => {
                       ? client.allowedDomainsJson.join(", ")
                       : "Sin dominios asignados"}
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      textAlign: "right", // Alinea los botones a la derecha
-                    }}
-                  >
+                  <TableCell sx={{ textAlign: "right" }}>
                     <Button
                       variant="contained"
                       sx={{
@@ -198,7 +206,7 @@ const ClientsPage = () => {
                           backgroundColor: colors.accentRed[300],
                         },
                       }}
-                      onClick={() => handleDeleteClient(client.id)}
+                      onClick={() => confirmDeleteClient(client)}
                     >
                       <DeleteOutlinedIcon sx={{ fontSize: "24px" }} />
                     </Button>
@@ -226,6 +234,32 @@ const ClientsPage = () => {
         onSave={handleSaveClient}
         initialData={selectedClient || { name: "", allowedDomainsJson: "" }}
       />
+      <Dialog
+        open={isConfirmDialogOpen}
+        onClose={() => setIsConfirmDialogOpen(false)}
+      >
+        <DialogTitle>Confirmar Eliminación</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            ¿Estás seguro de que deseas eliminar el cliente{" "}
+            <strong>{clientToDelete?.name}</strong> y sus permisos asociados?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsConfirmDialogOpen(false)}>
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleDeleteClient}
+            sx={{
+              backgroundColor: colors.accentRed[300],
+              "&:hover": { backgroundColor: colors.accentRed[600] },
+            }}
+          >
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
