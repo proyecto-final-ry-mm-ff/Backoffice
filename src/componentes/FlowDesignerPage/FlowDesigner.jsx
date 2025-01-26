@@ -251,7 +251,7 @@ const FlowDesigner = ({ onBackToList }) => {
                 onChange={(e) => setChannel(e.target.value)}
               >
                 <MenuItem value="Embebido">Embebido</MenuItem>
-                <MenuItem value="Instagram">Instagram</MenuItem>
+                {/* <MenuItem value="Instagram">Instagram</MenuItem> */}
                 <MenuItem value="Facebook">Facebook</MenuItem>
               </Select>
             </FormControl>

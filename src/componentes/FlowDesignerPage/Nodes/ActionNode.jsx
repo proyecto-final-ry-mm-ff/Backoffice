@@ -37,8 +37,8 @@ const ActionNode = ({ data }) => {
             Selecciona una acción
           </option>
           <option value="Llamar Operador">Llamar Operador</option>
-          <option value="Generar Ticket">Generar Ticket</option>
-          <option value="Registrar Mail">Registrar Mail</option>
+          <option value="Generar Ticket">*No Implementado* Generar Ticket</option>
+          <option value="Registrar Mail">*No Implementado* Registrar Mail</option>
         </select>
       </div>
     </div>
