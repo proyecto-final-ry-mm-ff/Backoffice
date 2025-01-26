@@ -115,13 +115,14 @@ const ClientsPage = () => {
           >
             <TableHead>
               <TableRow>
-                {["Nombre", "URL", ""].map((header, index) => (
+                {["ID", "Nombre", "Token", "URL", ""].map((header, index) => (
                   <TableCell
                     key={header || index}
                     sx={{
                       background: colors.background[400],
                       fontWeight: "bold",
                       borderBottom: `1px solid ${colors.border[600]}`,
+                      width: header === "ID" ? "100px" : "auto", // Fija el ancho solo para la columna "ID"
                     }}
                   >
                     {header}
@@ -151,7 +152,25 @@ const ClientsPage = () => {
                       overflow: "hidden",
                     }}
                   >
+                    {client.id}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      whiteSpace: "normal", // Permite saltos de línea
+                      wordWrap: "break-word", // Corta palabras largas
+                      overflow: "hidden",
+                    }}
+                  >
                     {client.name}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      // whiteSpace: "normal", // Permite saltos de línea
+                      // wordWrap: "break-word", // Corta palabras largas
+                      overflow: "hidden",
+                    }}
+                  >
+                    {client.token}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -161,7 +180,7 @@ const ClientsPage = () => {
                     }}
                   >
                     {client.allowedDomainsJson &&
-                    client.allowedDomainsJson.length > 0
+                      client.allowedDomainsJson.length > 0
                       ? client.allowedDomainsJson.join(", ")
                       : "Sin dominios asignados"}
                   </TableCell>
