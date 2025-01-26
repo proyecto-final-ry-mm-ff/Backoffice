@@ -5,13 +5,18 @@ import { Box } from "@mui/material";
 import { getChat } from "../../Services/chatService";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedChat } from "../../redux/features/chat/chatSlice";
+import ChatLandingPage from "./ChatLandingPage";
 
 const ChatPage = () => {
-  const [thisSelectedChat, setThisSelectedChat] = useState(); // Estado para el chat seleccionado
+  const [thisSelectedChat, setThisSelectedChat] = useState(false); // Estado para el chat seleccionado
   const dispatch = useDispatch();
 
 
   const handleSelectedChat = async (chat) => {
+    if (!chat) {
+      setThisSelectedChat(false)
+      return true;
+    }
     const chatWithAllMessages = await getChat(chat.id);
     if (chatWithAllMessages) {
       setThisSelectedChat(chatWithAllMessages)
@@ -45,7 +50,11 @@ const ChatPage = () => {
           overflowY: "hidden",
         }}
       >
-        <Chat chat={thisSelectedChat} />
+        {thisSelectedChat ?
+          <Chat chat={thisSelectedChat} />
+          :
+          <ChatLandingPage />
+        }
       </Box>
     </Box>
   );

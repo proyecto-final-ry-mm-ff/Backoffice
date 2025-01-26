@@ -14,7 +14,7 @@ import { colorsList } from "../../theme";
 import { assignChat, removeChat } from "../../redux/features/chat/chatSlice";
 import ArchiveIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import UnarchiveIcon from "@mui/icons-material/ArrowBackIosOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import CallEndOutlinedIcon from '@mui/icons-material/CallEndOutlined';
 import SearchIcon from "@mui/icons-material/Search";
 import { assignOperatorToChat, endChat } from "../../Services/signalRService";
 import { updateChat } from "../../Services/chatService";
@@ -47,11 +47,6 @@ export default function ChatList({ onChatSelect }) {
     onChatSelect(chat);
   };
 
-  /*const handleAssignChat = async () => {
-        store.dispatch(assignChat({ userId: userStore.id, chat: thisChat }));
-        await assignOperatorToChat(thisChat.id);
-    }*/
-
   const handleAssignChat = async (chatId) => {
     dispatch(assignChat({ userStoreId: userStore.id, chatId }));
     await assignOperatorToChat(chatId);
@@ -73,6 +68,7 @@ export default function ChatList({ onChatSelect }) {
         console.log("Chat guardado y finalizado correctamente.");
         await endChat(chat.id)
         store.dispatch(removeChat(chat.id));
+        onChatSelect(false);
       } else {
         console.error("Error al guardar y finalizar el chat.");
       }
@@ -227,9 +223,9 @@ export default function ChatList({ onChatSelect }) {
                 onClick={() => handleEndChat(chat.id)}
               >
                 {selectedTab === 0 ? (
-                  <DeleteOutlineOutlinedIcon />
+                  <CallEndOutlinedIcon />
                 ) : (
-                  <DeleteOutlineOutlinedIcon />
+                  <CallEndOutlinedIcon />
                 )}
               </Button>
               <Typography

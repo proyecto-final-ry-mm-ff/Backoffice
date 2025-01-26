@@ -7,7 +7,7 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import ChatIcon from "@mui/icons-material/Chat";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
-import HubIcon from "@mui/icons-material/Hub";
+import PeopleIcon from '@mui/icons-material/People';
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { Link, useNavigate } from "react-router-dom";
@@ -104,7 +104,7 @@ const Sidebar = () => {
               to="/flow-designer"
               icon={<AccountTreeIcon />}
             />
-            <Item title="Clientes" to="/clients-page" icon={<HubIcon />} />
+            <Item title="Clientes" to="/clients-page" icon={<PeopleIcon />} />
             <Item title="Configuración" to="/config" icon={<SettingsIcon />} />
           </Box>
         </Menu>

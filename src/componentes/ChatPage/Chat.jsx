@@ -35,7 +35,12 @@ const Chat = ({ chat }) => {
         }
     }, [messages]);
 
-    //let thisChat = chats?.find(c => c.id === chat.id) || null;
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Evita que se realice un salto de línea
+            handleSendMessage();
+        }
+    };
 
     // Envía mensajes desde el usuario
     const handleSendMessage = async () => {
@@ -259,6 +264,7 @@ const Chat = ({ chat }) => {
                     fullWidth
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     placeholder="Escribe un mensaje..."
                     variant="outlined"
                     disabled={!isAssigned} // Campo deshabilitado si no está asignado
