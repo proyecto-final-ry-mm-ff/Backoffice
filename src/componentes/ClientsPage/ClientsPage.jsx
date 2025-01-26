@@ -122,7 +122,7 @@ const ClientsPage = () => {
                       background: colors.background[400],
                       fontWeight: "bold",
                       borderBottom: `1px solid ${colors.border[600]}`,
-                      width: header === "ID" ? "100px" : "auto", // Fija el ancho solo para la columna "ID"
+                      width: header === "ID" ? "100px" : "auto",
                     }}
                   >
                     {header}
