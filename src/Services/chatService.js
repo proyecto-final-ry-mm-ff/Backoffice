@@ -1,29 +1,23 @@
 import { GetBearerToken } from "./helperService";
-import { store } from "../redux/store";
-import { assignChat, addMessageToChat } from "../redux/features/chat/chatSlice";
 
 const urlChat = "http://localhost:5015/chat";
 
-// Obtener lista de chats
-export const getChats = async () => {
+// Obtener un chat en particular (sirve para conseguir todos los mensajes previos)
+export const getChat = async (chatId) => {
   const token = GetBearerToken();
-  const response = await fetch(urlChat, {
+  const response = await fetch(`${urlChat}/${chatId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!response.ok) throw new Error("Error al obtener chats");
   return await response.json();
 };
 
-//Este sería como un end chat
-export const saveChat = async (token, chat) => {
-  // const token = GetBearerToken(); //TODO:  Hay que manejar una lógica de pedir refresh token si este expiró
-  console.log("Voy a guardar la instancia de chat...");
-  console.log({ chat });
-  token = GetBearerToken();
+export const updateChat = async (chat) => {
+  const token = GetBearerToken();
   const chatUpdateDto = {
     chatId: chat.id,
     customerId: chat.customerId,
-    status: 4, //4 es terminado
+    status: chat.status,
     messages: [],
   };
   const response = await fetch(`${urlChat}/${chat.id}`, {
@@ -35,8 +29,7 @@ export const saveChat = async (token, chat) => {
     body: JSON.stringify(chatUpdateDto),
   });
 
-  const parsedResponse = await response.json();
-  // console.log({ parsedResponse });
+  await response.json();
   if (response.ok) {
     return true;
   }

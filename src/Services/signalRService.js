@@ -7,7 +7,7 @@ import {
 } from "../redux/features/chat/chatSlice";
 import * as signalR from "@microsoft/signalr";
 import { assignChat } from "../redux/features/chat/chatSlice";
-import { saveMessageToChat } from "./chatService";
+import { getChat, saveMessageToChat } from "./chatService";
 const wssUrl = "http://localhost:5056/chat-hub";
 
 let eventsRegistered = false;
@@ -34,6 +34,7 @@ const setupSignalREvents = () => {
     connection.on("assignedChats", (chats) => {
         console.log("assignedChats ", { chats });
     });
+
     connection.on("NewChatRequest", (chat) => {
         console.log("NewChatRequest", { chat });
         store.dispatch(addChat(chat));
@@ -47,10 +48,7 @@ const setupSignalREvents = () => {
     });
 
     connection.on("ChatAssigned", (chat, pendingChats) => {
-        console.log(
-            `Se ha asignado el chat ${chat.id} Nuevos chats pendientes: `,
-            pendingChats
-        );
+        console.log(`Se ha asignado el chat ${chat.id} Nuevos chats pendientes: `, pendingChats);
         store.dispatch(setChats(pendingChats));
     });
 
@@ -142,6 +140,14 @@ export const sendMessageToChat = async (chatId, senderTypeId, message) => {
         await connection.invoke("SendMessageToChat", chatId, senderTypeId, message);
     } catch (err) {
         console.error("Error al enviar mensaje:", err);
+    }
+};
+
+export const endChat = async (chatId) => {
+    try {
+        await connection.invoke("OperatorEndChat", chatId);
+    } catch (err) {
+        console.error("Error al terminar chat en HUB:", err);
     }
 };
 

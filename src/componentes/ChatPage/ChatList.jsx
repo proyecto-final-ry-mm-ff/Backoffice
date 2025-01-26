@@ -9,15 +9,15 @@ import {
   TextField,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
+import { store } from "../../redux/store";
 import { colorsList } from "../../theme";
-import { assignChat } from "../../redux/features/chat/chatSlice";
+import { assignChat, removeChat } from "../../redux/features/chat/chatSlice";
 import ArchiveIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import UnarchiveIcon from "@mui/icons-material/ArrowBackIosOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import SearchIcon from "@mui/icons-material/Search";
-import { assignOperatorToChat } from "../../Services/signalRService";
-import { saveChat } from "../../Services/chatService";
-import { GetBearerToken } from "../../Services/helperService";
+import { assignOperatorToChat, endChat } from "../../Services/signalRService";
+import { updateChat } from "../../Services/chatService";
 
 export default function ChatList({ onChatSelect }) {
   const theme = useTheme();
@@ -59,17 +59,20 @@ export default function ChatList({ onChatSelect }) {
 
   const handleEndChat = async (chatId) => {
     try {
-      const token = userStore.token;
+      //const token = userStore.token;
       const chat = chats.myChats.find((c) => c.id === chatId);
 
       if (!chat) {
         console.error("Chat no encontrado en mi lista.");
         return;
       }
-
-      const success = await saveChat(token, chat);
+      //Cambio el estado a TERMINADO
+      const endedChat = { ...chat, status: 4 };
+      const success = await updateChat(endedChat);
       if (success) {
         console.log("Chat guardado y finalizado correctamente.");
+        await endChat(chat.id)
+        store.dispatch(removeChat(chat.id));
       } else {
         console.error("Error al guardar y finalizar el chat.");
       }
@@ -238,7 +241,7 @@ export default function ChatList({ onChatSelect }) {
                   transition: "transform 0.3s ease", // Transición suave
                 }}
               >
-              {`${chat?.client?.name} - ${chat?.customer?.name}`}
+                {`${chat?.client?.name} - ${chat?.customer?.name}`}
               </Typography>
               <Button
                 onClick={() => handleAssignChat(chat?.id)}

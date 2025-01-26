@@ -20,6 +20,7 @@ const chatSlice = createSlice({
       console.log("action.payload");
       const chatId = action.payload; // `pendingChat.id` del evento
       state.allChats = state.allChats.filter((chat) => chat.id !== chatId);
+      state.myChats = state.myChats.filter((chat) => chat.id !== chatId);
     },
     addMessageToChat: (state, action) => {
       const { chatId, ...message } = action.payload;
@@ -62,7 +63,20 @@ const chatSlice = createSlice({
     },
     // Seleccionar
     setSelectedChat: (state, action) => {
-      state.selectedChat = action.payload;
+      const updatedChat = action.payload;
+      state.selectedChat = updatedChat;
+
+      // Reemplazar el chat en myChats si existe
+      const myChatIndex = state.myChats.findIndex((chat) => chat.id === updatedChat.id);
+      if (myChatIndex !== -1) {
+        state.myChats[myChatIndex] = updatedChat;
+      }
+
+      // Reemplazar el chat en allChats si existe
+      const allChatIndex = state.allChats.findIndex((chat) => chat.id === updatedChat.id);
+      if (allChatIndex !== -1) {
+        state.allChats[allChatIndex] = updatedChat;
+      }
     },
     // Deseleccionar
     clearSelectedChat: (state) => {
