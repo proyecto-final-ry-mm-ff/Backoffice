@@ -1,7 +1,3 @@
-import { store } from "../redux/store";
-import { login } from "../redux/features/user/userSlice";
-import { connectToHub } from "./signalRService";
-
 const urlApi = "http://localhost:5015";
 
 export const loginApi = async (email, password) => {
@@ -15,11 +11,10 @@ export const loginApi = async (email, password) => {
     const parsedResponse = await response.json();
 
     if (!response.ok) {
-      throw new Error(parsedResponse.message || "Error al iniciar sesión");
+      throw new Error(parsedResponse.message);
     }
     return parsedResponse;
   } catch (error) {
-    console.error("Error en loginUserApi:", error);
     throw error;
   }
 };

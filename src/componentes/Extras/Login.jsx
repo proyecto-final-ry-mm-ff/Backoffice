@@ -11,19 +11,20 @@ export default function Login() {
   const theme = useTheme();
   const colors = colorsList(theme.palette.mode);
 
+  // Estado local para manejar los datos del formulario y errores
   const [userData, setUserData] = useState({});
   const [error, setErrorLogin] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Verificamos que no no esté iniciada ya una sesión
+  // Redirige si ya existe una sesión iniciada
   useEffect(() => {
     const logged = localStorage.getItem("logged") === "true";
     if (logged) {
       navigate("/chat-page");
     }
-  }, [navigate, setErrorLogin]);
+  }, [navigate]);
 
   // Actualiza los datos de los inputs en userData
   const handleChangeMultiple = (e) => {
@@ -36,13 +37,13 @@ export default function Login() {
   // Hace la llamada al thunk
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorLogin("");
+    setErrorLogin(""); // Limpiar mensajes de error
 
     try {
       await dispatch(loginThunk(userData.email, userData.password));
       navigate("/chat-page"); // Redirige si el login es exitoso
     } catch (error) {
-      setErrorLogin(error.message || "Error al iniciar sesión");
+      setErrorLogin(error.message);
     }
   };
 
@@ -56,20 +57,18 @@ export default function Login() {
         background: colors.background[500],
       }}
     >
-      {/* Contenedor */}
+      {/* Contenedor del formulario */}
       <Box
         sx={{
           padding: 5,
           borderRadius: 1,
-          //boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
           width: "100%",
           maxWidth: 400,
-          //background: `linear-gradient(165deg, ${colors.accentBlue[200]}, ${colors.accentBlue[600]})`,
           background: colors.background[300],
         }}
       >
         <form onSubmit={handleSubmit}>
-          {/* Encabezado */}
+          {/* Título */}
           <Typography
             variant="h2"
             sx={{
@@ -82,7 +81,7 @@ export default function Login() {
             Login
           </Typography>
 
-          {/* Email Input */}
+          {/* Input de email */}
           <Box sx={{ position: "relative", marginBottom: 2 }}>
             <FaUser
               style={{
@@ -105,7 +104,7 @@ export default function Login() {
             />
           </Box>
 
-          {/* Password Input */}
+          {/* Input de contraseña */}
           <Box sx={{ position: "relative", marginBottom: 2 }}>
             <FaLock
               style={{
@@ -129,7 +128,7 @@ export default function Login() {
             />
           </Box>
 
-          {/* Submit Button */}
+          {/* Botón de envío */}
           <Box
             sx={{
               display: "flex",
@@ -140,7 +139,7 @@ export default function Login() {
             <Button
               variant="contained"
               type="submit"
-              disabled={!userData.email || !userData.password} // Deshabilitado si email o password están vacíos
+              disabled={!userData.email || !userData.password}
               sx={{
                 color: colors.textPrimary[500],
                 background: colors.background[100],
@@ -148,15 +147,15 @@ export default function Login() {
                 textTransform: "uppercase",
                 width: "100%",
                 height: "55px",
-                opacity: !userData.email || !userData.password ? 0.5 : 1, // Reduce la opacidad cuando está deshabilitado
+                opacity: !userData.email || !userData.password ? 0.5 : 1,
                 pointerEvents:
-                  !userData.email || !userData.password ? "none" : "auto", // Evita interacción visual
+                  !userData.email || !userData.password ? "none" : "auto",
                 "&:hover": {
-                  backgroundColor: colors.buttonPrimaryHover[300], // Sin cambio si está deshabilitado
+                  backgroundColor: colors.buttonPrimaryHover[300],
                   cursor:
                     !userData.email || !userData.password
                       ? "default"
-                      : "pointer", // Cambia el cursor
+                      : "pointer",
                 },
               }}
             >
@@ -164,7 +163,7 @@ export default function Login() {
             </Button>
           </Box>
 
-          {/* Error Message */}
+          {/* Mensaje de error */}
           <Box>
             {error && (
               <Typography
