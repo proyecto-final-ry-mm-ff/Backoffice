@@ -21,6 +21,10 @@ const chatSlice = createSlice({
       const chatId = action.payload; // `pendingChat.id` del evento
       state.allChats = state.allChats.filter((chat) => chat.id !== chatId);
       state.myChats = state.myChats.filter((chat) => chat.id !== chatId);
+
+      if (state.selectedChat && state.selectedChat?.id === chatId) {
+        state.selectedChat = null;
+      }
     },
     addMessageToChat: (state, action) => {
       const { chatId, ...message } = action.payload;

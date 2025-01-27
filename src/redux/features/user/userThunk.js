@@ -5,7 +5,7 @@ import {
     connectToHub,
     disconnectFromHub,
 } from "../../../Services/signalRService";
-import { clearMyChats } from "../chat/chatSlice";
+import { clearMyChats, clearSelectedChat } from "../chat/chatSlice";
 
 export const loginThunk = (email, password) => async (dispatch) => {
     try {
@@ -42,6 +42,7 @@ export const logoutThunk = () => async (dispatch) => {
         // Actualizar el estado global
         dispatch(logout());
         dispatch(clearMyChats());
+        dispatch(clearSelectedChat());
 
         // Desconectar del backend y detener SignalR
         await disconnectFromHub();
