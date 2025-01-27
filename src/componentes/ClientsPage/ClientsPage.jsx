@@ -10,16 +10,12 @@ import {
   Typography,
   Box,
   useTheme,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
 } from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import ClientFormDialog from "./ClientFormDialog";
+import ClientDeleteDialog from "./ClientDeleteDialog"; // Importa el nuevo diálogo
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchClients,
@@ -36,14 +32,14 @@ const ClientsPage = () => {
 
   const { clients, status } = useSelector((state) => state.clientsStore);
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false); // Díalogo de creación / edición de un cliente
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // Diálogo de creación/edición
   const [selectedClient, setSelectedClient] = useState(null);
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false); // Dialogo de confirmación al eliminar
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // Diálogo de eliminación
   const [clientToDelete, setClientToDelete] = useState(null);
 
   useEffect(() => {
     dispatch(fetchClients());
-  }, [dispatch, clients]);
+  }, [dispatch]);
 
   const handleEditClient = (client) => {
     setSelectedClient({
@@ -71,22 +67,25 @@ const ClientsPage = () => {
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Error al guardar el cliente:", error);
-      throw error;
     }
   };
 
-  // Eliminar ->
+  // Configurar cliente para eliminar
   const confirmDeleteClient = (client) => {
-    setClientToDelete(client);
-    setIsConfirmDialogOpen(true);
+    setClientToDelete(client); // Asigna el cliente seleccionado
+    setIsDeleteDialogOpen(true); // Abre el diálogo de confirmación
   };
 
-  // Confirmar ->
+  // Confirmar eliminación
   const handleDeleteClient = async () => {
     if (clientToDelete) {
-      await dispatch(removeClient(clientToDelete.id));
-      setIsConfirmDialogOpen(false);
-      setClientToDelete(null);
+      try {
+        await dispatch(removeClient(clientToDelete.id)); // Llama al thunk de eliminación
+        setIsDeleteDialogOpen(false); // Cierra el diálogo de confirmación
+        setClientToDelete(null); // Limpia el cliente seleccionado
+      } catch (error) {
+        console.error("Error al eliminar el cliente:", error);
+      }
     }
   };
 
@@ -172,8 +171,7 @@ const ClientsPage = () => {
                       overflow: "hidden",
                     }}
                   >
-                    {client.allowedDomainsJson &&
-                    client.allowedDomainsJson.length > 0
+                    {client.allowedDomainsJson?.length > 0
                       ? client.allowedDomainsJson.join(", ")
                       : "Sin dominios asignados"}
                   </TableCell>
@@ -234,32 +232,12 @@ const ClientsPage = () => {
         onSave={handleSaveClient}
         initialData={selectedClient || { name: "", allowedDomainsJson: "" }}
       />
-      <Dialog
-        open={isConfirmDialogOpen}
-        onClose={() => setIsConfirmDialogOpen(false)}
-      >
-        <DialogTitle>Confirmar Eliminación</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            ¿Estás seguro de que deseas eliminar el cliente{" "}
-            <strong>{clientToDelete?.name}</strong> y sus permisos asociados?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsConfirmDialogOpen(false)}>
-            Cancelar
-          </Button>
-          <Button
-            onClick={handleDeleteClient}
-            sx={{
-              backgroundColor: colors.accentRed[300],
-              "&:hover": { backgroundColor: colors.accentRed[600] },
-            }}
-          >
-            Confirmar
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ClientDeleteDialog
+        open={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleDeleteClient}
+        clientName={clientToDelete?.name}
+      />
     </Box>
   );
 };
