@@ -1,4 +1,4 @@
-import { GetBearerToken } from "./helperService";
+import { GetBearerToken } from "./helper/helperService";
 import { store } from "../redux/store";
 import { assignChat, addMessageToChat } from "../redux/features/chat/chatSlice";
 
@@ -19,6 +19,7 @@ export const saveChat = async (token, chat) => {
   console.log("Voy a guardar la instancia de chat...");
   console.log({ chat });
   token = GetBearerToken();
+
   const chatUpdateDto = {
     chatId: chat.id,
     customerId: chat.customerId,

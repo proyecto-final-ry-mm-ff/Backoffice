@@ -171,7 +171,7 @@ export default function Login() {
                   marginTop: 2,
                   color: colors.accentRed[100],
                   textAlign: "center",
-                  fontWeight: "bold",
+                  fontSize: "15px",
                 }}
               >
                 {error}

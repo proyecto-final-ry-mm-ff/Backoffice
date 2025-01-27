@@ -1,6 +1,6 @@
 import { login, logout } from "./userSlice";
 import { loginApi } from "../../../Services/userService";
-import { GetRandomString } from "../../../Services/helperService";
+import { GetRandomString } from "../../../Services/helper/helperService";
 import {
   connectToHub,
   disconnectFromHub,
@@ -17,7 +17,6 @@ export const loginThunk = (email, password) => async (dispatch) => {
     // Conectar al hub
     await connectToHub();
   } catch (error) {
-    console.error("Error en loginThunk:", error);
     throw error; // Envia el error al componente
   }
 };

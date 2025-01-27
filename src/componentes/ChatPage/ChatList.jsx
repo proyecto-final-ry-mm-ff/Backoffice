@@ -17,7 +17,6 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import SearchIcon from "@mui/icons-material/Search";
 import { assignOperatorToChat } from "../../Services/signalRService";
 import { saveChat } from "../../Services/chatService";
-import { GetBearerToken } from "../../Services/helperService";
 
 export default function ChatList({ onChatSelect }) {
   const theme = useTheme();
@@ -238,7 +237,7 @@ export default function ChatList({ onChatSelect }) {
                   transition: "transform 0.3s ease", // Transición suave
                 }}
               >
-              {`${chat?.client?.name} - ${chat?.customer?.name}`}
+                {`${chat?.client?.name} - ${chat?.customer?.name}`}
               </Typography>
               <Button
                 onClick={() => handleAssignChat(chat?.id)}
