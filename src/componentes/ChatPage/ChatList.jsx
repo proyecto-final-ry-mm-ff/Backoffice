@@ -14,7 +14,7 @@ import { colorsList } from "../../theme";
 import { assignChat, removeChat } from "../../redux/features/chat/chatSlice";
 import ArchiveIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import UnarchiveIcon from "@mui/icons-material/ArrowBackIosOutlined";
-import CallEndOutlinedIcon from '@mui/icons-material/CallEndOutlined';
+import CallEndOutlinedIcon from "@mui/icons-material/CallEndOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { assignOperatorToChat, endChat } from "../../Services/signalRService";
 import { updateChat } from "../../Services/chatService";
@@ -37,12 +37,17 @@ export default function ChatList({ onChatSelect }) {
     setSearchTerm(event.target.value);
   };
 
-  // Handle de tabs
+  // Filtra los chats en base al término de búsqueda
+  const filteredChatsList = chatsList.filter((chat) =>
+    chat.id.toString().includes(searchTerm.toLowerCase()) ||
+    (chat?.client?.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (chat?.customer?.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
 
-  // Handle para definir el chat seleccionado
   const handleChatClick = (chat) => {
     onChatSelect(chat);
   };
@@ -54,19 +59,18 @@ export default function ChatList({ onChatSelect }) {
 
   const handleEndChat = async (chatId) => {
     try {
-      //const token = userStore.token;
       const chat = chats.myChats.find((c) => c.id === chatId);
 
       if (!chat) {
         console.error("Chat no encontrado en mi lista.");
         return;
       }
-      //Cambio el estado a TERMINADO
+
       const endedChat = { ...chat, status: 4 };
       const success = await updateChat(endedChat);
       if (success) {
         console.log("Chat guardado y finalizado correctamente.");
-        await endChat(chat.id)
+        await endChat(chat.id);
         store.dispatch(removeChat(chat.id));
         onChatSelect(false);
       } else {
@@ -98,8 +102,7 @@ export default function ChatList({ onChatSelect }) {
         <Typography variant="h3">CHATS</Typography>
       </Box>
 
-      {/*Input búsqueda */}
-
+      {/* Input búsqueda */}
       <TextField
         placeholder="Buscar chat..."
         variant="outlined"
@@ -132,7 +135,7 @@ export default function ChatList({ onChatSelect }) {
         }}
       />
 
-      {/* Tabs para alternar entre "All" y "My" */}
+      {/* Tabs para alternar entre "Pendientes" y "Asignados" */}
       <Tabs
         value={selectedTab}
         onChange={handleTabChange}
@@ -156,7 +159,7 @@ export default function ChatList({ onChatSelect }) {
         <Tab label="Asignados" />
       </Tabs>
 
-      {/* Lista de chatslist */}
+      {/* Lista de chats filtrados */}
       <Box
         sx={{
           alignItems: "center",
@@ -164,8 +167,8 @@ export default function ChatList({ onChatSelect }) {
           marginTop: "10px",
         }}
       >
-        {chatsList?.length > 0 ? (
-          chatsList.map((chat) => (
+        {filteredChatsList.length > 0 ? (
+          filteredChatsList.map((chat) => (
             <Box
               key={chat.id}
               onClick={() => handleChatClick(chat)}
@@ -180,64 +183,34 @@ export default function ChatList({ onChatSelect }) {
                 cursor: "pointer",
                 "&:hover": {
                   backgroundColor: colors.background[300],
-                  ".delete-icon": {
-                    // Selecciona el ícono de basura
-                    transform: "translateX(0)", // Lo mueve a su posición original
-                    opacity: 1, // Asegura que sea visible
-                  },
-                  ".chat-text": {
-                    // Selecciona el texto
-                    transform: "translateX(10px)", // Mueve el texto hacia la derecha
-                    transition: "transform 0.3s ease", // Anima el deslizamiento
-                  },
                 },
               }}
             >
-              {/* Botón de terminar chat */}
-              <Button
-                className="delete-icon"
-                sx={{
-                  display: "flex",
-                  position: "relative", // Permite que el botón esté fuera del flujo
-                  left: "-0px", // Oculta el ícono fuera del contenedor
-                  borderTopLeftRadius: "8px !important",
-                  borderBottomLeftRadius: "8px !important",
-                  opacity: 0, // Oculto por defecto
-                  transform: "translateX(-10px)", // Posición inicial para el deslizamiento
-                  transition: "all 0.3s ease", // Animación suave al aparecer
-
-                  minWidth: "unset",
-                  height: "50px",
-                  width: "35px",
-
-                  justifyContent: "center", // Centra el contenido horizontalmente
-                  alignItems: "center", // Centra el contenido verticalmente
-
-                  paddingBottom: "10px",
-
-                  borderRadius: "0px",
-                  "&:hover": {
-                    backgroundColor: colors.accentRed[400],
-                  },
-                }}
-                onClick={() => handleEndChat(chat.id)}
-              >
-                {selectedTab === 0 ? (
+              {selectedTab === 1 &&
+                < Button
+                  onClick={() => handleEndChat(chat.id)}
+                  sx={{
+                    minWidth: "unset",
+                    height: "50px",
+                    width: "35px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    paddingBottom: "10px",
+                    "&:hover": {
+                      backgroundColor: colors.accentRed[400],
+                    },
+                  }}
+                >
                   <CallEndOutlinedIcon />
-                ) : (
-                  <CallEndOutlinedIcon />
-                )}
-              </Button>
+                </Button>
+              }
               <Typography
-                className="chat-text"
                 sx={{
                   padding: "10px 0px",
                   fontSize: "18px",
-                  transform: "translateX(-10px)", // Posición inicial
-                  transition: "transform 0.3s ease", // Transición suave
                 }}
               >
-                {`${chat?.client?.name} - ${chat?.customer?.name}`}
+                {`${chat?.client?.name || "Sin nombre"} - ${chat?.customer?.name || "Sin cliente"}`}
               </Typography>
               <Button
                 onClick={() => handleAssignChat(chat?.id)}
@@ -247,7 +220,6 @@ export default function ChatList({ onChatSelect }) {
                   width: "40px",
                   padding: "0px",
                   marginLeft: "auto",
-                  borderRadius: "0px",
                   "&:hover": {
                     backgroundColor: colors.buttonPrimaryHover[400],
                   },
@@ -261,6 +233,6 @@ export default function ChatList({ onChatSelect }) {
           <Typography>No hay chats disponibles</Typography>
         )}
       </Box>
-    </Box>
+    </Box >
   );
 }
