@@ -1,4 +1,6 @@
-import { GetBearerToken } from "./helperService";
+import { GetBearerToken } from "./helper/helperService";
+import { store } from "../redux/store";
+import { assignChat, addMessageToChat } from "../redux/features/chat/chatSlice";
 
 const urlChat = "http://localhost:5015/chat";
 
