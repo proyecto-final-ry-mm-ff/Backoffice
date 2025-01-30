@@ -1,4 +1,4 @@
-const urlApi = "http://localhost:5015";
+const urlApi = process.env.REACT_APP_API_URL;
 
 export const loginApi = async (email, password) => {
   const response = await fetch(`${urlApi}/login`, {

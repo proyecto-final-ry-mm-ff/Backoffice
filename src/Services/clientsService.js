@@ -1,6 +1,7 @@
 // src/Services/clientsService.js
 
-const urlClient = "http://localhost:5015/Client";
+const urlClient = `${process.env.REACT_APP_API_URL}/Client`;
+
 
 // Obtener todos los clientes
 export const fetchClients = async () => {

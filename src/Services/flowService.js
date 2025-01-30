@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const urlFlow = "http://localhost:5015/Flow";
+const urlFlow = `${process.env.REACT_APP_API_URL}/Flow`;
+
 
 // Obtener todos los flujos
 export const getFlows = createAsyncThunk(

@@ -8,7 +8,7 @@ import {
 import * as signalR from "@microsoft/signalr";
 import { assignChat } from "../redux/features/chat/chatSlice";
 import { getChat, saveMessageToChat } from "./chatService";
-const wssUrl = "http://localhost:5056/chat-hub";
+const wssUrl = `${process.env.REACT_APP_SIGNALR_URL}/chat-hub`;
 
 let eventsRegistered = false;
 

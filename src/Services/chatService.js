@@ -2,7 +2,7 @@ import { GetBearerToken } from "./helper/helperService";
 import { store } from "../redux/store";
 import { assignChat, addMessageToChat } from "../redux/features/chat/chatSlice";
 
-const urlChat = "http://localhost:5015/chat";
+const urlChat = `${process.env.REACT_APP_API_URL}/chat`;
 
 // Obtener un chat en particular (sirve para conseguir todos los mensajes previos)
 export const getChat = async (chatId) => {
