@@ -9,8 +9,8 @@ WORKDIR /app
 # Copia los archivos de dependencias primero para optimizar caché
 COPY package.json package-lock.json ./
 
-# Instala dependencias con npm ci (más rápido y seguro que npm install)
-RUN npm ci --force
+# Instala dependencias y fuerza instalación de react-scripts
+RUN npm install --force && npm install react-scripts --save
 
 # Copia el resto del código fuente
 COPY . .
