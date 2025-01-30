@@ -9,8 +9,8 @@ WORKDIR /app
 # Copia los archivos de dependencias primero para optimizar caché
 COPY package.json package-lock.json ./
 
-# Instala dependencias y fuerza instalación de react-scripts
-RUN npm install --force && npm install react-scripts --save
+# Instalar dependencias de forma segura y forzar instalación de react-scripts
+RUN npm install --legacy-peer-deps --force && npm install react-scripts --save
 
 # Copia el resto del código fuente
 COPY . .
