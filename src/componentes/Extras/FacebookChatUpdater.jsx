@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addChat } from "../redux/features/chat/chatSlice"; // Acción de Redux
-import { getChats } from "../Services/chatService"; // Función para obtener chats
+import { addChat } from "../redux/features/chat/chatSlice"; // Acción de Reduxción para obtener chats
+import { getFacebookPendingChats } from "../../Services/chatService";
 
 const FacebookChatUpdater = () => {
     const dispatch = useDispatch();
@@ -9,7 +9,7 @@ const FacebookChatUpdater = () => {
     useEffect(() => {
         const fetchChats = async () => {
             try {
-                const chats = await getChats(); // Llamada a la API
+                const chats = await getFacebookPendingChats(); // Llamada a la API
                 chats.array.forEach(chat => {
                     dispatch(addChat(chat)); // Guardar en Redux
                 });
