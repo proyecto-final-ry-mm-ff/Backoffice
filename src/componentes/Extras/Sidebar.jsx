@@ -14,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ColorModeContext, colorsList } from "../../theme";
 import { useDispatch } from "react-redux";
 import { logoutThunk } from "../../redux/features/user/userThunk";
+import FacebookLogin from "./FacebookLogin";
 
 const Sidebar = () => {
   const theme = useTheme();
@@ -138,6 +139,7 @@ const Sidebar = () => {
           >
             <Typography>{isCollapsed ? "" : "Cerrar Sesión"}</Typography>
           </MenuItem>
+          <FacebookLogin />
         </Menu>
       </ProSidebar>
     </Box>
