@@ -18,6 +18,7 @@ import CallEndOutlinedIcon from "@mui/icons-material/CallEndOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { assignOperatorToChat, endChat } from "../../Services/signalRService";
 import { updateChat } from "../../Services/chatService";
+import FacebookChatUpdater from "../Extras/FacebookChatUpdater";
 
 export default function ChatList({ onChatSelect }) {
   const theme = useTheme();
@@ -92,6 +93,7 @@ export default function ChatList({ onChatSelect }) {
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       }}
     >
+      <FacebookChatUpdater /> {/* Ejecuta las actualizaciones en segundo plano */}
       {/* Encabezado */}
       <Box
         sx={{
