@@ -4,7 +4,7 @@ const FacebookLogin = () => {
   useEffect(() => {
     window.fbAsyncInit = function () {
       window.FB.init({
-        appId: "575440231632645", // Reemplaza con tu App ID
+        appId: "965552395014404", // Reemplaza con tu App ID
         cookie: true,
         xfbml: true,
         version: "v21.0",
