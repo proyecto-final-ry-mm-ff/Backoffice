@@ -15,7 +15,7 @@ export const getChat = async (chatId) => {
 };
 
 // Obtener un chat en particular (sirve para conseguir todos los mensajes previos)
-export const getFacebookPendingChats = async (chatId) => {
+export const getFacebookPendingChats = async () => {
   const token = GetBearerToken();
   const response = await fetch(`${urlChat}/facebook-pending-chats`, {
     headers: { Authorization: `Bearer ${token}` },

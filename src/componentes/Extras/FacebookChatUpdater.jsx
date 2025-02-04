@@ -10,7 +10,7 @@ const FacebookChatUpdater = () => {
         const fetchChats = async () => {
             try {
                 const chats = await getFacebookPendingChats(); // Llamada a la API
-                chats.array.forEach(chat => {
+                chats.forEach(chat => {
                     dispatch(addChat(chat)); // Guardar en Redux
                 });
             } catch (error) {
