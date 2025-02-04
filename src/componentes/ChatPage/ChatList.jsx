@@ -40,7 +40,7 @@ export default function ChatList({ onChatSelect }) {
 
   // Filtra los chats en base al término de búsqueda
   const filteredChatsList = chatsList.filter((chat) =>
-    chat.id.toString().includes(searchTerm.toLowerCase()) ||
+    chat?.id.toString().includes(searchTerm.toLowerCase()) ||
     (chat?.client?.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
     (chat?.customer?.name || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
