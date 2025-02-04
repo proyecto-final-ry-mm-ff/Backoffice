@@ -18,7 +18,7 @@ const chatSlice = createSlice({
 
       const targetChat = state.allChats.find((chat) => chat.id === theChat.id);
       if (!targetChat) {
-        state.allChats.push(targetChat);
+        state.allChats = [...state.allChats, targetChat];
       }
 
     },
