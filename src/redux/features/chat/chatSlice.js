@@ -14,7 +14,13 @@ const chatSlice = createSlice({
       state.allChats = action.payload;
     },
     addChat: (state, action) => {
-      state.allChats.push(action.payload);
+      const theChat = action.payload;
+
+      const targetChat = state.allChats.find((chat) => chat.id === theChat.id);
+      if (!targetChat) {
+        state.allChats.push(targetChat);
+      }
+
     },
     removeChat: (state, action) => {
       console.log("action.payload");
