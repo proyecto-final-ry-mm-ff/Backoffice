@@ -24,7 +24,7 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
         facebookId: initialData.facebookId || "-",
         allowedDomainsJson: Array.isArray(initialData.allowedDomainsJson)
           ? initialData.allowedDomainsJson.join(", ")
-          : initialData.allowedDomainsJson || "",
+          : initialData.allowedDomainsJson,
       });
     }
   }, [open, initialData]);
