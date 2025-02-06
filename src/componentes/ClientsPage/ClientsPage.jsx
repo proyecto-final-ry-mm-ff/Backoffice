@@ -191,7 +191,7 @@ const ClientsPage = () => {
                       overflow: "hidden",
                     }}
                   >
-                    {client.facebookId}
+                    {client?.facebookId.length > 0 ? client?.facebookId : "-"}
                   </TableCell>
                   <TableCell
                     sx={{
