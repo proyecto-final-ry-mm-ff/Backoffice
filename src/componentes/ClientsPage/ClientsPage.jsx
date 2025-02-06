@@ -45,13 +45,14 @@ const ClientsPage = () => {
     setSelectedClient({
       id: client.id,
       name: client.name,
+      facebookId: client.facebookId,
       allowedDomainsJson: client.allowedDomainsJson || [],
     });
     setIsDialogOpen(true);
   };
 
   const handleAddClient = () => {
-    setSelectedClient({ name: "", allowedDomainsJson: "" });
+    setSelectedClient({ name: "", facebookId: "-", allowedDomainsJson: "" });
     setIsDialogOpen(true);
   };
 
@@ -126,7 +127,7 @@ const ClientsPage = () => {
           <Table sx={{ tableLayout: "fixed" }}>
             <TableHead>
               <TableRow>
-                {["ID", "Nombre", "Token", "URL", ""].map((header, index) => (
+                {["ID", "Nombre", "Token", "Id de comercio en facebook", "URL", ""].map((header, index) => (
                   <TableCell
                     key={header || index}
                     sx={{
@@ -182,6 +183,15 @@ const ClientsPage = () => {
                     }}
                   >
                     {client.token}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      // whiteSpace: "normal", // Permite saltos de línea
+                      // wordWrap: "break-word", // Corta palabras largas
+                      overflow: "hidden",
+                    }}
+                  >
+                    {client.facebookId}
                   </TableCell>
                   <TableCell
                     sx={{
