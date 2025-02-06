@@ -21,6 +21,7 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
     if (open) {
       setFormData({
         name: initialData.name || "",
+        facebookId: initialData.facebookId || "-",
         allowedDomainsJson: Array.isArray(initialData.allowedDomainsJson)
           ? initialData.allowedDomainsJson.join(", ")
           : initialData.allowedDomainsJson || "",
@@ -38,6 +39,7 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
 
     const updatedData = {
       name: formData.name,
+      facebookId: formData.facebookId,
       allowedDomains: formData.allowedDomainsJson
         .split(",") // Divide la cadena en un array
         .map((url) => url.trim()) // Elimina espacios extra
@@ -64,6 +66,14 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
           label="Nombre"
           name="name"
           value={formData.name}
+          onChange={handleInputChange}
+          fullWidth
+          margin="dense"
+        />
+        <TextField
+          label="Facebook ID"
+          name="name"
+          value={formData.facebookId}
           onChange={handleInputChange}
           fullWidth
           margin="dense"
