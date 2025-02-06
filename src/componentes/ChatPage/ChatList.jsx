@@ -19,6 +19,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { assignOperatorToChat, endChat } from "../../Services/signalRService";
 import { updateChat } from "../../Services/chatService";
 import FacebookChatUpdater from "../Extras/FacebookChatUpdater";
+import { Constants } from "../../Services/helper/constants";
 
 export default function ChatList({ onChatSelect }) {
   const theme = useTheme();
@@ -179,12 +180,12 @@ export default function ChatList({ onChatSelect }) {
                 overflow: "hidden",
                 mb: "10px",
                 height: "50px",
-                backgroundColor: colors.background[200],
+                backgroundColor: (chat?.source == Constants.SOURCE_FACEBOOK) ? colors.facebookBackground[200] : colors.background[200],
                 borderRadius: "8px",
                 borderBottom: `1px solid ${colors.border[900]}`,
                 cursor: "pointer",
                 "&:hover": {
-                  backgroundColor: colors.background[300],
+                  backgroundColor: (chat?.source == Constants.SOURCE_FACEBOOK) ? colors.facebookBackground[300] : colors.background[300],
                 },
               }}
             >
@@ -209,7 +210,7 @@ export default function ChatList({ onChatSelect }) {
               <Typography
                 sx={{
                   padding: "10px 0px",
-                  fontSize: "18px",
+                  fontSize: "15px",
                 }}
               >
                 {`${chat?.client?.name || "Sin nombre"} - ${chat?.customer?.name || "Sin cliente"}`}
