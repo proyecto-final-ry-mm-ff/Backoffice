@@ -72,7 +72,7 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
         />
         <TextField
           label="Facebook ID"
-          name="name"
+          name="facebookId"
           value={formData.facebookId}
           onChange={handleInputChange}
           fullWidth
