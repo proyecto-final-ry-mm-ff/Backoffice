@@ -16,9 +16,15 @@ const chatSlice = createSlice({
     addChat: (state, action) => {
       const theChat = action.payload;
 
-      const targetChat = state.allChats.find((chat) => chat.id === theChat.id);
-      if (!targetChat) {
-        state.allChats = [...state.allChats, theChat];
+      // Verificar si ya está en myChats para evitar duplicados
+      const existsInMyChats = state.myChats.some((chat) => chat.id === theChat.id);
+      if (!existsInMyChats) {
+        // Buscar el chat en allChats
+        const targetChat = state.allChats.find((chat) => chat.id === theChat.id);
+        //Recién si tampoco está en el listado general, lo agrego
+        if (!targetChat) {
+          state.allChats = [...state.allChats, theChat];
+        }
       }
 
     },
