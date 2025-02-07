@@ -11,7 +11,7 @@ import {
 const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
   const [formData, setFormData] = useState({
     name: "",
-    allowedDomains: "",
+    allowedDomainsJson: "",
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -22,9 +22,9 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
       setFormData({
         name: initialData.name || "",
         facebookId: initialData.facebookId || "-",
-        allowedDomains: Array.isArray(initialData.allowedDomains)
-          ? initialData.allowedDomains.join(", ")
-          : initialData.allowedDomains,
+        allowedDomainsJson: Array.isArray(initialData.allowedDomainsJson)
+          ? initialData.allowedDomainsJson.join(", ")
+          : initialData.allowedDomainsJson,
       });
     }
   }, [open, initialData]);
@@ -40,7 +40,7 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
     const updatedData = {
       name: formData.name,
       facebookId: formData.facebookId,
-      allowedDomains: formData.allowedDomains
+      allowedDomains: formData.allowedDomainsJson
         .split(",") // Divide la cadena en un array
         .map((url) => url.trim()) // Elimina espacios extra
         .filter((url) => url), // Filtra valores vacíos
@@ -81,7 +81,7 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
         <TextField
           label="URL's"
           name="allowedDomains"
-          value={formData.allowedDomains}
+          value={formData.allowedDomainsJson}
           onChange={handleInputChange}
           fullWidth
           margin="dense"
