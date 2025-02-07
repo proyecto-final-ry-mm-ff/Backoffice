@@ -212,8 +212,8 @@ export default function ChatList({ onChatSelect }) {
               }
               <Typography
                 sx={{
-                  padding: "10px 0px",
-                  fontSize: "15px",
+                  padding: "10px 11px",
+                  fontSize: "13px",
                 }}
               >
                 {`${chat?.client?.name || "Sin nombre"} - ${chat?.customer?.name || "Sin cliente"}`}
