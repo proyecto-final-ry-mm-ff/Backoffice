@@ -18,7 +18,7 @@ const FacebookChatUpdater = () => {
             }
         };
 
-        // Ejecutar cada 300ms
+        // Ejecutar cada 30s
         const interval = setInterval(fetchChats, 30000);
 
         return () => clearInterval(interval); // Limpiar el intervalo al desmontar

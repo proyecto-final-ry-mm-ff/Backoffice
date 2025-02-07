@@ -27,6 +27,20 @@ const chatSlice = createSlice({
         }
       }
 
+      if (existsInMyChats) {
+        const myChatIndex = state.myChats.findIndex((chat) => chat.id === theChat.id);
+        if (myChatIndex !== -1) {
+          state.myChats[myChatIndex] = theChat;
+        }
+      } else {
+        //Recién si tampoco está en el listado general, lo agrego
+        // Reemplazar el chat en allChats si existe
+        const allChatIndex = state.allChats.findIndex((chat) => chat.id === theChat.id);
+        if (allChatIndex !== -1) {
+          state.allChats[allChatIndex] = theChat;
+        }
+      }
+
     },
     removeChat: (state, action) => {
       console.log("action.payload");
