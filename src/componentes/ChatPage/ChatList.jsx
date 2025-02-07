@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -34,6 +34,10 @@ export default function ChatList({ onChatSelect }) {
   const chatsList = selectedTab === 0 ? chats.allChats : chats.myChats; // All = 0  MY = 1
 
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el campo de búsqueda
+
+  useEffect(() => {
+    console.log("Chats actualizados:", chats);
+  }, [chats]);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
