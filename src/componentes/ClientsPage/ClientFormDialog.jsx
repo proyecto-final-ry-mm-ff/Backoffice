@@ -80,7 +80,7 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
         />
         <TextField
           label="URL's"
-          name="allowedDomainsJson"
+          name="allowedDomains"
           value={formData.allowedDomainsJson}
           onChange={handleInputChange}
           fullWidth
