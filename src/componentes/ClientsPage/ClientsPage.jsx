@@ -46,13 +46,13 @@ const ClientsPage = () => {
       id: client.id,
       name: client.name,
       facebookId: client.facebookId,
-      allowedDomainsJson: client.allowedDomainsJson || [],
+      allowedDomains: client.allowedDomains || [],
     });
     setIsDialogOpen(true);
   };
 
   const handleAddClient = () => {
-    setSelectedClient({ name: "", facebookId: "-", allowedDomainsJson: "" });
+    setSelectedClient({ name: "", facebookId: "-", allowedDomains: "" });
     setIsDialogOpen(true);
   };
 
@@ -200,9 +200,9 @@ const ClientsPage = () => {
                       overflow: "hidden",
                     }}
                   >
-                    {client.allowedDomainsJson &&
-                      client.allowedDomainsJson.length > 0
-                      ? client.allowedDomainsJson.join(", ")
+                    {client.allowedDomains &&
+                      client.allowedDomains.length > 0
+                      ? client.allowedDomains.join(", ")
                       : "Sin dominios asignados"}
                   </TableCell>
                   <TableCell sx={{ textAlign: "right" }}>
@@ -260,7 +260,7 @@ const ClientsPage = () => {
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         onSave={handleSaveClient}
-        initialData={selectedClient || { name: "", allowedDomainsJson: "" }}
+        initialData={selectedClient || { name: "", allowedDomains: "" }}
       />
       <ClientDeleteDialog
         open={isDeleteDialogOpen}

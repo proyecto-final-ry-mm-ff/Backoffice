@@ -35,6 +35,10 @@ const Chat = ({ chat }) => {
         }
     }, [messages]);
 
+    useEffect(() => {
+        console.log('Deberia verse el mensaje nuevo...')
+    }, [chatStore]);
+
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
             e.preventDefault(); // Evita que se realice un salto de línea

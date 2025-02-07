@@ -36,7 +36,6 @@ export default function ChatList({ onChatSelect }) {
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el campo de búsqueda
 
   useEffect(() => {
-    console.log("Chats actualizados:", chats);
   }, [chats]);
 
   const handleSearchChange = (event) => {
