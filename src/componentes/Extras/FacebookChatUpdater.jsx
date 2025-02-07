@@ -19,7 +19,7 @@ const FacebookChatUpdater = () => {
         };
 
         // Ejecutar cada 300ms
-        const interval = setInterval(fetchChats, 60000);
+        const interval = setInterval(fetchChats, 30000);
 
         return () => clearInterval(interval); // Limpiar el intervalo al desmontar
     }, [dispatch]);
