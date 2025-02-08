@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getFlows, deleteFlow, createFlow } from "../../Services/flowService";
+import { getFlows, deleteFlow } from "../../Services/flowService";
 import {
   Button,
   Table,
@@ -9,7 +9,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   Typography,
   Box,
   useTheme,
@@ -65,10 +64,7 @@ const FlowsList = () => {
 
   const handleActiveToggle = (id) => {
     const selectedFlow = flowsList.find(flow => flow.id === id);
-    console.log(selectedFlow);
     const flowsActivosMismoCanal = flowsList.filter(flow => flow.canal === selectedFlow.canal && flow.activo === true);
-    console.log(flowsActivosMismoCanal);
-
     if (flowsActivosMismoCanal.length > 0 && !selectedFlow.activo) { // revisa si hay un flow activo con el mismo canal que el seleccionado y si el seleccionado esta inactivo (o sea se está queriendo activarlo)
       alert("Ya hay un flujo activo para ese canal, debe desactivarlo primero");
     }

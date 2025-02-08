@@ -1,9 +1,6 @@
-import React, { useEffect } from "react";
-
-import Grid from "@mui/material/Grid";
-
+import React from "react";
 //Colores
-import { CssBaseline, Box, Typography, Button, useTheme } from "@mui/material";
+import {  Box, Typography, useTheme } from "@mui/material";
 
 import { colorsList } from "../../theme";
 

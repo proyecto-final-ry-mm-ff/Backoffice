@@ -1,6 +1,4 @@
 import { GetBearerToken } from "./helper/helperService";
-import { store } from "../redux/store";
-import { assignChat, addMessageToChat } from "../redux/features/chat/chatSlice";
 
 const urlChat = `${process.env.REACT_APP_API_URL}/chat`;
 
@@ -71,7 +69,6 @@ export const saveMessageToChat = async (chatId, message) => {
       throw new Error("No se pudo guardar el mensaje en la base de datos.");
     }
 
-    console.log("Mensaje guardado en la base de datos.");
   } catch (err) {
     console.error("Error al guardar el mensaje:", err);
   }

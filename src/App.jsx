@@ -1,6 +1,6 @@
-import React, { useEffect } from "react"; // Importa useEffect correctamente
+import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Provider, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { useMode, ColorModeContext } from "./theme";
 import { store } from "./redux/store";
@@ -17,8 +17,7 @@ import "./index.css";
 import ProtectedRoute from "./componentes/Extras/ProtectedRoute";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
-import { login } from "./redux/features/user/userSlice"; // Importa la acción de login
-import OperatorsPage from "./componentes/ClientsPage/OperatorsPage";
+import OperatorsPage from "./componentes/OperatorsPage/OperatorsPage"
 
 const persistor = persistStore(store);
 

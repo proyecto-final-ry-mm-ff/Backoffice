@@ -16,8 +16,6 @@ import { useDnD } from "./Recursos/DnDContext";
 import FlowSideBar from "./Recursos/FlowSideBar";
 import {
   ReactFlow,
-  MiniMap,
-  Controls,
   Background,
   useNodesState,
   useEdgesState,
@@ -33,12 +31,7 @@ import { initializeNodeData } from "./Nodes/NodeTypes";
 //flowService
 import { updateFlow, createFlow } from "../../Services/flowService";
 
-/*const initialNodes = [{
-    id: '0',
-    type: 'startNode',
-    position: { x: 150, y: 150 },
-    //data: { label: '1' }
-},];*/
+
 
 const FlowDesigner = ({ onBackToList }) => {
   const theme = useTheme();
@@ -130,7 +123,7 @@ const FlowDesigner = ({ onBackToList }) => {
   );
 
   const validateFlow = () => {
-    const nodosInicio = nodes.filter((node) => node.type == "startNode");
+    const nodosInicio = nodes.filter((node) => node.type === "startNode");
 
     if((nodosInicio).length < 1) {
         throw new Error('Debe haber un nodo inicio');
@@ -148,7 +141,7 @@ const FlowDesigner = ({ onBackToList }) => {
         throw new Error('No puede haber nodos desconectados');
     }        
     // sin canal seleccionado
-    if(channel == ""){
+    if(channel === ""){
         throw new Error('Debe seleccionar un canal');
     }
    
@@ -209,13 +202,13 @@ const FlowDesigner = ({ onBackToList }) => {
   const isValidConnection = (connection) => {
     const {source, target} = connection;        
 
-    const sourceNode = nodes.find((node)  => node.id == source);
-    const targetNode = nodes.find((node)  => node.id == target);              
+    const sourceNode = nodes.find((node)  => node.id === source);
+    const targetNode = nodes.find((node)  => node.id === target);              
 
     if(source === target) { // para que no se conecte a si mismo
         return false;
     }
-    if(sourceNode.type == "buttonNode" && targetNode.type == "buttonNode"){ // evitar que se conecten 2 botones
+    if(sourceNode.type === "buttonNode" && targetNode.type === "buttonNode"){ // evitar que se conecten 2 botones
         return false;
     }
 

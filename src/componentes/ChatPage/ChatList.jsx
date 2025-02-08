@@ -74,7 +74,6 @@ export default function ChatList({ onChatSelect }) {
       const endedChat = { ...chat, status: 4 };
       const success = await updateChat(endedChat);
       if (success) {
-        console.log("Chat guardado y finalizado correctamente.");
         await endChat(chat.id);
         store.dispatch(removeChat(chat.id));
         onChatSelect(false);

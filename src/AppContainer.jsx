@@ -23,7 +23,6 @@ const AppContainer = ({ children }) => {
           height: "96%",
           backgroundColor: theme.palette.background.paper, // Fondo del contenido
           boxShadow: "0 4px 16px rgba(0, 0, 0, 0.2)", // Sombra para efecto de profundidad
-          // overflow: 'hidden',
           display: "flex",
           flexDirection: "column",
         }}

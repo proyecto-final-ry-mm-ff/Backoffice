@@ -4,7 +4,7 @@ const FacebookLogin = () => {
   useEffect(() => {
     window.fbAsyncInit = function () {
       window.FB.init({
-        appId: "965552395014404", // Reemplaza con tu App ID
+        appId: `${process.env.REACT_APP_FACEBOOK_APP_ID}`,
         cookie: true,
         xfbml: true,
         version: "v21.0",
@@ -28,9 +28,6 @@ const FacebookLogin = () => {
       function (response) {
         if (response.status === "connected") {
           const userAccessToken = response.authResponse.accessToken;
-
-          console.log(userAccessToken);
-
           // Enviar el token al backend
           fetch("/api/auth/facebook/token", {
             method: "POST",
@@ -40,9 +37,6 @@ const FacebookLogin = () => {
             body: JSON.stringify({ accessToken: userAccessToken }),
           })
             .then((res) => res.json())
-            .then((data) => {
-              console.log("Token de Página:", data.pageAccessToken);
-            })
             .catch((error) => console.error("Error:", error));
         } else {
           console.error("El usuario no autorizó la aplicación.");

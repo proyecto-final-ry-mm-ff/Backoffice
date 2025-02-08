@@ -40,7 +40,6 @@ export const updateFlow = createAsyncThunk(
   "flows/updateFlow",
   async (updatedFlow, thunkAPI) => {
     try {
-      console.log(updatedFlow);
       const response = await fetch(urlFlow, {
         method: "PUT",
         headers: {

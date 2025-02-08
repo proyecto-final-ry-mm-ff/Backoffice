@@ -31,8 +31,6 @@ export const createClient = createAsyncThunk(
         allowedDomains: clientDto.allowedDomains,
       };
 
-      console.log("Transformed client:", transformedClient);
-
       // Enviar al servicio
       return await postClientService(transformedClient);
     } catch (error) {

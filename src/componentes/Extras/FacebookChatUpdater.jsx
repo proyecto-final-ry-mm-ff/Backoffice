@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addChat } from "../../redux/features/chat/chatSlice"; // Acción de Reduxción para obtener chats
 import { getFacebookPendingChats } from "../../Services/chatService";

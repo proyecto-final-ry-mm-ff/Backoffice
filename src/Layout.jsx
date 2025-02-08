@@ -1,13 +1,10 @@
 import React, { useEffect } from 'react';
-import { Box, CssBaseline, useTheme } from '@mui/material';
-import { ColorModeContext, useMode, colorsList } from './theme';
+import { Box } from '@mui/material';
 import Sidebar from './componentes/Extras/Sidebar';
 import { Outlet } from 'react-router-dom';
 import { connectToHub } from './Services/signalRService';
 
 const Layout = () => {
-    const [theme] = useMode();
-    const colors = colorsList(theme.palette.mode);
 
     useEffect(() => {
         const [navigationEntry] = performance.getEntriesByType("navigation");
@@ -22,9 +19,6 @@ const Layout = () => {
 
         if (navigationEntry?.type === "reload") {
             doConnect();
-            console.log("La página se recargó (F5).");
-        } else {
-            console.log("No fue refresh (o no se pudo detectar).");
         }
     }, []);
 

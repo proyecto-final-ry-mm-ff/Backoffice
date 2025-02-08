@@ -4,10 +4,9 @@ import SendIcon from "@mui/icons-material/Send";
 import { colorsList } from "../../theme";
 import {
     sendMessageToChat,
-    assignOperatorToChat,
 } from "../../Services/signalRService.js";
 import { useSelector } from "react-redux";
-import { store } from "../../redux/store";
+import { Constants } from "../../Services/helper/constants.js";
 
 const Chat = ({ chat }) => {
     const theme = useTheme();
@@ -36,7 +35,6 @@ const Chat = ({ chat }) => {
     }, [messages]);
 
     useEffect(() => {
-        console.log('Deberia verse el mensaje nuevo...')
     }, [chatStore]);
 
     const handleKeyDown = (e) => {
@@ -50,19 +48,11 @@ const Chat = ({ chat }) => {
     const handleSendMessage = async () => {
         if (newMessage.trim()) {
             try {
-                const senderTypeId = 2; // Operador
-                const newMessageObj = {
-                    chatId: selectedChat.id,
-                    senderTypeId,
-                    content: newMessage,
-                    timeStamp: new Date().toISOString(),
-                };
+                const senderTypeId = Constants.SENDER_TYPE_OPERATOR; // Operador
 
                 // Envía el mensaje al servidor
                 await sendMessageToChat(selectedChat.id, senderTypeId, newMessage);
 
-                // Añade el mensaje localmente hasta recibir confirmación del servidor
-                //  setMessages((prevMessages) => [...prevMessages, newMessageObj]);
                 setNewMessage("");
             } catch (error) {
                 console.error("Error al enviar mensaje:", error);

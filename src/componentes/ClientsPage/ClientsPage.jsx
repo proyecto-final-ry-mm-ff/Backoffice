@@ -30,7 +30,7 @@ const ClientsPage = () => {
   const colors = colorsList(theme.palette.mode);
   const dispatch = useDispatch();
 
-  const { clients, status } = useSelector((state) => state.clientsStore);
+  const { clients } = useSelector((state) => state.clientsStore);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false); // Diálogo de creación/edición
   const [selectedClient, setSelectedClient] = useState(null);
@@ -177,8 +177,6 @@ const ClientsPage = () => {
                   </TableCell>
                   <TableCell
                     sx={{
-                      // whiteSpace: "normal", // Permite saltos de línea
-                      // wordWrap: "break-word", // Corta palabras largas
                       overflow: "hidden",
                     }}
                   >
@@ -186,8 +184,6 @@ const ClientsPage = () => {
                   </TableCell>
                   <TableCell
                     sx={{
-                      // whiteSpace: "normal", // Permite saltos de línea
-                      // wordWrap: "break-word", // Corta palabras largas
                       overflow: "hidden",
                     }}
                   >
