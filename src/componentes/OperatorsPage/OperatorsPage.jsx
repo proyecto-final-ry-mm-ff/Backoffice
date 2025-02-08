@@ -9,7 +9,7 @@ import {
 import { colorsList } from "../../theme";
 import { FaLock, FaUser } from "react-icons/fa";
 import { postOperator } from "../../Services/operatorsService";
-import Toast from "../components/Toast"; // Importamos el componente Toast
+import Toast from  "../Extras/Toast";
 
 const OperatorsPage = () => {
   const theme = useTheme();
