@@ -20,7 +20,7 @@ import { assignOperatorToChat, endChat } from "../../Services/signalRService";
 import { updateChat } from "../../Services/chatService";
 import FacebookChatUpdater from "../Extras/FacebookChatUpdater";
 import { Constants } from "../../Services/helper/constants";
-import { useToast } from "../context/ToastContext"; // Importamos el hook
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
 
 
 export default function ChatList({ onChatSelect }) {

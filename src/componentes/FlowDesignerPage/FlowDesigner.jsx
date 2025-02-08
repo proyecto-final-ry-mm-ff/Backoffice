@@ -24,7 +24,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useEffect } from "react";
-import { useToast } from "../context/ToastContext"; // Importamos el hook
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
 
 
 //Nodos

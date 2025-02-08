@@ -7,7 +7,7 @@ import {
 } from "../../Services/signalRService.js";
 import { useSelector } from "react-redux";
 import { Constants } from "../../Services/helper/constants.js";
-import { useToast } from "../context/ToastContext"; // Importamos el hook
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
 
 const Chat = ({ chat }) => {
     const theme = useTheme();

@@ -9,7 +9,7 @@ import {
 import { colorsList } from "../../theme";
 import { FaLock, FaUser } from "react-icons/fa";
 import { postOperator } from "../../Services/operatorsService";
-import { useToast } from "../context/ToastContext"; // Importamos el hook
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
 
 
 const OperatorsPage = () => {

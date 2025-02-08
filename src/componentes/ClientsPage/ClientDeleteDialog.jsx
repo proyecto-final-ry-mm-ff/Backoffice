@@ -9,7 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { colorsList } from "../../theme";
-import { useToast } from "../context/ToastContext"; // Importamos el hook
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
 
 const ClientDeleteDialog = ({ open, onClose, onConfirm, clientName }) => {
   const theme = useTheme();

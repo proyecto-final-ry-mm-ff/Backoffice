@@ -17,7 +17,7 @@ import FlowDesigner from "./FlowDesigner";
 import { setSelectedFlow } from "../../redux/features/flows/flowSlice";
 import { colorsList } from "../../theme";
 import { toggleFlowActiveThunk } from "../../redux/features/flows/flowThunks";
-import { useToast } from "../context/ToastContext"; // Importamos el hook
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
 
 
 
