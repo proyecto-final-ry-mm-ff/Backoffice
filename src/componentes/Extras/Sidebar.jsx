@@ -141,7 +141,6 @@ const Sidebar = () => {
           >
             <Typography>{isCollapsed ? "" : "Cerrar Sesión"}</Typography>
           </MenuItem>
-          <FacebookLogin />
         </Menu>
       </ProSidebar>
     </Box>
