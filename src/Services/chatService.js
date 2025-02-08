@@ -20,7 +20,13 @@ export const getFacebookPendingChats = async () => {
   const response = await fetch(`${urlChat}/facebook-pending-chats`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  if (!response.ok) throw new Error("Error al obtener chats pendientes de facebook");
+
+  if (!response.ok){
+    if(response.status !== 404){
+      throw new Error("Error al obtener chats pendientes de facebook");
+    }
+  }
+    
   return await response.json();
 };
 
