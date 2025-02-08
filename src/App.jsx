@@ -18,6 +18,7 @@ import ProtectedRoute from "./componentes/Extras/ProtectedRoute";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import { login } from "./redux/features/user/userSlice"; // Importa la acción de login
+import OperatorsPage from "./componentes/ClientsPage/OperatorsPage";
 
 const persistor = persistStore(store);
 
@@ -69,6 +70,14 @@ const App = () => {
                         element={
                           <ProtectedRoute>
                             <ClientsPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/operators-page"
+                        element={
+                          <ProtectedRoute>
+                            <OperatorsPage />
                           </ProtectedRoute>
                         }
                       />
