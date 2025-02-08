@@ -44,7 +44,7 @@ const OperatorsPage = () => {
       // Mostrar mensaje de error
       setToast({
         open: true,
-        message: error || "Error al registrar operador",
+        message: error.message || "Error al registrar operador",
         severity: "error",
       });
     }
