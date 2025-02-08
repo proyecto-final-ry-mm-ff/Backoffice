@@ -7,10 +7,12 @@ import {
 } from "../../Services/signalRService.js";
 import { useSelector } from "react-redux";
 import { Constants } from "../../Services/helper/constants.js";
+import { useToast } from "../context/ToastContext"; // Importamos el hook
 
 const Chat = ({ chat }) => {
     const theme = useTheme();
     const colors = colorsList(theme.palette.mode);
+    const { showToast } = useToast(); // Usamos el toast global
 
     // Usa el chat directamente desde props
     const [messages, setMessages] = useState(chat?.messages || []);
@@ -56,6 +58,10 @@ const Chat = ({ chat }) => {
                 setNewMessage("");
             } catch (error) {
                 console.error("Error al enviar mensaje:", error);
+                showToast(
+                    "Error al enviar mensaje. Por favor contactese con soporte",
+                    "error",
+                );
             }
         }
     };

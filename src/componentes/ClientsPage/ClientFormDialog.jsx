@@ -7,6 +7,9 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+import { useToast } from "../context/ToastContext"; // Importamos el hook
+
+
 
 const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
   const [formData, setFormData] = useState({
@@ -15,6 +18,9 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const { showToast } = useToast(); // Usamos el toast global
+
+
 
   // Actualiza el formulario cuando cambian los datos iniciales
   useEffect(() => {
@@ -51,6 +57,10 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
       onClose();
     } catch (error) {
       console.error("Error al guardar el cliente:", error);
+      showToast(
+        "Error al guardar el cliente. Por favor contacte con soporte",
+        "error",
+      );
     } finally {
       setIsLoading(false);
     }

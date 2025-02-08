@@ -20,10 +20,15 @@ import { assignOperatorToChat, endChat } from "../../Services/signalRService";
 import { updateChat } from "../../Services/chatService";
 import FacebookChatUpdater from "../Extras/FacebookChatUpdater";
 import { Constants } from "../../Services/helper/constants";
+import { useToast } from "../context/ToastContext"; // Importamos el hook
+
 
 export default function ChatList({ onChatSelect }) {
   const theme = useTheme();
   const colors = colorsList(theme.palette.mode);
+
+  const { showToast } = useToast(); // Usamos el toast global
+
 
   const dispatch = useDispatch();
 
@@ -78,10 +83,21 @@ export default function ChatList({ onChatSelect }) {
         store.dispatch(removeChat(chat.id));
         onChatSelect(false);
       } else {
-        console.error("Error al guardar y finalizar el chat.");
+
+        showToast(
+          "Error al guardar y finalizar el chat. Por favor contactar con soporte",
+          "error",
+        );
       }
     } catch (err) {
+
       console.error("Error al finalizar el chat:", err);
+
+      showToast(
+        "Error al finalizar el chat. Por favor contactar con soporte",
+        "error",
+      );
+
     }
   };
 

@@ -24,11 +24,17 @@ import {
   removeClient,
 } from "../../redux/features/clients/clientsThunks";
 import { colorsList } from "../../theme";
+import { useToast } from "../context/ToastContext"; // Importamos el hook
+
+
 
 const ClientsPage = () => {
   const theme = useTheme();
   const colors = colorsList(theme.palette.mode);
   const dispatch = useDispatch();
+  const { showToast } = useToast(); // Usamos el toast global
+
+
 
   const { clients } = useSelector((state) => state.clientsStore);
 
@@ -68,6 +74,10 @@ const ClientsPage = () => {
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Error al guardar el cliente:", error);
+      showToast(
+        "Error al guardar el cliente. Por favor contacte con soporte",
+        "error",
+      );
     }
   };
 
@@ -81,11 +91,17 @@ const ClientsPage = () => {
   const handleDeleteClient = async () => {
     if (clientToDelete) {
       try {
-        await dispatch(removeClient(clientToDelete.id)); // Llama al thunk de eliminación
+        dispatch(removeClient(clientToDelete.id)); // Llama al thunk de eliminación
         setIsDeleteDialogOpen(false); // Cierra el diálogo de confirmación
         setClientToDelete(null); // Limpia el cliente seleccionado
       } catch (error) {
         console.error("Error al eliminar el cliente:", error);
+
+        showToast(
+          "Error al eliminar el cliente. Por favor contacte con soporte",
+          "error",
+        );
+
       }
     }
   };

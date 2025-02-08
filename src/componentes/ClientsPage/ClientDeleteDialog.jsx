@@ -9,11 +9,15 @@ import {
   useTheme,
 } from "@mui/material";
 import { colorsList } from "../../theme";
+import { useToast } from "../context/ToastContext"; // Importamos el hook
 
 const ClientDeleteDialog = ({ open, onClose, onConfirm, clientName }) => {
   const theme = useTheme();
   const colors = colorsList(theme.palette.mode);
   const [isLoading, setIsLoading] = useState(false);
+  const { showToast } = useToast(); // Usamos el toast global
+
+
 
   const handleConfirm = async () => {
     setIsLoading(true);
@@ -22,6 +26,10 @@ const ClientDeleteDialog = ({ open, onClose, onConfirm, clientName }) => {
       onClose(); // Cierra el diálogo solo si la operación es exitosa
     } catch (error) {
       console.error("Error al eliminar el cliente:", error);
+      showToast(
+        "Error al eliminar el cliente. Por favor contacte con soporte",
+        "error",
+      );
     } finally {
       setIsLoading(false);
     }

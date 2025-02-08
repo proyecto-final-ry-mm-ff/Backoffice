@@ -9,7 +9,8 @@ import {
 import { colorsList } from "../../theme";
 import { FaLock, FaUser } from "react-icons/fa";
 import { postOperator } from "../../Services/operatorsService";
-import Toast from "../Extras/Toast";
+import { useToast } from "../context/ToastContext"; // Importamos el hook
+
 
 const OperatorsPage = () => {
   const theme = useTheme();
@@ -17,7 +18,8 @@ const OperatorsPage = () => {
 
 
   const [userData, setUserData] = useState({});
-  const [toast, setToast] = useState({ open: false, message: "", severity: "info" });
+  const { showToast } = useToast(); // Usamos el toast global
+
 
   // Actualiza los datos de los inputs en userData
   const handleChangeMultiple = (e) => {
@@ -34,19 +36,17 @@ const OperatorsPage = () => {
       await postOperator(operatorDto);
 
       // Mostrar mensaje de éxito
-      setToast({
-        open: true,
-        message: "Operador registrado con éxito",
-        severity: "success",
-      });
+      showToast(
+        "Operador registrado con éxito",
+        "success",
+      );
 
     } catch (error) {
       // Mostrar mensaje de error
-      setToast({
-        open: true,
-        message: error.message || "Error al registrar operador",
-        severity: "error",
-      });
+      showToast(
+        "Error al registrar operador. Por favor contacte con soporte",
+        "error",
+      );
     }
   };
 
@@ -167,14 +167,6 @@ const OperatorsPage = () => {
           </Box>
         </form>
       </Box>
-
-      {/* Componente Toast para mostrar mensajes */}
-      <Toast
-        open={toast.open}
-        message={toast.message}
-        severity={toast.severity}
-        onClose={() => setToast({ ...toast, open: false })}
-      />
     </Box>
   );
 };
