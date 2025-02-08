@@ -106,6 +106,7 @@ const Sidebar = () => {
               icon={<AccountTreeIcon />}
             />
             <Item title="Clientes" to="/clients-page" icon={<PeopleIcon />} />
+            <Item title="Registrar operador" to="/operators-page" icon={<PeopleIcon />} />
             <Item title="Configuración" to="/config" icon={<SettingsIcon />} />
           </Box>
         </Menu>
