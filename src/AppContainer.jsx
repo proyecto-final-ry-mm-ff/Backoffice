@@ -1,12 +1,12 @@
 import React from "react";
 import { Box, useTheme } from "@mui/material";
-import { ToastProvider } from "./context/ToastProvider";
+import { ToastContext } from "./context/ToastContext";
 
 const AppContainer = ({ children }) => {
   const theme = useTheme();
 
   return (
-    <ToastProvider>
+    <ToastContext>
       <Box
         sx={{
           display: "flex",
@@ -32,7 +32,7 @@ const AppContainer = ({ children }) => {
           {children}
         </Box>
       </Box>
-    </ToastProvider>
+    </ToastContext>
   );
 };
 

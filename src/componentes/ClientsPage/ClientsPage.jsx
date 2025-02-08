@@ -24,7 +24,7 @@ import {
   removeClient,
 } from "../../redux/features/clients/clientsThunks";
 import { colorsList } from "../../theme";
-import { useToast } from "../context/ToastContext"; // Importamos el hook
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
 
 
 
