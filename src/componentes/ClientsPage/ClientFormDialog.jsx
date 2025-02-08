@@ -7,6 +7,9 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
+
+
 
 const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
   const [formData, setFormData] = useState({
@@ -15,15 +18,19 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const { showToast } = useToast(); // Usamos el toast global
+
+
 
   // Actualiza el formulario cuando cambian los datos iniciales
   useEffect(() => {
     if (open) {
       setFormData({
         name: initialData.name || "",
+        facebookId: initialData.facebookId || "-",
         allowedDomainsJson: Array.isArray(initialData.allowedDomainsJson)
           ? initialData.allowedDomainsJson.join(", ")
-          : initialData.allowedDomainsJson || "",
+          : initialData.allowedDomainsJson,
       });
     }
   }, [open, initialData]);
@@ -38,6 +45,7 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
 
     const updatedData = {
       name: formData.name,
+      facebookId: formData.facebookId,
       allowedDomains: formData.allowedDomainsJson
         .split(",") // Divide la cadena en un array
         .map((url) => url.trim()) // Elimina espacios extra
@@ -49,6 +57,10 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
       onClose();
     } catch (error) {
       console.error("Error al guardar el cliente:", error);
+      showToast(
+        "Error al guardar el cliente. Por favor contacte con soporte",
+        "error",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -69,8 +81,16 @@ const ClientFormDialog = ({ open, onClose, onSave, initialData }) => {
           margin="dense"
         />
         <TextField
+          label="Facebook ID"
+          name="facebookId"
+          value={formData.facebookId}
+          onChange={handleInputChange}
+          fullWidth
+          margin="dense"
+        />
+        <TextField
           label="URL's"
-          name="allowedDomainsJson"
+          name="allowedDomains"
           value={formData.allowedDomainsJson}
           onChange={handleInputChange}
           fullWidth

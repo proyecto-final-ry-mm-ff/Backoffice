@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -18,10 +18,17 @@ import CallEndOutlinedIcon from "@mui/icons-material/CallEndOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { assignOperatorToChat, endChat } from "../../Services/signalRService";
 import { updateChat } from "../../Services/chatService";
+import FacebookChatUpdater from "../Extras/FacebookChatUpdater";
+import { Constants } from "../../Services/helper/constants";
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
+
 
 export default function ChatList({ onChatSelect }) {
   const theme = useTheme();
   const colors = colorsList(theme.palette.mode);
+
+  const { showToast } = useToast(); // Usamos el toast global
+
 
   const dispatch = useDispatch();
 
@@ -33,13 +40,16 @@ export default function ChatList({ onChatSelect }) {
 
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el campo de búsqueda
 
+  useEffect(() => {
+  }, [chats]);
+
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
   // Filtra los chats en base al término de búsqueda
   const filteredChatsList = chatsList.filter((chat) =>
-    chat.id.toString().includes(searchTerm.toLowerCase()) ||
+    chat?.id.toString().includes(searchTerm.toLowerCase()) ||
     (chat?.client?.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
     (chat?.customer?.name || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -69,15 +79,25 @@ export default function ChatList({ onChatSelect }) {
       const endedChat = { ...chat, status: 4 };
       const success = await updateChat(endedChat);
       if (success) {
-        console.log("Chat guardado y finalizado correctamente.");
         await endChat(chat.id);
         store.dispatch(removeChat(chat.id));
         onChatSelect(false);
       } else {
-        console.error("Error al guardar y finalizar el chat.");
+
+        showToast(
+          "Error al guardar y finalizar el chat. Por favor contactar con soporte",
+          "error",
+        );
       }
     } catch (err) {
+
       console.error("Error al finalizar el chat:", err);
+
+      showToast(
+        "Error al finalizar el chat. Por favor contactar con soporte",
+        "error",
+      );
+
     }
   };
 
@@ -92,6 +112,7 @@ export default function ChatList({ onChatSelect }) {
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       }}
     >
+      <FacebookChatUpdater /> {/* Ejecuta las actualizaciones en segundo plano */}
       {/* Encabezado */}
       <Box
         sx={{
@@ -177,12 +198,12 @@ export default function ChatList({ onChatSelect }) {
                 overflow: "hidden",
                 mb: "10px",
                 height: "50px",
-                backgroundColor: colors.background[200],
+                backgroundColor: (chat?.source == Constants.SOURCE_FACEBOOK) ? colors.facebookBackground[200] : colors.background[200],
                 borderRadius: "8px",
                 borderBottom: `1px solid ${colors.border[900]}`,
                 cursor: "pointer",
                 "&:hover": {
-                  backgroundColor: colors.background[300],
+                  backgroundColor: (chat?.source == Constants.SOURCE_FACEBOOK) ? colors.facebookBackground[300] : colors.background[300],
                 },
               }}
             >
@@ -206,8 +227,8 @@ export default function ChatList({ onChatSelect }) {
               }
               <Typography
                 sx={{
-                  padding: "10px 0px",
-                  fontSize: "18px",
+                  padding: "10px 11px",
+                  fontSize: "13px",
                 }}
               >
                 {`${chat?.client?.name || "Sin nombre"} - ${chat?.customer?.name || "Sin cliente"}`}

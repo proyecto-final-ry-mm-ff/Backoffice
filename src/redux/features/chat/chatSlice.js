@@ -14,10 +14,35 @@ const chatSlice = createSlice({
       state.allChats = action.payload;
     },
     addChat: (state, action) => {
-      state.allChats.push(action.payload);
+      const theChat = action.payload;
+
+      // Verificar si ya está en myChats para evitar duplicados
+      const existsInMyChats = state.myChats.some((chat) => chat.id === theChat.id);
+      if (!existsInMyChats) {
+        // Buscar el chat en allChats
+        const targetChat = state.allChats.find((chat) => chat.id === theChat.id);
+        //Recién si tampoco está en el listado general, lo agrego
+        if (!targetChat) {
+          state.allChats = [...state.allChats, theChat];
+        }
+      }
+
+      if (existsInMyChats) {
+        const myChatIndex = state.myChats.findIndex((chat) => chat.id === theChat.id);
+        if (myChatIndex !== -1) {
+          state.myChats[myChatIndex] = theChat;
+        }
+      } else {
+        //Recién si tampoco está en el listado general, lo agrego
+        // Reemplazar el chat en allChats si existe
+        const allChatIndex = state.allChats.findIndex((chat) => chat.id === theChat.id);
+        if (allChatIndex !== -1) {
+          state.allChats[allChatIndex] = theChat;
+        }
+      }
+
     },
     removeChat: (state, action) => {
-      console.log("action.payload");
       const chatId = action.payload; // `pendingChat.id` del evento
       state.allChats = state.allChats.filter((chat) => chat.id !== chatId);
       state.myChats = state.myChats.filter((chat) => chat.id !== chatId);
@@ -40,7 +65,6 @@ const chatSlice = createSlice({
     },
     // Asignar
     assignChat: (state, action) => {
-      console.log("se asigna un chat");
       const { chatId } = action.payload;
 
       // Verificar si ya está en myChats para evitar duplicados
@@ -103,4 +127,5 @@ export const {
   clearSelectedChat,
   clearMyChats,
 } = chatSlice.actions;
+
 export default chatSlice.reducer;

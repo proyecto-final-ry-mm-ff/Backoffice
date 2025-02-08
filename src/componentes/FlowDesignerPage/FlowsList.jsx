@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getFlows, deleteFlow, createFlow } from "../../Services/flowService";
+import { getFlows, deleteFlow } from "../../Services/flowService";
 import {
   Button,
   Table,
@@ -9,7 +9,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   Typography,
   Box,
   useTheme,
@@ -18,6 +17,9 @@ import FlowDesigner from "./FlowDesigner";
 import { setSelectedFlow } from "../../redux/features/flows/flowSlice";
 import { colorsList } from "../../theme";
 import { toggleFlowActiveThunk } from "../../redux/features/flows/flowThunks";
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
+
+
 
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
@@ -27,7 +29,10 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
 const FlowsList = () => {
   const dispatch = useDispatch();
+  const { showToast } = useToast(); // Usamos el toast global
+
   const { flowsList, status, error } = useSelector((state) => state.flowStore);
+
 
   const theme = useTheme();
   const colors = colorsList(theme.palette.mode);
@@ -56,6 +61,9 @@ const FlowsList = () => {
       setIsDesigning(true);
     } catch (err) {
       console.error('Error al crear el flujo:', err);
+      showToast("Error al crear el flujo. Por favor contacte con soporte",
+        "error",
+      );
     }
   };
 
@@ -65,12 +73,11 @@ const FlowsList = () => {
 
   const handleActiveToggle = (id) => {
     const selectedFlow = flowsList.find(flow => flow.id === id);
-    console.log(selectedFlow);
     const flowsActivosMismoCanal = flowsList.filter(flow => flow.canal === selectedFlow.canal && flow.activo === true);
-    console.log(flowsActivosMismoCanal);
-
     if (flowsActivosMismoCanal.length > 0 && !selectedFlow.activo) { // revisa si hay un flow activo con el mismo canal que el seleccionado y si el seleccionado esta inactivo (o sea se está queriendo activarlo)
-      alert("Ya hay un flujo activo para ese canal, debe desactivarlo primero");
+      showToast("Ya hay un flujo activo para ese canal, debe desactivarlo primero",
+        "info",
+      );
     }
     else {
       dispatch(toggleFlowActiveThunk(id));
@@ -257,7 +264,7 @@ const FlowsList = () => {
               }}
             >
               <Typography variant="h3">
-                No hay flows disponibles.
+                No hay flujos automáticos disponibles.
               </Typography>
             </Box>
           )}

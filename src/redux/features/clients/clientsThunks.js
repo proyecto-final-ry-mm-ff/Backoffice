@@ -27,10 +27,9 @@ export const createClient = createAsyncThunk(
       // Transformar allowedDomainsJson en allowedDomains
       const transformedClient = {
         name: clientDto.name,
+        facebookId: clientDto.facebookId,
         allowedDomains: clientDto.allowedDomains,
       };
-
-      console.log("Transformed client:", transformedClient);
 
       // Enviar al servicio
       return await postClientService(transformedClient);

@@ -1,6 +1,5 @@
 import { login, logout } from "./userSlice";
 import { loginApi } from "../../../Services/userService";
-import { GetRandomString } from "../../../Services/helper/helperService";
 import {
   connectToHub,
   disconnectFromHub,
@@ -37,7 +36,6 @@ export const logoutThunk = () => async (dispatch) => {
     // Desconectar del backend y detener SignalR
     await disconnectFromHub();
 
-    console.log("Logout completado exitosamente.");
   } catch (error) {
     console.error("Error durante el logout:", error);
   }

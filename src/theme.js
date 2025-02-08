@@ -25,6 +25,7 @@ export const colorsList = (mode) => ({
 
         // Bordes
         border: generateColorPalette("#48484A"), // Bordes sutiles para delimitar.
+        facebookBackground: generateColorPalette("#0866FF")
       }
     : {
         // Fondo principal (Background)
@@ -48,6 +49,7 @@ export const colorsList = (mode) => ({
 
         // Bordes
         border: generateColorPalette("#D1D1D6"), // Bordes ligeros y discretos.
+        facebookBackground: generateColorPalette("#0866FF")
       }),
 });
 

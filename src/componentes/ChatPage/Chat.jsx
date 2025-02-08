@@ -4,14 +4,15 @@ import SendIcon from "@mui/icons-material/Send";
 import { colorsList } from "../../theme";
 import {
     sendMessageToChat,
-    assignOperatorToChat,
 } from "../../Services/signalRService.js";
 import { useSelector } from "react-redux";
-import { store } from "../../redux/store";
+import { Constants } from "../../Services/helper/constants.js";
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
 
 const Chat = ({ chat }) => {
     const theme = useTheme();
     const colors = colorsList(theme.palette.mode);
+    const { showToast } = useToast(); // Usamos el toast global
 
     // Usa el chat directamente desde props
     const [messages, setMessages] = useState(chat?.messages || []);
@@ -35,6 +36,9 @@ const Chat = ({ chat }) => {
         }
     }, [messages]);
 
+    useEffect(() => {
+    }, [chatStore]);
+
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
             e.preventDefault(); // Evita que se realice un salto de línea
@@ -46,22 +50,18 @@ const Chat = ({ chat }) => {
     const handleSendMessage = async () => {
         if (newMessage.trim()) {
             try {
-                const senderTypeId = 2; // Operador
-                const newMessageObj = {
-                    chatId: selectedChat.id,
-                    senderTypeId,
-                    content: newMessage,
-                    timeStamp: new Date().toISOString(),
-                };
+                const senderTypeId = Constants.SENDER_TYPE_OPERATOR; // Operador
 
                 // Envía el mensaje al servidor
                 await sendMessageToChat(selectedChat.id, senderTypeId, newMessage);
 
-                // Añade el mensaje localmente hasta recibir confirmación del servidor
-                //  setMessages((prevMessages) => [...prevMessages, newMessageObj]);
                 setNewMessage("");
             } catch (error) {
                 console.error("Error al enviar mensaje:", error);
+                showToast(
+                    "Error al enviar mensaje. Por favor contactese con soporte",
+                    "error",
+                );
             }
         }
     };

@@ -4,7 +4,7 @@ export const loginApi = async (email, password) => {
   const response = await fetch(`${urlApi}/login`, {
     headers: { "Content-Type": "application/json" },
     method: "POST",
-    body: JSON.stringify({ email, password }), //Password1!
+    body: JSON.stringify({ email, password }),
   });
 
   const parsedResponse = await response.json();
