@@ -6,10 +6,10 @@ import {
   useTheme,
   TextField,
 } from "@mui/material";
-import { useDispatch,  } from "react-redux";
+import { useDispatch, } from "react-redux";
 import { colorsList } from "../../theme";
-import { postOperator } from "../../Services/operatorsService";
 import { FaLock, FaUser } from "react-icons/fa";
+import { registerOperator } from "../../redux/features/operator/operatorThunks";
 
 const OperatorsPage = () => {
   const theme = useTheme();
@@ -31,7 +31,7 @@ const OperatorsPage = () => {
     e.preventDefault();
     try {
       const operatorDto = { email: userData.email, password: userData.password };
-      await dispatch(postOperator(operatorDto)).unwrap();
+      await dispatch(registerOperator(operatorDto)).unwrap();
     } catch (error) {
       setError(error.message);
     }
