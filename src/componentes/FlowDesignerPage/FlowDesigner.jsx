@@ -134,6 +134,7 @@ const FlowDesigner = ({ onBackToList }) => {
         "Debe haber un nodo inicio",
         "error",
       );
+      throw new Error('Debe haber un nodo inicio');
     }
 
     if ((nodosInicio).length > 1) {
@@ -141,6 +142,7 @@ const FlowDesigner = ({ onBackToList }) => {
         "No puede haber más de un nodo inicio",
         "error",
       );
+      throw new Error('No puede haber más de un nodo inicio');
     }
     // provisorio: se podrían poner estas validaciones en la activación de flujo, ver cual opcion es mejor
     // nodos desconectados        
@@ -152,6 +154,7 @@ const FlowDesigner = ({ onBackToList }) => {
         "No puede haber nodos desconectados",
         "error",
       );
+      throw new Error('No puede haber nodos desconectados');
     }
     // sin canal seleccionado
     if (channel === "") {
@@ -159,6 +162,7 @@ const FlowDesigner = ({ onBackToList }) => {
         "Debe seleccionar un canal",
         "error",
       );
+      throw new Error('Debe seleccionar un canal');
     }
 
   }
