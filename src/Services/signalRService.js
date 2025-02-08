@@ -40,7 +40,7 @@ const setupSignalREvents = () => {
         saveMessageToChat(chatId, messageDto);
     });
 
-    connection.on("ChatAssigned", (pendingChats) => {
+    connection.on("ChatAssigned", (chat, pendingChats) => {
         store.dispatch(setChats(pendingChats));
     });
 
