@@ -2,7 +2,7 @@
 
 const urlOperator = `${process.env.REACT_APP_API_URL}`;
 
-// Crear un nuevo cliente
+//Registrar operador
 export const postOperator = async (operatorDto) => {
     const response = await fetch(`${urlOperator}/register`, {
         method: "POST",
@@ -13,5 +13,5 @@ export const postOperator = async (operatorDto) => {
     if (!response.ok) {
         throw new Error("Error al crear el operador. Por favor intente nuevamente");
     }
-    return response.json(); // Devuelve el operador creado
+    return true;
 };
