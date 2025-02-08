@@ -11,7 +11,7 @@ export const postOperator = async (operatorDto) => {
     });
 
     if (!response.ok) {
-        throw new Error("Error al crear el operador. Por favor intente nuevamente");
+        throw new Error({ message: "Error al crear el operador. Por favor intente nuevamente" });
     }
     return true;
 };
