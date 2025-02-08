@@ -6,24 +6,23 @@ import {
   useTheme,
   TextField,
 } from "@mui/material";
-import { useDispatch, } from "react-redux";
 import { colorsList } from "../../theme";
 import { FaLock, FaUser } from "react-icons/fa";
-import { registerOperator } from "../../redux/features/operator/operatorThunks";
 import { postOperator } from "../../Services/operatorsService";
+import Toast from "../components/Toast"; // Importamos el componente Toast
 
 const OperatorsPage = () => {
   const theme = useTheme();
   const colors = colorsList(theme.palette.mode);
-  const dispatch = useDispatch();
+
 
   const [userData, setUserData] = useState({});
-  const [error, setError] = useState("");
+  const [toast, setToast] = useState({ open: false, message: "", severity: "info" });
 
   // Actualiza los datos de los inputs en userData
   const handleChangeMultiple = (e) => {
-    setUserData((userData) => ({
-      ...userData,
+    setUserData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
     }));
   };
@@ -33,8 +32,21 @@ const OperatorsPage = () => {
     try {
       const operatorDto = { email: userData.email, password: userData.password };
       await postOperator(operatorDto);
+
+      // Mostrar mensaje de éxito
+      setToast({
+        open: true,
+        message: "Operador registrado con éxito",
+        severity: "success",
+      });
+
     } catch (error) {
-      setError(error.message);
+      // Mostrar mensaje de error
+      setToast({
+        open: true,
+        message: error.message || "Error al registrar operador",
+        severity: "error",
+      });
     }
   };
 
@@ -153,24 +165,16 @@ const OperatorsPage = () => {
               Registrar
             </Button>
           </Box>
-
-          {/* Mensaje de error */}
-          <Box>
-            {error && (
-              <Typography
-                sx={{
-                  marginTop: 2,
-                  color: colors.accentRed[100],
-                  textAlign: "center",
-                  fontSize: "15px",
-                }}
-              >
-                {error}
-              </Typography>
-            )}
-          </Box>
         </form>
       </Box>
+
+      {/* Componente Toast para mostrar mensajes */}
+      <Toast
+        open={toast.open}
+        message={toast.message}
+        severity={toast.severity}
+        onClose={() => setToast({ ...toast, open: false })}
+      />
     </Box>
   );
 };
