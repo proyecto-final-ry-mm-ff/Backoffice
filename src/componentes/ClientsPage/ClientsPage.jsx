@@ -24,13 +24,19 @@ import {
   removeClient,
 } from "../../redux/features/clients/clientsThunks";
 import { colorsList } from "../../theme";
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
+
+
 
 const ClientsPage = () => {
   const theme = useTheme();
   const colors = colorsList(theme.palette.mode);
   const dispatch = useDispatch();
+  const { showToast } = useToast(); // Usamos el toast global
 
-  const { clients, status } = useSelector((state) => state.clientsStore);
+
+
+  const { clients } = useSelector((state) => state.clientsStore);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false); // Diálogo de creación/edición
   const [selectedClient, setSelectedClient] = useState(null);
@@ -45,13 +51,14 @@ const ClientsPage = () => {
     setSelectedClient({
       id: client.id,
       name: client.name,
+      facebookId: client.facebookId,
       allowedDomainsJson: client.allowedDomainsJson || [],
     });
     setIsDialogOpen(true);
   };
 
   const handleAddClient = () => {
-    setSelectedClient({ name: "", allowedDomainsJson: "" });
+    setSelectedClient({ name: "", facebookId: "-", allowedDomainsJson: "" });
     setIsDialogOpen(true);
   };
 
@@ -67,6 +74,10 @@ const ClientsPage = () => {
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Error al guardar el cliente:", error);
+      showToast(
+        "Error al guardar el cliente. Por favor contacte con soporte",
+        "error",
+      );
     }
   };
 
@@ -80,11 +91,17 @@ const ClientsPage = () => {
   const handleDeleteClient = async () => {
     if (clientToDelete) {
       try {
-        await dispatch(removeClient(clientToDelete.id)); // Llama al thunk de eliminación
+        dispatch(removeClient(clientToDelete.id)); // Llama al thunk de eliminación
         setIsDeleteDialogOpen(false); // Cierra el diálogo de confirmación
         setClientToDelete(null); // Limpia el cliente seleccionado
       } catch (error) {
         console.error("Error al eliminar el cliente:", error);
+
+        showToast(
+          "Error al eliminar el cliente. Por favor contacte con soporte",
+          "error",
+        );
+
       }
     }
   };
@@ -126,7 +143,7 @@ const ClientsPage = () => {
           <Table sx={{ tableLayout: "fixed" }}>
             <TableHead>
               <TableRow>
-                {["ID", "Nombre", "Token", "URL", ""].map((header, index) => (
+                {["ID", "Nombre", "Token", "Id de comercio en facebook", "URL", ""].map((header, index) => (
                   <TableCell
                     key={header || index}
                     sx={{
@@ -176,12 +193,17 @@ const ClientsPage = () => {
                   </TableCell>
                   <TableCell
                     sx={{
-                      // whiteSpace: "normal", // Permite saltos de línea
-                      // wordWrap: "break-word", // Corta palabras largas
                       overflow: "hidden",
                     }}
                   >
                     {client.token}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      overflow: "hidden",
+                    }}
+                  >
+                    {client?.facebookId.length > 0 ? client?.facebookId : "-"}
                   </TableCell>
                   <TableCell
                     sx={{

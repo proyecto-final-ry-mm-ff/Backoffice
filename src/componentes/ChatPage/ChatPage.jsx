@@ -3,7 +3,7 @@ import Chat from "./Chat";
 import ChatList from "./ChatList";
 import { Box } from "@mui/material";
 import { getChat } from "../../Services/chatService";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setSelectedChat } from "../../redux/features/chat/chatSlice";
 import ChatLandingPage from "./ChatLandingPage";
 

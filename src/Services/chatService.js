@@ -1,8 +1,6 @@
 import { GetBearerToken } from "./helper/helperService";
-import { store } from "../redux/store";
-import { assignChat, addMessageToChat } from "../redux/features/chat/chatSlice";
 
-const urlChat = "http://localhost:5015/chat";
+const urlChat = `${process.env.REACT_APP_API_URL}/chat`;
 
 // Obtener un chat en particular (sirve para conseguir todos los mensajes previos)
 export const getChat = async (chatId) => {
@@ -11,6 +9,22 @@ export const getChat = async (chatId) => {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!response.ok) throw new Error("Error al obtener chats");
+  return await response.json();
+};
+
+// Obtener un chat en particular (sirve para conseguir todos los mensajes previos)
+export const getFacebookPendingChats = async () => {
+  const token = GetBearerToken();
+  const response = await fetch(`${urlChat}/facebook-pending-chats`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok){
+    if(response.status !== 404){
+      throw new Error("Error al obtener chats pendientes de facebook");
+    }
+  }
+    
   return await response.json();
 };
 
@@ -55,7 +69,6 @@ export const saveMessageToChat = async (chatId, message) => {
       throw new Error("No se pudo guardar el mensaje en la base de datos.");
     }
 
-    console.log("Mensaje guardado en la base de datos.");
   } catch (err) {
     console.error("Error al guardar el mensaje:", err);
   }

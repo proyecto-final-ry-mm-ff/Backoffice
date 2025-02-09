@@ -1,48 +1,52 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom"; //Son lol componentes y hooks de react para manejar la navegación.
-import { FaUser, FaLock } from "react-icons/fa";
-import { Typography, Box, useTheme, TextField, Button } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Button,
+  Typography,
+  Box,
+  useTheme,
+  TextField,
+} from "@mui/material";
 import { colorsList } from "../../theme";
-import { loginThunk } from "../../redux/features/user/userThunk";
+import { FaLock, FaUser } from "react-icons/fa";
+import { postOperator } from "../../Services/operatorsService";
+import { useToast } from "../../context/ToastContext"; // Importamos el hook
 
-export default function Login() {
+
+const OperatorsPage = () => {
   const theme = useTheme();
   const colors = colorsList(theme.palette.mode);
 
-  // Estado local para manejar los datos del formulario y errores
+
   const [userData, setUserData] = useState({});
-  const [error, setErrorLogin] = useState("");
+  const { showToast } = useToast(); // Usamos el toast global
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  // Redirige si ya existe una sesión iniciada
-  useEffect(() => {
-    const logged = localStorage.getItem("logged") === "true";
-    if (logged) {
-      navigate("/chat-page");
-    }
-  }, [navigate]);
 
   // Actualiza los datos de los inputs en userData
   const handleChangeMultiple = (e) => {
-    setUserData((userData) => ({
-      ...userData,
+    setUserData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
     }));
   };
 
-  // Hace la llamada al thunk
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorLogin(""); // Limpiar mensajes de error
-
     try {
-      await dispatch(loginThunk(userData.email, userData.password));
-      navigate("/chat-page"); // Redirige si el login es exitoso
+      const operatorDto = { email: userData.email, password: userData.password };
+      await postOperator(operatorDto);
+
+      // Mostrar mensaje de éxito
+      showToast(
+        "Operador registrado con éxito",
+        "success",
+      );
+
     } catch (error) {
-      setErrorLogin(error.message);
+      // Mostrar mensaje de error
+      showToast(
+        "Error al registrar operador. Por favor contacte con soporte",
+        "error",
+      );
     }
   };
 
@@ -62,7 +66,7 @@ export default function Login() {
           padding: 5,
           borderRadius: 1,
           width: "100%",
-          maxWidth: 400,
+          maxWidth: "90%",
           background: colors.background[300],
         }}
       >
@@ -77,7 +81,7 @@ export default function Login() {
               fontWeight: "bold",
             }}
           >
-            Login
+            Registrar operador
           </Typography>
 
           {/* Input de email */}
@@ -116,7 +120,7 @@ export default function Login() {
             />
             <TextField
               fullWidth
-              type="password"
+              type="text"
               name="password"
               placeholder="Contraseña"
               value={userData.password || ""}
@@ -158,27 +162,13 @@ export default function Login() {
                 },
               }}
             >
-              Iniciar sesión
+              Registrar
             </Button>
-          </Box>
-
-          {/* Mensaje de error */}
-          <Box>
-            {error && (
-              <Typography
-                sx={{
-                  marginTop: 2,
-                  color: colors.accentRed[100],
-                  textAlign: "center",
-                  fontSize: "15px",
-                }}
-              >
-                {error}
-              </Typography>
-            )}
           </Box>
         </form>
       </Box>
     </Box>
   );
-}
+};
+
+export default OperatorsPage;

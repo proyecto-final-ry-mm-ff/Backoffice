@@ -10,10 +10,12 @@ import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import PeopleIcon from '@mui/icons-material/People';
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import { Link, useNavigate } from "react-router-dom";
 import { ColorModeContext, colorsList } from "../../theme";
 import { useDispatch } from "react-redux";
 import { logoutThunk } from "../../redux/features/user/userThunk";
+import FacebookLogin from "./FacebookLogin";
 
 const Sidebar = () => {
   const theme = useTheme();
@@ -105,6 +107,7 @@ const Sidebar = () => {
               icon={<AccountTreeIcon />}
             />
             <Item title="Clientes" to="/clients-page" icon={<PeopleIcon />} />
+            <Item title="Registrar operador" to="/operators-page" icon={<PersonAddAlt1Icon />} />
             <Item title="Configuración" to="/config" icon={<SettingsIcon />} />
           </Box>
         </Menu>
